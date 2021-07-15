@@ -70,7 +70,7 @@ function setFontBackgrond(obj){
 //更新rom列表字体
 function setFontsize(obj){
     var dom = $(#romlist);
-    for (var i = 1; i <= 13; i++){
+    for (var i = 1; i <= 15; i++){
         $(#config_title_fontsize).select("li[opt="+ i +"]").attributes.removeClass("active");
         var s = 'fontsize'+i.toString();
         if(dom.attributes.hasClass(s)){
@@ -91,7 +91,7 @@ function setRomlistSize(obj){
     var romlist = $(#romlist);
 
     //先清除所有缩放样式
-    for(var i=1;i<=6;i++){
+    for(var i=1;i<=9;i++){
         $(#config_romlist_size).select("li[opt="+ i +"]").attributes.removeClass("active");
         if(romlist.attributes.hasClass("zoom" + i)){
             romlist.attributes.removeClass("zoom" + i);
@@ -112,7 +112,7 @@ function setRomMargin(obj){
     var romlist = $(#romlist);
 
     //先清除所有缩放样式
-    for(var i=1;i<=10;i++){
+    for(var i=1;i<=15;i++){
         $(#config_romlist_margin).select("li[opt="+ i +"]").attributes.removeClass("active");
         if (romlist.attributes.hasClass("margin" + i)){
             romlist.attributes.removeClass("margin" + i);

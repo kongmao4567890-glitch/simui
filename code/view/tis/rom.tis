@@ -160,30 +160,38 @@ function scrollLoadRom(evtPos){
             return;
         }
         SCROLL_LOCK = true; //加锁
-        var menu = $(#menulist).select("dd:current").attributes["opt"];
-        var val = self.$(#search_input).value;
-        var num = $(#num_search).select("li:current").html;
-
-        if(num == "ALL"){
-            num = "";
-        }
-         //生成游戏列表
-        var filter_type = $(#filter_type).value;
-        var filter_publisher = $(#filter_publisher).value;
-        var filter_year = $(#filter_year).value;
-        var filter_country = $(#filter_country).value;
-        var filter_translate = $(#filter_translate).value;
-        var filter_version = $(#filter_version).value;
-        ROMJSON = view.GetGameList(0,ACTIVE_PLATFORM,menu,val,num,SCROLL_PAGE,filter_type,filter_publisher,filter_year,filter_country,filter_translate,filter_version);
-
-        if(ROMJSON != "[]"){
-            createRomList(0);
-            SCROLL_POS = scrollPos;
-            SCROLL_LOCK = false;
-        }
+ 
+        //加载一页rom
+        loadPageRom();
     }
 
 }
+
+//加载一页rom
+function loadPageRom(){
+    var menu = $(#menulist).select("dd:current").attributes["opt"];
+    var val = self.$(#search_input).value;
+    var num = $(#num_search).select("li:current").html;
+
+    if(num == "ALL"){
+        num = "";
+    }
+        //生成游戏列表
+    var filter_type = $(#filter_type).value;
+    var filter_publisher = $(#filter_publisher).value;
+    var filter_year = $(#filter_year).value;
+    var filter_country = $(#filter_country).value;
+    var filter_translate = $(#filter_translate).value;
+    var filter_version = $(#filter_version).value;
+    ROMJSON = view.GetGameList(0,ACTIVE_PLATFORM,menu,val,num,SCROLL_PAGE,filter_type,filter_publisher,filter_year,filter_country,filter_translate,filter_version);
+
+    if(ROMJSON != "[]"){
+        createRomList(0);
+        SCROLL_POS = scrollPos;
+        SCROLL_LOCK = false;
+    }
+}
+
 
 //初始化滚动分页功能
 function resetScroll(){
