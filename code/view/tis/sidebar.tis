@@ -353,7 +353,25 @@ function _createRotate(info){
     //滚动图
     $(#stack).html = pics;
     $(#stack).refresh();
+    $(#stack).update();
+
+
+    //重新计算下尺寸，防止标题图过宽
+    var stackList = $$(#stack img);
+    for (var s in stackList){
+        var width = s.box(#width);
+        var height = s.box(#height);
+        if(width == 0 || height == 0){
+            continue;
+        }
+        if(width / height > 1.5){
+            s.style["max-width"] = "90%";
+            s.style["height"] = "auto";
+        }
+    }
+
     rotateAttached();
+
     //视频状态控制
     _setVideoControl(video);
    

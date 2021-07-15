@@ -233,8 +233,12 @@ function deleteRom(obj){
     if (result != "yes"){
         return true;
     }
-
+  
     var id = obj.attributes["rid"];
+    if(id == undefined){
+        id = ACTIVE_ROM_ID;
+    }
+
     var dom = $(#romlist).select("li[rid="+id+"]");
     if (dom != undefined){
         dom.remove(); //删除页面dom

@@ -210,7 +210,7 @@ solid-with-shadow
     .stack>img{max-width:360dip;width:100%;margin:0 auto}
 
     /* 右侧边栏遮罩 */
-    #mask{background:color(sidebar-background-color) no-repeat center center;width:*;height:100%;position:absolute;z-index:3;text-align:center;vertical-align:middle;display:block;background-size:70%;}
+    #mask{background:color(sidebar-background-color) no-repeat center center;width:*;height:100%;position:absolute;z-index:5;text-align:center;vertical-align:middle;display:block;background-size:70%;}
     #mask img{width:60%;display:block;opacity: 0.3;}
     #mask p{font-size:16dip;display: block;opacity: 0.5;margin-bottom:50dip}
 
@@ -308,12 +308,12 @@ solid-with-shadow
     .right_bg{display:none}
     .widthMode  .right_bg{background:no-repeat center center;background-size:100%;height:300dip;display:block; box-shadow: inset 0 -100dip 100dip color(sidebar-background-color);position:relative}
     .widthMode .margin_wrapper{margin-top:-50dip;height:*;}
-    .widthMode .button_wrapper{top:60dip;width:50%}
+    .widthMode .button_wrapper{top:60dip;width:50%;z-index:4}
     .widthMode .rotate_wrapper{height:90dip;z-index:3}
     .widthMode  #right_title{display:block}
     .widthMode #rotate{height:35dip;line-height:35dip;width:35dip;top:-40dip;right:0dip;position:absolute;z-index:2;}
-    .widthMode .stack{position:absolute;top:-120dip;width:auto;height:200px;right:40dip;}
-    .widthMode .stack>img{max-width:auto;width:auto;height:200dip;}
+    .widthMode .stack{position:absolute;top:-120dip;width:auto;height:200px;right:40dip;vertical-align:middle;text-align:right}
+    .widthMode .stack>img{max-width:auto;width:auto;height:200dip;margin-right:0}
     .widthMode video{margin:0;padding:0}
     .widthMode .sim_select{display:block;width:*;}
     .widthMode .buttons{display:block;width:*;}

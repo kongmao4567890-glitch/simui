@@ -63,6 +63,13 @@ func main() {
 	w, err := window.New(
 		sciter.SW_MAIN|sciter.SW_RESIZEABLE|sciter.SW_ENABLE_DEBUG,
 		&sciter.Rect{Left: 0, Top: 0, Right: int32(utils.ToInt(width)), Bottom: int32(utils.ToInt(height))})
+
+	//w, err := window.New(sciter.SW_RESIZEABLE|sciter.SW_MAIN|sciter.SW_ENABLE_DEBUG, nil)
+
+
+
+
+
 	if err != nil {
 		utils.WriteLog(err.Error())
 	}

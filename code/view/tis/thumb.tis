@@ -92,6 +92,20 @@ function DeleteThumb(evt){
     }
 
     var type = evt.attributes["value"];
+
+    //先把视频结束掉
+    if(type == "video"){
+        var vdom = $(#right_video);
+        if (vdom != undefined){
+            try{
+                vdom.videoStop();
+                vdom.videoUnload();
+            }catch(e){
+
+            }
+        }
+    }
+
     mainView.DeleteThumbs(type,ACTIVE_ROM_ID);
     self.select(".file-drop-zone[opt="+ type +"]").html = "<div class='file-drop-zone-empty'>" + CONF.Lang.DropPicToHere + "</div>";
 
