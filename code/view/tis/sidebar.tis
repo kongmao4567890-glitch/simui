@@ -354,6 +354,7 @@ function _createRotate(info){
     $(#stack).html = pics;
     $(#stack).refresh();
     $(#stack).update();
+    rotateAttached();
 
 
     //重新计算下尺寸，防止标题图过宽
@@ -365,12 +366,11 @@ function _createRotate(info){
             continue;
         }
         if(width / height > 1.5){
-            s.style["max-width"] = "90%";
+            s.style["max-width"] = "300dip";
             s.style["height"] = "auto";
         }
     }
 
-    rotateAttached();
 
     //视频状态控制
     _setVideoControl(video);
