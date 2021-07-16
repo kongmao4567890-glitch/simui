@@ -68,7 +68,7 @@ func CheckJoystick() (status int8) {
 					if current-btnLock[btn] < 500 {
 						break
 					}
-					
+
 					btnLock[btn] = current
 					utils.ViewButton(btn)
 					//fmt.Println("AxisData:", btn, current-btnLock[btn])
@@ -86,23 +86,32 @@ func CheckJoystick() (status int8) {
 //1上2下3左4右
 func GetJoystickDirection(axis []int) int {
 
-	if axis[1] == -32767 {
-		return 1
-	} else if axis[1] == 32768 {
-		return 2
-	} else if axis[0] == -32767 {
-		return 3
-	} else if axis[0] == 32768 {
+	if len(axis) >= 1 && axis[0] > 0 {
 		return 4
-	} else if len(axis) >= 7 && axis[6] == -32767 {
-		return 1
-	} else if len(axis) >= 7 && axis[6] == 32768 {
-		return 2
-	} else if len(axis) >= 7 && axis[5] == -32767 {
+	} else if len(axis) >= 1 && axis[0] < -1 {
 		return 3
-	} else if len(axis) >= 7 && axis[5] == 32768 {
+	} else if len(axis) > 1 && axis[1] > 0 {
+		return 2
+	} else if len(axis) > 1 && axis[1] < -1 {
+		return 1
+	} else if len(axis) > 3 && axis[3] > 0 {
+		return 2
+	} else if len(axis) > 3 && axis[3] < -1 {
+		return 1
+	} else if len(axis) > 4 && axis[4] > 0 {
 		return 4
+	} else if len(axis) > 4 && axis[4] < -1 {
+		return 3
+	} else if len(axis) > 5 && axis[5] > 0 {
+		return 4
+	} else if len(axis) > 5 && axis[5] < -1 {
+		return 3
+	} else if len(axis) > 6 && axis[6] > 0 {
+		return 2
+	} else if len(axis) > 6 && axis[6] < -1 {
+		return 1
 	}
+
 	return 0
 }
 
