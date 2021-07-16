@@ -37,6 +37,12 @@ func main() {
 	config.Cfg.UnzipPath = config.Cfg.CachePath + "unzip" + separator //rom解压路径
 
 	defer func() {
+
+		//删除解压的缓存
+		err := utils.DeleteDir(config.Cfg.UnzipPath)
+
+		fmt.Println(err)
+
 		if r := recover(); r != nil {
 			var trace [1024]byte
 			n := runtime.Stack(trace[:], true)
@@ -63,12 +69,6 @@ func main() {
 	w, err := window.New(
 		sciter.SW_MAIN|sciter.SW_RESIZEABLE|sciter.SW_ENABLE_DEBUG,
 		&sciter.Rect{Left: 0, Top: 0, Right: int32(utils.ToInt(width)), Bottom: int32(utils.ToInt(height))})
-
-	//w, err := window.New(sciter.SW_RESIZEABLE|sciter.SW_MAIN|sciter.SW_ENABLE_DEBUG, nil)
-
-
-
-
 
 	if err != nil {
 		utils.WriteLog(err.Error())
