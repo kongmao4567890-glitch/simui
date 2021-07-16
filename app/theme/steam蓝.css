@@ -133,6 +133,7 @@ html:theme(steam) {
     var(rom-list-active-text-color) : #FFF;
     var(rom-list-active-background-color) : #417997;
     var(rom-list-text-slave-color) : #acdbf5;
+    var(rom-block-text-shadow-color) : #000;
 
     /* 相关游戏 */
     var(related-background-color): #324862;

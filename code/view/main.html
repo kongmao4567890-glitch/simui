@@ -101,7 +101,9 @@ solid-with-shadow
     .romblock li div:nth-child(7){display:none}
     .romblock li div:nth-child(8){display:none}
 
-    #romlist.textShadow{text-shadow: 1px 1px 1px #000}
+    #romlist.textShadow{text-shadow: 1px 1px 1px color(rom-block-text-shadow-color);box-shadow:0}
+    #romlist.textShadow li:current{border:0;box-shadow:0}
+    #romlist.textShadow li:current img {border:0;}
     #romlist.fontsize1 li{display:inherit;font-size:8dip;}
     #romlist.fontsize2 li{display:inherit;font-size:9dip}
     #romlist.fontsize3 li{display:inherit;font-size:10dip}
