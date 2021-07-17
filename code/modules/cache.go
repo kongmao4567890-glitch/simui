@@ -139,7 +139,7 @@ func CreateRomData(platform uint32) ([]*db.Rom, error) {
 					title = aliasName
 				}
 
-				fileMd5 := GetRomMd5(utils.ToString(platform), title)
+				fileMd5 := GetRomMd5(utils.ToString(platform), p)
 				infoMd5 := GetRomMd5(title, p, base.Type, base.Year, base.Publisher, base.Country, base.Translate)
 				//如果游戏名称存在分隔符，说明是子游戏
 				menu := ConstMenuRootKey //无目录，读取默认参数
