@@ -17,68 +17,67 @@ import (
 /**
  * 创建缓存入口
  **/
-func CreateRomCache(getPlatform uint32) error{
+func CreateRomCache(getPlatform uint32) error {
 
+	//检查更新一个平台还是所有平台
+	PlatformList := map[uint32]*db.Platform{}
+	if getPlatform == 0 { //所有平台
+		PlatformList = config.Cfg.Platform
+	} else { //一个平台
+		if _, ok := config.Cfg.Platform[getPlatform]; ok {
+			PlatformList[getPlatform] = config.Cfg.Platform[getPlatform]
+		}
+	}
 
-		//检查更新一个平台还是所有平台
-		PlatformList := map[uint32]*db.Platform{}
-		if getPlatform == 0 { //所有平台
-			PlatformList = config.Cfg.Platform
-		} else { //一个平台
-			if _, ok := config.Cfg.Platform[getPlatform]; ok {
-				PlatformList[getPlatform] = config.Cfg.Platform[getPlatform]
-			}
+	//先检查平台，将不存在的平台数据先干掉
+	if getPlatform == 0 {
+		if err := ClearPlatform(); err != nil {
+			return err
+		}
+	}
+
+	//清空过滤器
+	_ = (&db.Filter{}).Truncate()
+
+	//开始重建缓存
+	for platform, _ := range PlatformList {
+
+		//第一步：创建rom缓存
+		romlist, err := CreateRomData(platform)
+		if err != nil {
+			return err
 		}
 
-		//先检查平台，将不存在的平台数据先干掉
-		if getPlatform == 0 {
-			if err := ClearPlatform(); err != nil {
-				return err
-			}
+		//第二步：更新rom数据
+		if err := UpdateRomDB(platform, romlist); err != nil {
+			//不报错，只记录错误日志
+			utils.WriteLog(err.Error())
 		}
 
-		//清空过滤器
-		_ = (&db.Filter{}).Truncate()
-
-		//开始重建缓存
-		for platform, _ := range PlatformList {
-
-			//第一步：创建rom缓存
-			romlist, err := CreateRomData(platform)
-			if err != nil {
-				return err
-			}
-
-			//第二步：更新rom数据
-			if err := UpdateRomDB(platform, romlist); err != nil {
-				//不报错，只记录错误日志
-				utils.WriteLog(err.Error())
-			}
-
-			//第三步：读取rom目录
-			menu ,err := CreateMenuList(platform)
-			if err != nil {
-				return err
-			}
-
-			//第四步：更新menu数据
-			if err := UpdateMenuDB(platform, menu); err != nil {
-				return err
-			}
-
-			//第五步：更新filter数据
-			UpdateFilterDB(platform);
-
+		//第三步：读取rom目录
+		menu, err := CreateMenuList(platform)
+		if err != nil {
+			return err
 		}
 
-		//收缩数据库
-		db.Vacuum()
-
-		//数据更新完成后，页面回调，更新页面DOM
-		if _, err := utils.Window.Call("CB_createCache", sciter.NewValue("")); err != nil {
-			fmt.Print(err)
+		//第四步：更新menu数据
+		if err := UpdateMenuDB(platform, menu); err != nil {
+			return err
 		}
-		return nil
+
+		//第五步：更新filter数据
+		UpdateFilterDB(platform)
+
+	}
+
+	//收缩数据库
+	db.Vacuum()
+
+	//数据更新完成后，页面回调，更新页面DOM
+	if _, err := utils.Window.Call("CB_createCache", sciter.NewValue("")); err != nil {
+		fmt.Print(err)
+	}
+	return nil
 
 }
 
@@ -203,7 +202,7 @@ func CreateRomData(platform uint32) ([]*db.Rom, error) {
 			}
 			return nil
 		}); err != nil {
-		return nil,errors.New(config.Cfg.Lang["RomMenuCanNotBeExists"])
+		return nil, errors.New(config.Cfg.Lang["RomMenuCanNotBeExists"])
 	}
 
 	return romlist, nil
@@ -214,12 +213,12 @@ func CreateMenuList(platform uint32) (map[string]*db.Menu, error) {
 
 	menuList := map[string]*db.Menu{}
 
-	FileInfo, err := ioutil.ReadDir(config.Cfg.Platform[platform].RomPath);
+	FileInfo, err := ioutil.ReadDir(config.Cfg.Platform[platform].RomPath)
 	if err != nil {
 		return menuList, err
 	}
 	for _, v := range FileInfo {
-		if (v.IsDir() == true) {
+		if v.IsDir() == true {
 			menuList[v.Name()] = &db.Menu{
 				Platform: platform,
 				Name:     v.Name(),
@@ -259,7 +258,7 @@ func UpdateRomDB(platform uint32, romlist []*db.Rom) error {
 
 	romlistInfoMd5 := []string{} //磁盘文件
 	romlistFileMd5 := []string{} //磁盘文件
-	for _, v := range romlist { //从romlist列表中抽出两个md5
+	for _, v := range romlist {  //从romlist列表中抽出两个md5
 		romlistInfoMd5 = append(romlistInfoMd5, v.InfoMd5)
 		romlistFileMd5 = append(romlistFileMd5, v.FileMd5)
 	}
@@ -273,12 +272,14 @@ func UpdateRomDB(platform uint32, romlist []*db.Rom) error {
 	//整理出要添加的数据体
 	addData := []*db.Rom{}
 	updateData := []*db.Rom{}
-	for _, v := range romlist {
-		if utils.InSliceString(v.FileMd5, addFileUniq) {
-			addData = append(addData, v) //添加的数据
-		}
-		if !utils.InSliceString(v.FileMd5, addAndSubFileUniq) {
-			updateData = append(updateData, v) //更新的数据
+	if len(addAndSubFileUniq) > 0 {
+		for _, v := range romlist {
+			if utils.InSliceString(v.FileMd5, addFileUniq) {
+				addData = append(addData, v) //添加的数据
+			}
+			if !utils.InSliceString(v.FileMd5, addAndSubFileUniq) {
+				updateData = append(updateData, v) //更新的数据
+			}
 		}
 	}
 
