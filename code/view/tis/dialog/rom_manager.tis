@@ -954,6 +954,7 @@ function managerCheckRepeat(){
     var romobj = JSON.parse(romjson);
 
     if(romobj.length == 0 ){
+        $(#romlist_repeat tbody).html = "";
         alert(CONF.Lang.DuplicateFilesNotFound);
         return;
     }
@@ -1009,8 +1010,9 @@ function managerFileRepeatMoveRom(){
         url = url.split(CONF.RootPath.toString()).join("");
 
         mainView.MoveRomByFileManager(JSON.stringify(paths),url);
-        managerCheckRepeat();
     }
+
+    alert(CONF.Lang.RomMoveSuccess);
 }
 
 //删除文件 - 文件去重
@@ -1048,8 +1050,8 @@ function managerFileRepeatDelete(){
         mainView.DeleteRom(id); //删除实体文件
         //删除页面上的dom
     }
+    alert(CONF.Lang.DeleteSuccess);
 
-    managerCheckRepeat();
 }
 
 //运行游戏 - 文件去重
@@ -1075,6 +1077,7 @@ function managerCheckZombie(){
     var romobj = JSON.parse(romjson);
 
     if(romobj.length == 0 ){
+        $(#romlist_zombie tbody).html = "";
         alert(CONF.Lang.NoInvalidFilesNotFound);
         return;
     }
@@ -1129,8 +1132,9 @@ function managerFileZombieMoveRom(){
         url = url.split(CONF.RootPath.toString()).join("");
 
         mainView.MoveZombieByFileManager(JSON.stringify(paths),url);
-        managerCheckZombie();
     }
+
+    alert(CONF.Lang.RomMoveSuccess);
 }
 
 //删除文件 - 无效资源清理
@@ -1165,8 +1169,8 @@ function managerFileZombieDelete(){
 
     for(var p in arr) {
         mainView.DeleteZombieByFileManager(p); //删除实体文件
-        //删除页面上的dom
     }
 
-    managerCheckZombie();
+    alert(CONF.Lang.DeleteSuccess);
+
 }

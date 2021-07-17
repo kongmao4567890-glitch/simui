@@ -84,7 +84,8 @@ func CheckRomZombie(platformId uint32) ([]map[string]string, error) {
 	existsMap := map[string]string{}
 	//读取已存在rom
 	for _, v := range romlist {
-		existsMap[v.Name] = ""
+		name := utils.GetFileName(v.RomPath)
+		existsMap[name] = ""
 	}
 
 	res := config.GetResPath(platformId)
