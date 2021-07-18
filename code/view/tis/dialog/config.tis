@@ -57,8 +57,13 @@ function Init(){
     //生成界面选项
     $(#config_background).value = CONF.Default.BackgroundImage;
     $(#config_background_repeat).value = CONF.Default.BackgroundRepeat;
-    $(#config_wallpaper).value = CONF.Default.WallpaperImage;
     $(#config_cursor).html = cursor_url;
+
+    //壁纸
+    var wallpaper_image = CONF.Default.WallpaperImage.split("\/").join(CONF.Separator.toString());
+    wallpaper_image = wallpaper_image.split(CONF.RootPath.toString()).join("");
+    $(#config_wallpaper).value = wallpaper_image;
+
 
     //生成快捷工具列表
     var shortcut = "";
