@@ -88,13 +88,13 @@ func GetJoystickDirection(axis []int) int {
 
 	if (len(axis) == 6) {
 		//条件位置不能换
-		if (axis[4] < -1) {
+		if (axis[4] == -32767) {
 			return 3
-		} else if (axis[4] > 1) {
+		} else if (axis[4] == 32768) {
 			return 4
-		} else if (axis[5] < -1) {
+		} else if (axis[5] == -32767) {
 			return 1
-		} else if (axis[5] > 1) {
+		} else if (axis[5] == 32768) {
 			return 2
 		}
 
@@ -102,27 +102,27 @@ func GetJoystickDirection(axis []int) int {
 
 		if len(axis) >= 1 && axis[0] > 0 {
 			return 4
-		} else if len(axis) >= 1 && axis[0] < -1 {
+		} else if len(axis) >= 1 && axis[0] == -32767 {
 			return 3
-		} else if len(axis) > 1 && axis[1] > 0 {
+		} else if len(axis) > 1 && axis[1] == 32768 {
 			return 2
-		} else if len(axis) > 1 && axis[1] < -1 {
+		} else if len(axis) > 1 && axis[1] == -32767 {
 			return 1
-		} else if len(axis) > 3 && axis[3] > 0 {
+		} else if len(axis) > 3 && axis[3] == 32768 {
 			return 2
-		} else if len(axis) > 3 && axis[3] < -1 {
+		} else if len(axis) > 3 && axis[3] == -32767 {
 			return 1
-		} else if len(axis) > 4 && axis[4] > 0 {
+		} else if len(axis) > 4 && axis[4] == 32768 {
 			return 4
-		} else if len(axis) > 4 && axis[4] < -1 {
+		} else if len(axis) > 4 && axis[4] == -32767 {
 			return 3
-		} else if len(axis) > 5 && axis[5] > 0 {
+		} else if len(axis) > 5 && axis[5] == 32768 {
 			return 4
-		} else if len(axis) > 5 && axis[5] < -1 {
+		} else if len(axis) > 5 && axis[5] == -32767 {
 			return 3
-		} else if len(axis) > 6 && axis[6] > 0 {
+		} else if len(axis) > 6 && axis[6] == 32768 {
 			return 2
-		} else if len(axis) > 6 && axis[6] < -1 {
+		} else if len(axis) > 6 && axis[6] == -32767 {
 			return 1
 		}
 	}
