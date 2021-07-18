@@ -100,7 +100,7 @@ func GetJoystickDirection(axis []int) int {
 
 	} else {
 
-		if len(axis) >= 1 && axis[0] > 0 {
+		if len(axis) >= 1 && axis[0] == 32768 {
 			return 4
 		} else if len(axis) >= 1 && axis[0] == -32767 {
 			return 3
