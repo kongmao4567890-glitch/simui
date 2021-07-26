@@ -146,7 +146,7 @@ function _createRomListList(romobj,cls){
 //rom分页
 function scrollLoadRom(evtPos){
 
-    var scrollPos = evtPos.toInteger() + $(#center).box(#height);
+    var scrollPos = evtPos.toInteger() + $(#center_content).box(#height);
     var boxHeight = $(#romwrapper).box(#height);
 
     if(SCROLL_POS == 0){

@@ -62,7 +62,7 @@ view.root.on("ready", function(){
 
    //回到顶端
     self.on("click", "#istop", function(evt) {
-        $(#center).scrollTo(0,0, false);
+        $(#center_content).scrollTo(0,0, false);
     });
     
     //打开快捷工具
@@ -218,7 +218,7 @@ view.root.on("ready", function(){
     });
 
     //rom分页
-    $(#center).onScroll = function(evt) {
+    $(#center_content).onScroll = function(evt) {
         scrollLoadRom(evt.scrollPos);
     };
 

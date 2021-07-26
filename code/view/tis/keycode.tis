@@ -2,7 +2,7 @@
 
 
     //禁用系统默认滚动
-    self.on("keydown", "#center", function(evt) {
+    self.on("keydown", "#center_content", function(evt) {
          return true;
     });
 
@@ -182,7 +182,7 @@ function scrollUp(listType){
         return;
     }
 
-    var centerScroll = $(#center).scroll(#top); //滚动条高度
+    var centerScroll = $(#center_content).scroll(#top); //滚动条高度
     var(x,liY,w,liH) = $(#romlist li:current).box(#rectw,#margin,#parent);
     var titlebarHeight = $(#titlebar).box(#height); //标题栏高度
     var scro = 0;
@@ -192,7 +192,7 @@ function scrollUp(listType){
         }else{
                 scro = liY + liH;
         }
-        $(#center).scrollTo(0,scro, false); // increment scroll position by 100px, no animation
+        $(#center_content).scrollTo(0,scro, false); // increment scroll position by 100px, no animation
     }
 }
 
@@ -201,8 +201,8 @@ function scrollDown(listType){
     if ($(#romlist li:current) == undefined){
         return;
     }
-    var centerScroll = $(#center).scroll(#top); //滚动条高度
-    var centerHeight = $(#center).box(#height) + centerScroll; //滚动层高度 + 滚动条高度
+    var centerScroll = $(#center_content).scroll(#top); //滚动条高度
+    var centerHeight = $(#center_content).box(#height) + centerScroll; //滚动层高度 + 滚动条高度
     var(x,liY,w,liH) = $(#romlist li:current).box(#rectw,#margin,#parent);
     var titlebarHeight = $(#titlebar).box(#height); //标题栏高度
     var scrHeight = 0;
@@ -215,7 +215,7 @@ function scrollDown(listType){
 
     if (scrHeight > centerHeight){
         var scro = centerScroll + liH;
-        $(#center).scrollTo(0,scro, false);
+        $(#center_content).scrollTo(0,scro, false);
     }
 
 }
