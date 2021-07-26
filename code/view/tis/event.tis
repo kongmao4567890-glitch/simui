@@ -195,6 +195,12 @@ view.root.on("ready", function(){
     self.on("click", "#add_menu", function(evt) {
         addMenu(this);
     });
+
+    //显示隐藏的游戏
+    self.on("click", "#romlist_hide", function(evt) {
+        changeHideMenu(this);
+    });
+    
     
 
    /**

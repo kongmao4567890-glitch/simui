@@ -39,7 +39,6 @@ function createMenuList(menujson){
     dd += "<dt>"+ CONF.Lang.Cate +"</dt>";
     dd += "<dd opt='' class='menuitem fixed'>"+ CONF.Lang.AllGames +"</dd>";
     dd += "<dd opt='favorite' class='menuitem fixed'>"+ CONF.Lang.Favorite +"</dd>";
-    dd += "<dd opt='hide' class='menuitem fixed'>"+ CONF.Lang.HideGame +"</dd>";
 
     //遍历数据，生成dom
     for(var obj in menuobj) {
@@ -107,6 +106,27 @@ function changeMenu(obj){
 
     //更新配置文件
     view.UpdateConfig("menu",ACTIVE_MENU);
+}
+
+//目录单击
+function changeHideMenu(obj){
+
+    //设置全局变量
+    ACTIVE_MENU = "hide";
+
+    //重置滚动翻页数据
+    resetScroll();
+
+    ROMJSON = view.GetGameList(0,ACTIVE_PLATFORM,ACTIVE_MENU,"","",SCROLL_PAGE,"","","","","","");
+    createRomList(1);
+    
+    //统计游戏数量
+    var romCount = view.GetGameCount(0,ACTIVE_PLATFORM,ACTIVE_MENU,"",filter_type,"","","","",""); //必须在获取rom的方法下面
+    $(#rom_count_num).html = romCount; //初始化在线人数
+
+    //激活第一个字母索引
+    $(#num_search li).state.current = true;
+
 }
 
 //rom搜索功能

@@ -26,9 +26,7 @@ solid-with-shadow
     #center_content{position:absolute;z-index:3;size:*}
     #right{background-color:color(sidebar-background-color);height:*;overflow:scroll-indicator;padding:0 9dip;width:205dip;position:relative;min-width:217dip;max-width:700dip}
     
-    /* 菜单
-    
-     */
+    /* 菜单 */
     menu{display:none;border:1dip solid color(context-border-color);padding:0}
     menu li{padding:9dip 16dip 9dip 9dip;text-align:center;color:color(context-text-color);line-height:17dip;height:17dip;list-style:none;}
     menu li:nth-child(odd){ background:color(context-odd-background-color)}
@@ -207,7 +205,7 @@ solid-with-shadow
     .flow_wrapper_left{height:auto;flow:none;}
     .flow_wrapper_right{height:*;}
     .margin_wrapper{height:*;}
-    #add_menu{position:absolute;top:18dip;right:8dip}
+    .menulist_menu{position:absolute;top:18dip;right:8dip}
     
     /* 基础信息表格 */
     #right_rombase{width:*;display:block;clear:both;height:auto;padding:0;margin:0;background:color(right-doc-background-color);}
@@ -447,7 +445,14 @@ solid-with-shadow
     <splitter id="platform_splitter" />
     <section id="left_menu">
         <dl id="menulist"></dl>
-        <button id="add_menu" class="funbtn" title="{{AddMenu}}"><i>+</i></button>
+       
+        <button type="menu" class="menulist_menu funbtn" title="{{Config}}"><i.setting></i>
+            <menu>
+                <li id="add_menu">{{AddMenu}}</li>
+                <li id="romlist_hide">{{HideGame}}</li>
+            </menu>
+        
+        </button>
     </section>
     <splitter id="menu_splitter" />
     <section id="center" class="scrollbar">
