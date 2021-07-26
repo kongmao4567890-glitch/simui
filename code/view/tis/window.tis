@@ -49,6 +49,11 @@ function Init(){
 
     $(body).state.focus = true;
 
+    //如果没有平台，则自动打开平台设置窗口
+    if(CONF.PlatformList.length == 0){
+         openPlatformConfig();
+    }
+
 }
 
 //初始化配置

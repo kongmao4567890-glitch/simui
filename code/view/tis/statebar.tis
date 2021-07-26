@@ -329,7 +329,7 @@ function openAbout(){
 }
 
 //弹出平台配置窗口
-function openPlatformConfig(evt){
+function openPlatformConfig(){
     view.dialog({
         url:self.url(ROOTPATH + "platform_config.html"),
         width:980,
