@@ -313,6 +313,11 @@ solid-with-shadow
     #third_files li:hover{opacity:0.8}
     #third_files li:active{opacity:0.4}
 
+    /* 大缩略图 */
+    #big_thumb_wrapper{position:absolute;top:0;left:0;size:*;z-index:10;display:block;display:none}
+    #big_thumb_bg{z-index:5;size:*;background-color:rgba(0, 0, 0, 0.55);position:absolute;backdrop-filter:blur(5dip);}
+    #big_thumb_content{z-index:6;position:absolute;size:*;vertical-align:middle;text-align:center;margin:auto;}
+    #big_thumb_content img{vertical-align:middle;margin:auto;display:block}
 
     /* 宽模式 */
     .widthMode{height:*}
@@ -346,14 +351,20 @@ solid-with-shadow
     .widthMode .related > li:hover{opacity:0.7}
     .widthMode .related > li img{width:48dip;height:48dip;border-radius:48dip;margin:0 auto}
     .widthMode .related > li > p{margin-bottom:0;display:block;font-size:10dip}
+
 </style>
 
 </head>
 <body>
 
-<div id="search_box">
-<input type="text" id="search_box_input" value="" novalue="请输入搜索关键字" />
+<!-- 大图 -->
+<div id="big_thumb_wrapper">
+    <div id="big_thumb_bg"></div>
+    <div id="big_thumb_content"><img id="big_thumb" src="" /></div>
 </div>
+<!-- 搜索框 -->
+<div id="search_box"><input type="text" id="search_box_input" value="" novalue="请输入搜索关键字" /></div>
+
 <div id="console" style="display:none;box-shadow:0 0 9dip #fff;position:absolute;top:30%;left:50%;width:500dip;margin:-52dip 0 0 -250dip;height:auto;background:#FFF;text-align:center;padding:24dip 0"></div>
 <div id="loading"><img src="images/loading.gif" /><p><span id="loading_platform"></span><span id="loading_text">{{Loading}}</span></p></div>
 <menu.context id="romcontext"></menu>
@@ -540,5 +551,6 @@ solid-with-shadow
     include ROOTPATH + "tis/menucontext.tis";
     include ROOTPATH + "tis/keycode.tis";
     include ROOTPATH + "tis/event.tis";
+
 </script>
 </html>

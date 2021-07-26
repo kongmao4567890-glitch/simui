@@ -338,7 +338,6 @@ function _createRotate(info){
     if(poster != ""){ pics += "<img src=\""+ poster +"\" />"; }
     if(packing != ""){ pics += "<img src=\""+ packing +"\" />"; }
     if(cassette != ""){ pics += "<img src=\""+ cassette +"\" />"; }
-    if(icon != ""){ pics += "<img src=\""+ icon +"\" />"; }
     if(gif != ""){ pics += "<img src=\""+ gif +"\" />"; }
     //if(background != ""){ pics += "<img src=\""+ background +"\" />"; }
     if(wallpaper != ""){ pics += "<img src=\""+ wallpaper +"\" />";}
@@ -354,8 +353,7 @@ function _createRotate(info){
     $(#stack).html = pics;
     $(#stack).refresh();
     $(#stack).update();
-    rotateAttached();
-
+    rotateAttached($(#stack));
 
     //重新计算下尺寸，防止标题图过宽
     var stackList = $$(#stack img);
@@ -567,9 +565,9 @@ function SetRomCmd(evt){
 
 //侧边栏缩略图滑动特效
 function thumbSlider(evt){
-    var container = $(div#stack);
+    var container = $(#stack);
     var next = container.shown.next || container.first;
-    rotateTo(next,false);
+    rotateTo($(#stack),next,false);
 }
 
 

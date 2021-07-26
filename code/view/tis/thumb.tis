@@ -110,3 +110,20 @@ function DeleteThumb(evt){
     self.select(".file-drop-zone[opt="+ type +"]").html = "<div class='file-drop-zone-empty'>" + CONF.Lang.DropPicToHere + "</div>";
 
 }
+
+/*打开缩略图大图显示*/
+function openSlider(evt){
+    $(#big_thumb_wrapper).style["display"] = "block";
+    var big_thumb = $(#big_thumb);
+    big_thumb.attributes["src"] = evt.attributes["src"];
+    big_thumb.style["width"] = "auto";
+    big_thumb.style["height"] = "auto";
+    big_thumb.update();
+    var width = big_thumb.box(#width);
+    var height = big_thumb.box(#height);
+    if(height > 600){
+        big_thumb.style["height"] = "600dip";
+    }else if(width > 800){
+        big_thumb.style["width"] = "800dip";
+    }
+}
