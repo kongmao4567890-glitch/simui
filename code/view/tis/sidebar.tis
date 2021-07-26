@@ -77,9 +77,7 @@ function openSidebar(obj){
     
     $(#right_rename).attributes["rid"] = info.Id; //重命名功能
     $(#right_base_info).attributes["rid"] = info.Id; //编辑资料
-    $(#right_edit_doc).attributes["rid"] = info.Id; //编辑文档
     $(#right_edit_strategy).attributes["rid"] = info.Id; //编辑攻略
-    $(#right_edit_files).attributes["rid"] = info.Id; //编辑攻略文件
     $(#right_move).attributes["rid"] = info.Id; //移动rom
 
 

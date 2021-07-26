@@ -34,8 +34,10 @@ solid-with-shadow
     menu hr{display:block;background:none;border:0;border-top:1px solid color(context-hr-dark-color);border-bottom:1px solid color(context-hr-light-color);padding:0;margin:0}
 
     /* 标题栏 */
-    #titlebar{height:36dip;line-height:36dip;width:100%;position:relative;flow:horizontal-flow;background:color(platform-background-color);}
-    #logo{color:color(logo-text-color);width:202dip;line-height:36dip;display:inline-block;text-align:center;font-size:14dip;background-color:color(titlebar-background-color);}
+    frameset{position:relative}
+    .title_wrapper{width:*}
+    #titlebar{display:block;height:36dip;line-height:36dip;flow:horizontal-flow;background:color(platform-background-color);}
+    #logo{color:color(logo-text-color);width:202dip;height:36dip;line-height:36dip;display:inline-block;text-align:center;font-size:14dip;background-color:color(titlebar-background-color);}
     #logo img{max-width:202dip;max-height:36dip;width:auto;height:auto;}
     #tb_left{text-align:left;width:*;display:inline-block;height:36dip;overflow:hidden;}
     #tb_right{text-align:right;width:223dip;display:inline;background-color:color(titlebar-background-color);}
@@ -265,7 +267,7 @@ solid-with-shadow
     #ping{width:1;height:1;position: absolute;top:0;left:0;}
 
     /* 侧边栏tab选项卡 */
-    .sidetabs{prototype:Tabs;size:*;display:block;flow:vertical}
+    .sidetabs{prototype:Tabs;size:*;display:block;flow:vertical;}
     .sidetabs>strip{display:block;flow:horizontal;font-size:17dip;padding-top:5dip}
     .sidetabs>strip>label{display:block;height:*;width:*;background:none;text-align:center;color:color(tab-text-color);background:color(tab-background-color);margin:0 1px;padding:3dip 0 }
     .sidetabs>strip>label.disable{color:color(tab-text-disable-color)}
@@ -417,6 +419,22 @@ solid-with-shadow
         </button><button role="window-minimize"><i.minimize.minsize></i></button><button role="window-maximize"><i.maximize.minsize></i></button><button role="window-close"><i.close.minsize></i></button>
     </div>
 </div>
+<!-- 状态栏 -->
+<div class="statebar">
+    <div class="filter">
+        <select id="filter_type"><option value="">{{BaseType}}</option></select>
+        <select id="filter_year"><option value="">{{BaseYear}}</option></select>
+        <select id="filter_publisher"><option value="">{{BasePublisher}}</option></select>
+        <select id="filter_country"><option value="">{{BaseCountry}}</option></select>
+        <select id="filter_translate"><option value="">{{BaseTranslate}}</option></select>
+        <select id="filter_version"><option value="">{{BaseVersion}}</option></select>
+        <input type="text" id="search_input" novalue="{{Keyword}}" />
+        <button id="filter_clear">{{FilterClear}}</button>
+    </div>
+    <div class="counnum">
+        <span id="rom_count_text">{{GameCount}}：</span><span id="rom_count_num">0</span></div>
+</div>
+
 <frameset cols="62dip,140dip,*,217dip" noresize="noresize">
     <section id="left_platform">
         <ul id="platform_ul"></ul>
@@ -430,20 +448,7 @@ solid-with-shadow
     <section id="center" class="scrollbar">
         <ul id="num_search"><li>ALL</li><li>A</li><li>B</li><li>C</li><li>D</li><li>E</li><li>F</li><li>G</li><li>H</li><li>I</li><li>J</li><li>K</li><li>L</li><li>M</li><li>N</li><li>O</li><li>P</li><li>Q</li><li>R</li><li>S</li><li>T</li><li>U</li><li>V</li><li>W</li><li>X</li><li>Y</li><li>Z</li><li>#</li></ul>
 
-        <div class="statebar">
-            <div class="filter">
-                <select id="filter_type"><option value="">{{BaseType}}</option></select>
-                <select id="filter_year"><option value="">{{BaseYear}}</option></select>
-                <select id="filter_publisher"><option value="">{{BasePublisher}}</option></select>
-                <select id="filter_country"><option value="">{{BaseCountry}}</option></select>
-                <select id="filter_translate"><option value="">{{BaseTranslate}}</option></select>
-                <select id="filter_version"><option value="">{{BaseVersion}}</option></select>
-                <input type="text" id="search_input" novalue="{{Keyword}}" />
-                <button id="filter_clear">{{FilterClear}}</button>
-            </div>
-            <div class="counnum">
-                <span id="rom_count_text">{{GameCount}}：</span><span id="rom_count_num">0</span></div>
-        </div>
+
         <div id="romwrapper">
             <ul id="romlist">
             </ul>
@@ -470,9 +475,7 @@ solid-with-shadow
                 <button id="right_hide" class="funbtn" rid="" rname="" title="{{SetHide}}"></button>
                 <button id="right_rename" class="funbtn" rid="" rname="" title="{{Rename}}"><img src="this://app/images/fileico_rename.png" /></button>
                 <button id="right_base_info" class="funbtn" platform="" name="" value="" rid="" title="{{EditBaseInfo}}"><img src="this://app/images/fileico_baseinfo.png" /></button>
-                <button id="right_edit_doc" class="funbtn" platform="" name="" value="" rid="" title="{{EditDoc}}"><img src="this://app/images/fileico_doc.png" /></button>
-                <button id="right_edit_strategy" class="funbtn" rid="" rname="" title="{{EditStrategy}}"><img src="this://app/images/fileico_strategy.png" /></button>
-                <button id="right_edit_files" class="funbtn" rid="" rname="" title="{{EditFiles}}"><img src="this://app/images/fileico_files.png" /></button>
+                <button id="right_edit_strategy" class="funbtn" rid="" rname="" title="{{EditDocAndStrategy}}"><img src="this://app/images/fileico_strategy.png" /></button>
                 <button id="right_move" class="funbtn" platform="" name="" value="" rid="" title="{{RomMove}}"><img src="this://app/images/fileico_move.png" /></button>
                 <button id="right_open_folder" type="menu" class="funbtn" rid="" rname="" title="{{OpenFolder}}"><img src="this://app/images/fileico_folder.png" /><menu id="foldercontext" type="menu"></menu></button>
                 <button id="right_delete" class="funbtn" platform="" name="" value="" title="{{DeleteRom}}"><img src="this://app/images/fileico_delete.png" /></button>
