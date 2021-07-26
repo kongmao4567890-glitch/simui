@@ -21,9 +21,14 @@ solid-with-shadow
     #left_platform{background-color:color(sidebar-background-color);height:*;}
     #left_menu{background-color:color(sidebar-background-color);height:*;overflow:scroll-indicator;position:relative}
     #center{background-color:color(center-background-color);box-shadow:inset 0 0 4dip color(center-box-shadow-color);height:*;overflow:scroll-indicator;position:relative;}
+    #center_fuzzy{backdrop-filter:blur(3dip);position:absolute;size:*;display:none}
+    #center_mask{position:absolute;z-index:2;size:*;background-repeat:repeat}
+    #center_content{position:absolute;z-index:3;size:*}
     #right{background-color:color(sidebar-background-color);height:*;overflow:scroll-indicator;padding:0 9dip;width:205dip;position:relative;min-width:217dip;max-width:700dip}
     
-    /* 菜单 */
+    /* 菜单
+    
+     */
     menu{display:none;border:1dip solid color(context-border-color);padding:0}
     menu li{padding:9dip 16dip 9dip 9dip;text-align:center;color:color(context-text-color);line-height:17dip;height:17dip;list-style:none;}
     menu li:nth-child(odd){ background:color(context-odd-background-color)}
@@ -280,7 +285,7 @@ solid-with-shadow
     .sidetabs>panels>:expanded{visibility:visible;height:*;background:none;}
     
     #second_thumbs img{display:block;max-width:360px;width:100%;margin:0 auto}
-    #third_strategy{color:color(desc-content-text-color);line-height:1.5em;padding-top:10dip}
+    #third_strategy{color:color(desc-content-text-color);line-height:1.5em;padding-top:10dip;font-size:14dip;}
     #third_strategy p{line-height:2em;}
     #third_strategy img{display:block;max-width:300px;width:100%;margin:0 auto}
     #third_strategy img.ctl{width:16dip;height:16dip;margin:0 1dip;vertical-align:middle;display:inline-block;}
@@ -446,13 +451,12 @@ solid-with-shadow
     </section>
     <splitter id="menu_splitter" />
     <section id="center" class="scrollbar">
+    <div id="center_fuzzy"></div>
+    <div id="center_mask"></div>
+    <div id="center_content">
         <ul id="num_search"><li>ALL</li><li>A</li><li>B</li><li>C</li><li>D</li><li>E</li><li>F</li><li>G</li><li>H</li><li>I</li><li>J</li><li>K</li><li>L</li><li>M</li><li>N</li><li>O</li><li>P</li><li>Q</li><li>R</li><li>S</li><li>T</li><li>U</li><li>V</li><li>W</li><li>X</li><li>Y</li><li>Z</li><li>#</li></ul>
-
-
-        <div id="romwrapper">
-            <ul id="romlist">
-            </ul>
-        </div>
+        <div id="romwrapper"><ul id="romlist"></ul></div>
+    </div>
     </section>
     <splitter id="right_splitter" />
     <section id="right">
@@ -557,3 +561,4 @@ solid-with-shadow
 
 </script>
 </html>
+

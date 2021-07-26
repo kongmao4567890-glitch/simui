@@ -53,10 +53,19 @@ function Init(){
     cursor_url = cursor_url.split("\/").join(CONF.Separator.toString());
     cursor_url = cursor_url.split(CONF.RootPath.toString()).join("");
 
+    var backgroundImage = CONF.Default.BackgroundImage;
+    backgroundImage = backgroundImage.split("\/").join(CONF.Separator.toString());
+    backgroundImage = backgroundImage.split(CONF.RootPath.toString()).join("");
+
+    var backgroundMask = CONF.Default.BackgroundMask;
+    backgroundMask = backgroundMask.split("\/").join(CONF.Separator.toString());
+    backgroundMask = backgroundMask.split(CONF.RootPath.toString()).join("");
 
     //生成界面选项
-    $(#config_background).value = CONF.Default.BackgroundImage;
+    $(#config_background).value = backgroundImage;
     $(#config_background_repeat).value = CONF.Default.BackgroundRepeat;
+    $(#config_background_fuzzy).value = CONF.Default.BackgroundFuzzy;
+    $(#config_background_mask).value = backgroundMask;
     $(#config_cursor).html = cursor_url;
 
     //壁纸
@@ -225,12 +234,30 @@ function setBackgroundImage(obj){
 //更新背景循环方式
 function setBackgroundRepeat(obj){
     if(obj.value == "cover"){
-        mainView.root.$(body).style["background-size"] = obj.value;
-        mainView.root.$(body).style["background-repeat"] = "no-repeat";
+        mainView.root.$(#center).style["background-size"] = obj.value;
+        mainView.root.$(#center).style["background-repeat"] = "no-repeat";
     }else{
-        mainView.root.$(body).style["background-repeat"] = obj.value;
-        mainView.root.$(body).style["background-size"] = "contain";
+        mainView.root.$(#center).style["background-repeat"] = obj.value;
+        mainView.root.$(#center).style["background-size"] = "contain";
     }
+}
+
+//背景模糊度数
+function setBackgroundFuzzy(obj){
+    var center = mainView.root.$(#center);
+    if(obj.value == 1 && center.style["background-image"] != "" && center.style["background-image"] != "url()"){
+        mainView.root.$(#center_fuzzy).style["display"] = "block"; 
+    }else{
+        mainView.root.$(#center_fuzzy).style["display"] = "none"; 
+    }
+}
+
+//背景遮罩图片
+function setBackgroundMask(obj){
+    mainView.root.$(#center_mask).style["background-image"] = [url:URL.fromPath(obj.value)];
+    var saveVal = URL.toPath(obj.value);
+    saveVal = saveVal.split("\/").join(CONF.Separator.toString());
+    saveVal = saveVal.split(CONF.RootPath.toString()).join("");
 }
 
 //提交界面样式
@@ -238,11 +265,15 @@ function interfaceSubmit(obj){
     var cursor = $(#config_cursor).value;
     var background_image = $(#config_background).value;
     var background_repeat = $(#config_background_repeat).value;
+    var background_fuzzy = $(#config_background_fuzzy).value;
+    var background_mask = $(#config_background_mask).value;
     var wallpaper_image = $(#config_wallpaper).value;
 
     mainView.UpdateConfig("cursor",cursor);
     mainView.UpdateConfig("background_image",background_image);
     mainView.UpdateConfig("background_repeat",background_repeat);
+    mainView.UpdateConfig("background_fuzzy",background_fuzzy);
+    mainView.UpdateConfig("background_mask",background_mask);
     mainView.UpdateConfig("wallpaper_image",wallpaper_image);
 
     view.msgbox(#alert,CONF.Lang.UpdateSuccess);

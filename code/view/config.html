@@ -41,7 +41,7 @@
   <tabs class="tabs" id="mytabs">
     <strip>
       <label ww="650dip" wh="310dip" for="first" selected>{{GeneralConfig}}</label>
-      <label ww="540dip" wh="275dip" for="second">{{InterfaceConfig}}</label>
+      <label ww="540dip" wh="305dip" for="second">{{InterfaceConfig}}</label>
       <label ww="540dip" wh="500dip" for="third">{{RombaseEnum}}</label>
       <label ww="570dip" wh="350dip" for="fourth">{{Shortcut}}</label>
     </strip>
@@ -81,6 +81,15 @@
                     <option value="cover">{{BackgroundCover}}</option>
                     <option value="no-repeat">{{BackgroundNoRepeat}}</option>
                 </select>
+                <select id="config_background_fuzzy">
+                    <option value="0">{{NotFuzzy}}</option>
+                    <option value="1">{{Fuzzy}}</option>
+                </select>
+              </td>
+            </tr>
+            <tr>
+              <td><div class="tip" title="{{TipBackgroundMask}}">?</div>{{DefaultBackgroundMask}}：</td>
+              <td colspan="3"><input type="text" id="config_background_mask" value=""> <button class="openfile" for="config_background_mask" caption="{{SelectPicFile}}" filter="picture Files (*.png,*.gif,*.jpg,*.jpeg,*.bmp)|*.png;*.gif;*.jpg;*.jpeg;*.bmp|All Files (*.*)|*.*">...</button>
               </td>
             </tr>
             <tr>
@@ -131,12 +140,9 @@
 
     //平台列表点击
     event click $(#platform_list li) {
-      try{
-        GetPlatformItem(this);
-      }catch(e){
-        alert(e);}
+      GetPlatformItem(this);
     }
-
+    
     //更新通用配置信息
     event click $(#config_submit) {
       configSubmit(this);
@@ -176,6 +182,16 @@
     //背景显示方式
     event change $(#config_background_repeat) {
         setBackgroundRepeat(this);
+    }
+
+    //背景模糊度数
+    event change $(#config_background_fuzzy) {
+        setBackgroundFuzzy(this);
+    }
+
+    //背景遮罩图片
+    event change $(#config_background_mask) {
+        setBackgroundMask(this);
     }
 
     //更换鼠标指针

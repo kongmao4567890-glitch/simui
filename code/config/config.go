@@ -24,8 +24,8 @@ var (
 		".html", ".htm", ".mht", ".mhtml", ".url",
 		".pdf", ".chm", ".doc", ".docx", ".ppt", ".pptx", "xls", "xlsx", ".rtf",
 		".exe", ".com", ".cmd", ".bat", ".lnk",
-	}                                                                                                   //可直接运行的doc文档支持的扩展名
-	Window *window.Window                                                                               //窗体
+	} //可直接运行的doc文档支持的扩展名
+	Window *window.Window //窗体
 )
 
 //配置文件
@@ -238,6 +238,11 @@ func getDefault() (*db.Config, error) {
 		vo.WallpaperImage, _ = filepath.Abs(vo.WallpaperImage)
 	}
 
+	//如果背景遮罩文件存在，则转换为绝对路径
+	if utils.FileExists(vo.BackgroundMask) == true {
+		vo.BackgroundMask, _ = filepath.Abs(vo.BackgroundMask)
+	}
+
 	//如果鼠标指针文件存在，则转换为绝对路径
 	if utils.FileExists(vo.Cursor) == true {
 		vo.Cursor, _ = filepath.Abs(vo.Cursor)
@@ -279,7 +284,7 @@ func getTheme() (map[string]*ThemeStruct, error) {
 	themelist := map[string]*ThemeStruct{}
 	for _, fi := range lists {
 		ext := strings.ToLower(path.Ext(fi.Name())) //获取文件后缀
-		if !fi.IsDir() && ext == ".css" { // 忽略目录
+		if !fi.IsDir() && ext == ".css" {           // 忽略目录
 
 			filename := dirPth + fi.Name()
 			file, err := os.Open(filename) //打开文件

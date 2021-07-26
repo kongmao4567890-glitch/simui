@@ -1,0 +1,2 @@
+ALTER TABLE config ADD COLUMN "background_fuzzy" INTEGER NOT NULL DEFAULT 0;
+ALTER TABLE config ADD COLUMN "background_mask" TEXT NOT NULL DEFAULT '';
