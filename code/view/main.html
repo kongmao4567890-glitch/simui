@@ -81,7 +81,7 @@ solid-with-shadow
 
 
     
-    #platform_ul li button{display:block;width:10dip;height:*;line-height:1em;padding:0;color:#FFF;background:none;vertical-align:middle;margin:0;border-left:1dip solid color(platform-arrow-border-light);}
+    #platform_ul li button{width:10dip;line-height:1em;padding:0;color:#FFF;background:none;vertical-align:middle;border-radius:0;margin:0;border:0;border-left:1dip solid color(platform-arrow-border-light);}
     #platform_ul li button i{height:*;line-height:*;vertical-align:middle;background-size: 120%;}
     
     
@@ -246,7 +246,7 @@ solid-with-shadow
     #rotate:hover{opacity:1}
     .stack{overflow:hidden;flow:stack;width:100%;text-align:center;}
     .stack>img{max-width:360dip;width:100%;margin:0 auto}
-
+    .stack>img:hover{cursor:pointer;opacity:0.8;}
     /* 右侧边栏遮罩 */
     #mask{background:color(sidebar-background-color) no-repeat center center;width:*;height:100%;position:absolute;z-index:5;text-align:center;vertical-align:middle;display:block;background-size:70%;}
     #mask img{width:60%;display:block;opacity: 0.3;}
@@ -282,6 +282,7 @@ solid-with-shadow
     #romcontext .doc{background-image:url(this://app/images/fileico_doc.png);}
     #romcontext .files{background-image:url(this://app/images/fileico_files.png);}
     #romcontext .strategy{background-image:url(this://app/images/fileico_strategy.png);}
+    #romcontext .audio{background-image:url(this://app/images/fileico_audio.png);}
     #romcontext .delete{background-image:url(this://app/images/fileico_delete.png);}
     #romcontext .move{background-image:url(this://app/images/fileico_move.png);}
 
@@ -376,6 +377,14 @@ solid-with-shadow
     .widthMode .related > li:hover{opacity:0.7}
     .widthMode .related > li img{width:48dip;height:48dip;border-radius:48dip;margin:0 auto}
     .widthMode .related > li > p{margin-bottom:0;display:block;font-size:10dip}
+
+    /* 音频 */
+    .audio{padding:0;margin:0}
+    .audio li{display:block;border-bottom:1px solid #333;padding:00;flow:horizontal-flow;}
+    .audio li:last-child{border-bottom:0}
+    .audio li p{width:*;display:block;vertical-align:middle;color:#333;background:url(this://app/images/fileico_audio.png) no-repeat left center;background-size:12dip;padding-left:18dip}
+    .audio li a{width:12dip;display:block;height:12dip;padding:3dip;vertical-align:middle}
+    .audio li a i{size:*}
 
 </style>
 
@@ -505,6 +514,7 @@ solid-with-shadow
                 <button id="right_rename" class="funbtn" rid="" rname="" title="{{Rename}}"><img src="this://app/images/fileico_rename.png" /></button>
                 <button id="right_base_info" class="funbtn" platform="" name="" value="" rid="" title="{{EditBaseInfo}}"><img src="this://app/images/fileico_baseinfo.png" /></button>
                 <button id="right_edit_strategy" class="funbtn" rid="" rname="" title="{{EditDocAndStrategy}}"><img src="this://app/images/fileico_strategy.png" /></button>
+                <button id="right_edit_audio" class="funbtn" rid="" rname="" title="{{EditAudio}}"><img src="this://app/images/fileico_audio.png" /></button>
                 <button id="right_move" class="funbtn" platform="" name="" value="" rid="" title="{{RomMove}}"><img src="this://app/images/fileico_move.png" /></button>
                 <button id="right_open_folder" type="menu" class="funbtn" rid="" rname="" title="{{OpenFolder}}"><img src="this://app/images/fileico_folder.png" /><menu id="foldercontext" type="menu"></menu></button>
                 <button id="right_delete" class="funbtn" platform="" name="" value="" title="{{DeleteRom}}"><img src="this://app/images/fileico_delete.png" /></button>
@@ -532,6 +542,8 @@ solid-with-shadow
                     <div title="{{FileName}}" id="right_rombase_name"></div>
                     <h2 id="doc_title">{{Doc}}</h2>
                     <div id="doc" class="doc"></div>
+                    <h2 id="audio_title">{{Audio}}</h2>
+                    <ul class="audio" id="audio"></ul>
                 </div>
             </div>
 

@@ -204,7 +204,6 @@ func CreateRomData(platform uint32) ([]*db.Rom, error) {
 		}); err != nil {
 		return nil, errors.New(config.Cfg.Lang["RomMenuCanNotBeExists"])
 	}
-
 	return romlist, nil
 }
 
@@ -263,11 +262,21 @@ func UpdateRomDB(platform uint32, romlist []*db.Rom) error {
 		romlistFileMd5 = append(romlistFileMd5, v.FileMd5)
 	}
 
+
 	//数据库中抽出两个md5
 	DbFileMd5, DbInfoMd5, _ := (&db.Rom{}).GetMd5ByPlatform(platform)
 	addFileUniq := utils.SliceDiff(romlistFileMd5, DbFileMd5) //新增的
 	subFileUniq := utils.SliceDiff(DbFileMd5, romlistFileMd5) //删除的
 	addAndSubFileUniq := append(addFileUniq, subFileUniq...)  //增加的和删除的
+
+	fmt.Println("romlist",len(romlist))
+	fmt.Println("DbFileMd5",len(DbFileMd5))
+	fmt.Println("DbInfoMd5",len(DbInfoMd5))
+	fmt.Println("addFileUniq",len(addFileUniq))
+	fmt.Println("subFileUniq",len(subFileUniq))
+	fmt.Println("addAndSubFileUniq",len(addAndSubFileUniq))
+
+
 
 	//整理出要添加的数据体
 	addData := []*db.Rom{}

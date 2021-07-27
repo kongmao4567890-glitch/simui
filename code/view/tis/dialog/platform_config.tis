@@ -65,6 +65,7 @@ function GetPlatformItem(evt){
     $(#platform_wallpaper).value = info.WallpaperPath;
     $(#platform_video).value = info.VideoPath;
     $(#platform_files).value = info.FilesPath;
+    $(#platform_audio).value = info.AudioPath;
     $(#platform_rombase).value = info.Rombase;
 
     //如果没有扩展名，则自动填充大量扩展名
@@ -113,6 +114,7 @@ function GetPlatformItem(evt){
         $(#platform_wallpaper).state.disabled = false;
         $(#platform_video).state.disabled = false;
         $(#platform_files).state.disabled = false;
+        $(#platform_audio).state.disabled = false;
         $(#platform_rombase).state.disabled = false;
         var folders = $$(.openfolder);
         var files = $$(.openfile);
@@ -135,6 +137,7 @@ function GetPlatformItem(evt){
         $(#platform_wallpaper).state.disabled = true;
         $(#platform_video).state.disabled = true;
         $(#platform_files).state.disabled = true;
+        $(#platform_audio).state.disabled = true;
         $(#platform_rombase).state.disabled = true;
         var folders = $$(.openfolder);
         var files = $$(.openfile);
@@ -142,7 +145,6 @@ function GetPlatformItem(evt){
         for(var f in files) {f.state.disabled = true;}
     }
 
- 
 }
 
 
@@ -168,6 +170,7 @@ function platformSubmit(evt){
         strategy   : $(#platform_strategy).value,
         doc        : $(#platform_doc).value,
         files      : $(#platform_files).value,
+        audio      : $(#platform_audio).value,
         rombase    : $(#platform_rombase).value,
     };
     if(data.id == ""){view.msgbox(#alert,CONF.Lang.SelectPlatform);return true;}
@@ -298,6 +301,7 @@ function openPlatformFolder(evt) {
         $(#platform_wallpaper).value = url + SEPARATOR + "wallpaper";
         $(#platform_video).value = url + SEPARATOR + "video";
         $(#platform_files).value = url + SEPARATOR + "files";
+        $(#platform_audio).value = url + SEPARATOR + "audio";
         $(#platform_rombase).value = url + SEPARATOR + rombase.toLowerCase() + ".csv";
 
         $(#platform_doc).state.disabled = false;
@@ -315,6 +319,7 @@ function openPlatformFolder(evt) {
         $(#platform_wallpaper).state.disabled = false;
         $(#platform_video).state.disabled = false;
         $(#platform_files).state.disabled = false;
+        $(#platform_audio).state.disabled = false;
         $(#platform_rombase).state.disabled = false;
         var folders = $$(.openfolder);
         var files = $$(.openfile);

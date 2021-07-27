@@ -25,6 +25,8 @@ var (
 		".pdf", ".chm", ".doc", ".docx", ".ppt", ".pptx", "xls", "xlsx", ".rtf",
 		".exe", ".com", ".cmd", ".bat", ".lnk",
 	} //可直接运行的doc文档支持的扩展名
+	AUDIO_EXTS = []string{".hdmi", ".mp3", ".wav",".wma"} //支持的音频类型
+
 	Window *window.Window //窗体
 )
 
@@ -186,7 +188,10 @@ func getPlatform() ([]*db.Platform, map[uint32]*db.Platform, error) {
 			platformList[k].FilesPath, _ = filepath.Abs(v.FilesPath)
 			platform[v.Id].FilesPath = platformList[k].FilesPath
 		}
-
+		if v.AudioPath != "" {
+			platformList[k].AudioPath, _ = filepath.Abs(v.AudioPath)
+			platform[v.Id].AudioPath = platformList[k].AudioPath
+		}
 		if v.Rombase != "" {
 			platformList[k].Rombase, _ = filepath.Abs(v.Rombase)
 			platform[v.Id].Rombase = platformList[k].Rombase
@@ -435,6 +440,7 @@ func GetResPath(platformId uint32) map[string]string {
 	res["video"] = platform.VideoPath
 	res["doc"] = platform.DocPath
 	res["strategy"] = platform.StrategyPath
+	res["audio"] = platform.AudioPath
 	res["files"] = platform.FilesPath
 	return res
 }
@@ -456,5 +462,6 @@ func GetResExts() map[string][]string {
 	res["doc"] = DOC_EXTS
 	res["strategy"] = DOC_EXTS
 	res["files"] = RUN_EXTS
+	res["audio"] = AUDIO_EXTS
 	return res
 }

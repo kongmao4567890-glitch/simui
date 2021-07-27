@@ -147,6 +147,18 @@ function editStrategy(evt){
     });
 }
 
+//编辑游戏音频
+function editAudio(evt){
+    var data = view.dialog({
+        url:self.url(ROOTPATH + "edit_rom_audio.html"),
+        width:self.toPixels(550dip),
+        height:self.toPixels(610dip),
+        parameters: {
+            id:evt.attributes["rid"],
+        };
+    });
+}
+
 //rom模块右键菜单
 function romContextMenu(obj){
     var romcontext = $(#romcontext);
@@ -192,6 +204,7 @@ function romContextMenu(obj){
     btndata += "<li class='rename' rid='"+ detailObj.Info.Id +"'>"+ CONF.Lang.Rename +"</li>";
     btndata += "<li class='baseinfo' rid='"+ detailObj.Info.Id +"'>"+ CONF.Lang.EditBaseInfo +"</li>";
     btndata += "<li class='strategy' rid='"+ detailObj.Info.Id +"'>"+ CONF.Lang.EditDocAndStrategy +"</li>";
+    btndata += "<li class='audio' rid='"+ detailObj.Info.Id +"'>"+ CONF.Lang.EditAudio +"</li>";
     btndata += "<hr />";
     btndata += "<li class='move' rid='"+ detailObj.Info.Id +"'>"+ CONF.Lang.RomMove +"</li>";
     btndata += "<li class='delete' rid='"+ detailObj.Info.Id +"'>"+ CONF.Lang.Delete +"</li>";

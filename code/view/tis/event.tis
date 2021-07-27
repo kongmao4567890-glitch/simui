@@ -317,6 +317,11 @@ view.root.on("ready", function(){
         editStrategy(this);
     });
 
+    //编辑游戏音频
+    self.on("click", "#right_edit_audio", function(evt) {
+        editAudio(this);
+    });
+
     //打开资料文件
     self.on("click", "#third_files li", function(evt) {
         view.OpenStrategyFiles(this.attributes["path"]);
@@ -373,10 +378,14 @@ view.root.on("ready", function(){
         baseinfo(this);
     });
 
-
     //编辑游戏攻略
     self.on("click", "#romcontext .strategy", function(evt) {
         editStrategy(this);
+    });
+
+    //编辑游戏音频
+    self.on("click", "#romcontext .audio", function(evt) {
+        editAudio(this);
     });
 
     //右键菜单设置喜爱

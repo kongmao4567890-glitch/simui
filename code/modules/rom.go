@@ -16,11 +16,13 @@ var ConstSeparator = "__"     //rom子分隔符
 var ConstMenuRootKey = "_7b9" //根子目录游戏的Menu参数
 
 type RomDetail struct {
-	Info        *db.Rom         //rom信息
-	DocContent  string          //简介内容
-	Sublist     []*db.Rom       //子游戏
-	Simlist     []*db.Simulator //模拟器
-	RomFileSize string          //rom文件大小
+	Info          *db.Rom             //rom信息
+	DocContent    string              //简介内容
+	StrategyFiles []map[string]string //攻略文件列表
+	AudioList     []map[string]string //音频文件列表
+	Sublist       []*db.Rom           //子游戏
+	Simlist       []*db.Simulator     //模拟器
+	RomFileSize   string              //rom文件大小
 }
 
 //运行游戏
@@ -216,6 +218,13 @@ func GetGameDetail(id uint64) (*RomDetail, error) {
 			}
 		}
 	}
+
+	//攻略文件列表
+	res.StrategyFiles, _ = GetStrategyFile(id)
+
+	//音频文件列表
+	res.AudioList, _ = GetAudioList(id)
+
 	return res, nil
 }
 

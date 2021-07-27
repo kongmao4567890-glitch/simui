@@ -92,6 +92,7 @@ function openSidebar(obj){
     $(#right_rename).attributes["rid"] = info.Id; //重命名功能
     $(#right_base_info).attributes["rid"] = info.Id; //编辑资料
     $(#right_edit_strategy).attributes["rid"] = info.Id; //编辑攻略
+    $(#right_edit_audio).attributes["rid"] = info.Id; //编辑音频
     $(#right_move).attributes["rid"] = info.Id; //移动rom
 
 
@@ -217,7 +218,7 @@ function openSidebar(obj){
     _createSecondThumbs(info);
 
     //攻略文件
-    var strategyFiles =JSON.parse(view.GetStrategyFile(info.Id));
+    var strategyFiles = detailObj.StrategyFiles;
     var files = "";
         for(var f in strategyFiles) {
             var fileExt = getFileExt(f.path);
@@ -270,6 +271,15 @@ function openSidebar(obj){
     }else{
         $(#third_strategy).html = "<div class='sidebar_empty'>"+ CONF.Lang.StrategyEmpty +"</div>";
     }
+
+    //音频文件
+    var audioList = detailObj.AudioList;
+    var audio = "";
+        for(var f in audioList) {
+            audio += "<li><p>"+ f.name +"</p><a.funbtn path=\""+ f.path +"\"><i.video_play></i></a></li>";
+        }
+    $(#audio).html = audio;
+
 
 }
 

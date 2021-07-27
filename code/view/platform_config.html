@@ -129,7 +129,7 @@
               <td>
                 <input type="text" id="platform_background" value="" disabled>
                 <button class="openfolder" for="platform_background" caption="{{SelectFolder}}" disabled>...</button></td>
-              <td>{{WallpaperMenu}}：</td>
+              <td><div class="tip" title="{{TipWallpaper}}">?</div>{{WallpaperMenu}}：</td>
               <td>
                 <input type="text" id="platform_wallpaper" value="" disabled>
                 <button class="openfolder" for="platform_wallpaper" caption="{{SelectFolder}}" disabled>...</button></td>
@@ -160,11 +160,18 @@
                 <td>
                   <input type="text" id="platform_files" value="" disabled>
                   <button class="openfolder" for="platform_files" caption="{{SelectFolder}}" disabled>...</button></td>
+                <td>{{AudioMenu}}：</td>
                 <td>
-                  <div class="tip" title="{{RombaseTip}}">?</div>{{Rombase}}：</td>
+                  <input type="text" id="platform_audio" value="" disabled>
+                  <button class="openfolder" for="platform_audio" caption="{{SelectFolder}}" disabled>...</button></td>
+              </tr>
+              <tr>
+                <td><div class="tip" title="{{RombaseTip}}">?</div>{{Rombase}}：</td>
                 <td>
                   <input type="text" id="platform_rombase" value="" disabled>
                   <button class="openfile" for="platform_rombase" caption="{{SelectConfigFile}}" filter="csv Files (*.csv)|*.csv|All Files (*.*)|*.*" disabled>...</button></td>
+                  <td></td>
+                  <td></td>
               </tr>
           </table>
           <div class="form_bottom">

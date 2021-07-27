@@ -34,7 +34,7 @@ view.root.on("ready", function(){
         files += "<li id='files_li_"+ i +"' value='"+ i +"'>";
         files += "<input type='text' id='files_name_"+ i + "' value='"+ s.name +"' />";
         files += "<input type='text' id='files_path_"+ i + "' value='"+ s.path +"' />";
-        files += "<button class='openfile' for='files_path_" + s.Id + "' caption='' 'Files (*.pdf;*.chm;*.exe;*.url;*.html;*.htm;*.mht,*.mhtml,*.doc;*.docx;*.ppt;*.pptx;*.xls;*.xlsx)|*.pdf;*.chm;*.exe;*.url;*.html;*.htm;*.mht;*.mhtml;*.doc;*.docx;*.ppt;*.pptx;*.xls;*.xlsx|All Files (*.*)|*.*'>...</button>";
+        files += "<button class='openfile' for='files_path_" + i + "' caption='' 'Files (*.pdf;*.chm;*.exe;*.url;*.html;*.htm;*.mht,*.mhtml,*.doc;*.docx;*.ppt;*.pptx;*.xls;*.xlsx)|*.pdf;*.chm;*.exe;*.url;*.html;*.htm;*.mht;*.mhtml;*.doc;*.docx;*.ppt;*.pptx;*.xls;*.xlsx|All Files (*.*)|*.*'>...</button>";
         files += "<button class='files_delete' value='"+ i +"'>"+CONF.Lang.Delete+"</button>";
         files += "</li>";
         i++;
@@ -185,8 +185,6 @@ function openFile(evt) {
         url = url.split("\/").join(CONF.Separator.toString());
         url = url.split(CONF.RootPath.toString()).join("");
         out.value = url;
-        out.focus = true;
-        out.focus = false;
     }
 }
 
