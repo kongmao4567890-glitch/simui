@@ -276,7 +276,7 @@ function openSidebar(obj){
     var audioList = detailObj.AudioList;
     var audio = "";
         for(var f in audioList) {
-            audio += "<li><p>"+ f.name +"</p><a.funbtn path=\""+ f.path +"\"><i.video_play></i></a></li>";
+            audio += "<li><p>"+ f.name +"</p><a.funbtn.play_audio path=\""+ f.path +"\"><i.video_play></i></a></li>";
         }
     $(#audio).html = audio;
 

@@ -1,0 +1,7 @@
+﻿//播放单个音频
+function playAudio(url){
+
+    var data = [];
+    data[0] = url;    
+    view.PlayAudio(JSON.stringify(data));
+}

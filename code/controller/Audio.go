@@ -2,6 +2,7 @@ package controller
 
 import (
 	"encoding/json"
+	"fmt"
 	"simUI/code/modules"
 	"simUI/code/utils"
 	"simUI/code/utils/go-sciter"
@@ -51,13 +52,18 @@ func AudioController() {
 		return sciter.NullValue()
 	})
 
-	//打开攻略文件
-	utils.Window.DefineFunction("OpenAudio", func(args ...*sciter.Value) *sciter.Value {
-		p := args[0].String()
-		if err := modules.OpenAudioFile(p); err != nil {
+	//播放音频文件
+	utils.Window.DefineFunction("PlayAudio", func(args ...*sciter.Value) *sciter.Value {
+		urls := []string{}
+		json.Unmarshal([]byte(args[0].String()), &urls)
+
+		fmt.Println("================",urls)
+
+		if err := utils.PlayAudio(urls); err != nil {
 			utils.WriteLog(err.Error())
 			return utils.ErrorMsg(err.Error())
 		}
+
 		return sciter.NullValue()
 	})
 

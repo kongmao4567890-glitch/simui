@@ -25,7 +25,7 @@ var (
 		".pdf", ".chm", ".doc", ".docx", ".ppt", ".pptx", "xls", "xlsx", ".rtf",
 		".exe", ".com", ".cmd", ".bat", ".lnk",
 	} //可直接运行的doc文档支持的扩展名
-	AUDIO_EXTS = []string{".hdmi", ".mp3", ".wav",".wma"} //支持的音频类型
+	AUDIO_EXTS = []string{".mp3",".dmi", ".wav",".wma"} //支持的音频类型
 
 	Window *window.Window //窗体
 )

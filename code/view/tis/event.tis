@@ -327,6 +327,10 @@ view.root.on("ready", function(){
         view.OpenStrategyFiles(this.attributes["path"]);
     });
 
+    //播放音频
+    self.on("click", ".play_audio", function(evt) {
+        playAudio(this.attributes["path"]);
+    });
 
     /**
     * 菜单右键菜单

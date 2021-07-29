@@ -83,24 +83,3 @@ func UpdateAudio(id uint64, data string) error {
 
 	return nil
 }
-
-//播放音频文件
-func OpenAudioFile(p string) error {
-
-	if !utils.IsAbsPath(p) {
-		p = config.Cfg.RootPath + p
-	}
-
-	if !utils.FileExists(p) {
-		return errors.New(p + config.Cfg.Lang["FileNotFound"])
-	}
-
-	cmd := []string{}
-	cmd = append(cmd, p)
-
-	if err := utils.RunGame("", cmd); err != nil {
-		return err
-	}
-
-	return nil
-}

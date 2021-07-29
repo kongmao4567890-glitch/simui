@@ -18,7 +18,7 @@ view.root.on("ready", function(){
         files += "<li id='audio_li_"+ i +"' value='"+ i +"'>";
         files += "<input type='text' id='audio_name_"+ i + "' value='"+ s.name +"' />";
         files += "<input type='text' id='audio_path_"+ i + "' value='"+ s.path +"' />";
-        files += "<button class='openfile' for='audio_path_" + i + "' caption='' 'Files (*.pdf;*.chm;*.exe;*.url;*.html;*.htm;*.mht,*.mhtml,*.doc;*.docx;*.ppt;*.pptx;*.xls;*.xlsx)|*.pdf;*.chm;*.exe;*.url;*.html;*.htm;*.mht;*.mhtml;*.doc;*.docx;*.ppt;*.pptx;*.xls;*.xlsx|All Files (*.*)|*.*'>...</button>";
+        files += "<button class='openfile' for='audio_path_" + i + "' caption='' 'Files (*.mp3,*.dmi,*.wma,*.wav)|*.mp3;*.dmi;*.wma;*.wav|All Files (*.*)|*.*'>...</button>";
         files += "<button class='audio_delete' value='"+ i +"'>"+CONF.Lang.Delete+"</button>";
         files += "</li>";
         i++;
@@ -38,7 +38,7 @@ function addAudio(){
     audio += "<li id='audio_li_"+ insertId +"' value='"+ insertId +"'>";
     audio += "<input type='text' novalue='"+ CONF.Lang.FileName +"' id='audio_name_"+ insertId + "' value='' />";
     audio += "<input type='text' novalue='"+ CONF.Lang.FilePath +"' id='audio_path_"+ insertId + "' value='' />";
-    audio += "<button class='openfile' for='audio_path_" + insertId + "' caption='"+ CONF.Lang.SelectFile +"' filter='Files (*.pdf;*.chm;*.exe;*.url;*.html;*.htm;*.mht,*.mhtml,*.doc;*.docx;*.ppt;*.pptx;*.xls;*.xlsx)|*.pdf;*.chm;*.exe;*.url;*.html;*.htm;*.mht;*.mhtml;*.doc;*.docx;*.ppt;*.pptx;*.xls;*.xlsx|All Files (*.*)|*.*'>...</button>";
+    audio += "<button class='openfile' for='audio_path_" + insertId + "' caption='"+ CONF.Lang.SelectFile +"' filter='Files (*.mp3,*.dmi,*.wma,*.wav)|*.mp3;*.dmi;*.wma;*.wav|All Files (*.*)|*.*'>...</button>";
     audio += "<button class='audio_delete' value='"+ insertId +"'>"+CONF.Lang.Delete+"</button>";
     audio += "</li>";
     $(#audio_list).append(audio);
