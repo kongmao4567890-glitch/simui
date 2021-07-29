@@ -45,7 +45,8 @@ func CreateRomCache(getPlatform uint32) error {
 		//第一步：创建rom缓存
 		romlist, err := CreateRomData(platform)
 		if err != nil {
-			return err
+			utils.WriteLog(err.Error())
+			continue
 		}
 
 		//第二步：更新rom数据
@@ -88,7 +89,8 @@ func CreateRomData(platform uint32) ([]*db.Rom, error) {
 
 	romlist := []*db.Rom{}
 
-	RomPath := config.Cfg.Platform[platform].RomPath                    //rom文件路径
+	RomPath := config.Cfg.Platform[platform].RomPath //rom文件路径
+
 	RomExt := strings.Split(config.Cfg.Platform[platform].RomExts, ",") //rom扩展名
 	BaseInfo, err := GetRomBaseList(platform)
 
@@ -262,39 +264,28 @@ func UpdateRomDB(platform uint32, romlist []*db.Rom) error {
 		romlistFileMd5 = append(romlistFileMd5, v.FileMd5)
 	}
 
-
 	//数据库中抽出两个md5
 	DbFileMd5, DbInfoMd5, _ := (&db.Rom{}).GetMd5ByPlatform(platform)
 	addFileUniq := utils.SliceDiff(romlistFileMd5, DbFileMd5) //新增的
 	subFileUniq := utils.SliceDiff(DbFileMd5, romlistFileMd5) //删除的
-	addAndSubFileUniq := append(addFileUniq, subFileUniq...)  //增加的和删除的
-
-	fmt.Println("romlist",len(romlist))
-	fmt.Println("DbFileMd5",len(DbFileMd5))
-	fmt.Println("DbInfoMd5",len(DbInfoMd5))
-	fmt.Println("addFileUniq",len(addFileUniq))
-	fmt.Println("subFileUniq",len(subFileUniq))
-	fmt.Println("addAndSubFileUniq",len(addAndSubFileUniq))
-
-
 
 	//整理出要添加的数据体
 	addData := []*db.Rom{}
 	updateData := []*db.Rom{}
-	if len(addAndSubFileUniq) > 0 {
-		for _, v := range romlist {
-			if utils.InSliceString(v.FileMd5, addFileUniq) {
-				addData = append(addData, v) //添加的数据
-			}
-			if !utils.InSliceString(v.FileMd5, addAndSubFileUniq) {
-				updateData = append(updateData, v) //更新的数据
-			}
+
+	for _, v := range romlist {
+		if utils.InSliceString(v.FileMd5, addFileUniq) {
+			addData = append(addData, v) //添加的数据
+		} else if !utils.InSliceString(v.InfoMd5, DbInfoMd5) {
+			updateData = append(updateData, v) //更新的数据
 		}
 	}
 
 	//在已有数据中查找info_md5不一致的数据，就是修改的数据
+
 	updateIssetData := []*db.Rom{}
 	for _, v := range updateData {
+
 		if !utils.InSliceString(v.InfoMd5, DbInfoMd5) {
 			updateIssetData = append(updateIssetData, v) //添加的数据
 		}

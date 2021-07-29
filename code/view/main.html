@@ -71,29 +71,13 @@ solid-with-shadow
 
     /* 平台按钮 */
     #platform_ul{overflow:scroll-indicator;height:*;margin:0;padding:0;background:color(platform-background-color);}
-    #platform_ul li{flow:horizontal-flow;display:block;text-align:center;vertical-align: middle;min-height:40dip;color:color(platform-text-color);background:none;border-top:1dip solid color(platform-arrow-border-light);border-bottom:1dip solid color(platform-arrow-border-dark);}
-    #platform_ul li .leftdiv{size:*;margin:0;padding:5dip;border-right:1dip solid color(platform-arrow-border-dark);vertical-align:middle;}
-    #platform_ul li img{size:28dip;margin:3dip auto 5dip auto;}
-    #platform_ul li p{margin:0;line-height:1.4em;display:block;font-size:12dip;white-space:pre-wrap;word-wrap:break-word;word-break:break-all;}
+    #platform_ul >li{flow:horizontal-flow;display:block;text-align:center;vertical-align: middle;min-height:40dip;color:color(platform-text-color);background:none;border-top:1dip solid color(platform-arrow-border-light);border-bottom:1dip solid color(platform-arrow-border-dark);}
+    #platform_ul >li .leftdiv{size:*;margin:0;padding:5dip;border-right:1dip solid color(platform-arrow-border-dark);vertical-align:middle;}
+    #platform_ul >li img{size:28dip;margin:3dip auto 5dip auto;}
+    #platform_ul >li p{margin:0;line-height:1.4em;display:block;font-size:12dip;white-space:pre-wrap;word-wrap:break-word;word-break:break-all;}
     
-    
-
-
-
-    
-    #platform_ul li button{width:10dip;line-height:1em;padding:0;color:#FFF;background:none;vertical-align:middle;border-radius:0;margin:0;border:0;border-left:1dip solid color(platform-arrow-border-light);}
-    #platform_ul li button i{height:*;line-height:*;vertical-align:middle;background-size: 120%;}
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+    #platform_ul >li button{width:10dip;line-height:1em;padding:0;color:#FFF;background:none;vertical-align:middle;border-radius:0;margin:0;border:0;border-left:1dip solid color(platform-arrow-border-light);}
+    #platform_ul >li button i{height:*;line-height:*;vertical-align:middle;background-size: 120%;}
     
     #platform_ul li:hover{opacity:0.7;}
     #platform_ul li:current{background-color:color(platform-active-background-color);opacity:1;border-right:color(platform-active-background-color);border-left:color(platform-active-background-color)}
@@ -380,9 +364,9 @@ solid-with-shadow
 
     /* 音频 */
     .audio{padding:0;margin:0}
-    .audio li{display:block;border-bottom:1px solid #333;padding:00;flow:horizontal-flow;}
+    .audio li{display:block;border-bottom:1px solid #666;padding:00;flow:horizontal-flow;}
     .audio li:last-child{border-bottom:0}
-    .audio li p{width:*;display:block;vertical-align:middle;color:#333;background:url(this://app/images/fileico_audio.png) no-repeat left center;background-size:12dip;padding-left:18dip}
+    .audio li p{width:*;display:block;vertical-align:middle;color:#999;background:url(this://app/images/fileico_audio.png) no-repeat left center;background-size:12dip;padding-left:18dip}
     .audio li a{width:12dip;display:block;height:12dip;padding:3dip;vertical-align:middle}
     .audio li a i{size:*}
 

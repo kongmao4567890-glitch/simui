@@ -542,7 +542,7 @@ func MoveRom(id uint64, newPlatform uint32, newFolder string) error {
 
 	//移动攻略文件
 	if config.Cfg.Platform[newPlatform].FilesPath == "" {
-		return errors.New(config.Cfg.Lang["TipMoveFiles"])
+		return nil
 	}
 	files, _ := utils.ScanDirByKeyword(config.Cfg.Platform[rom.Platform].FilesPath, romName+"__")
 	filesPath := config.Cfg.Platform[newPlatform].FilesPath

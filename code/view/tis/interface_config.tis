@@ -38,7 +38,9 @@ function setThumbType(obj){
 
     $(#config_thumb).select("li[opt="+ obj.attributes["opt"] +"]").attributes.addClass("active");
     view.UpdateConfig("thumb",obj.attributes["opt"]);
-    alert(CONF.Lang.ConfigThumbType);
+    initConfig("1");
+    createRomList(1);
+
 }
 
 //是否显示rom的标题背景
@@ -59,7 +61,6 @@ function setFontBackgrond(obj){
     if(obj.attributes["opt"] == 0){
         romlist.attributes.addClass("textShadow");
     }
-
 
     $(#config_font_background).select("li[opt="+ obj.attributes["opt"] +"]").attributes.addClass("active");
 
