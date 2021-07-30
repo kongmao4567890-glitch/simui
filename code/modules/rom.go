@@ -579,6 +579,8 @@ func SetRomBase(d map[string]string) (*db.Rom, error) {
 	}
 
 	//更新到数据库
+	fileMd5 := GetRomMd5(utils.ToString(rom.Platform), rom.RomPath)
+	infoMd5 := GetRomMd5(rom.Name, rom.RomPath, d["type"], d["year"], d["publisher"], d["country"], d["translate"], d["version"])
 	dbRom := &db.Rom{
 		Name:          name,
 		BaseType:      d["type"],
@@ -587,6 +589,8 @@ func SetRomBase(d map[string]string) (*db.Rom, error) {
 		BaseCountry:   d["country"],
 		BaseTranslate: d["translate"],
 		BaseVersion:   d["version"],
+		InfoMd5:       infoMd5,
+		FileMd5:       fileMd5,
 	}
 	if err := dbRom.UpdateRomBase(uint64(utils.ToInt(d["id"]))); err != nil {
 		return nil, err

@@ -127,7 +127,6 @@ func CreateRomData(platform uint32) ([]*db.Rom, error) {
 				//先读取基础数据，如果没有基础数据，则读取别名
 				baseName := ""
 				base := &RomBase{}
-				aliasName := ""
 				if _, ok := BaseInfo[title]; ok {
 					base = BaseInfo[title]
 					if BaseInfo[title].Name != "" {
@@ -137,12 +136,10 @@ func CreateRomData(platform uint32) ([]*db.Rom, error) {
 
 				if baseName != "" {
 					title = baseName
-				} else if aliasName != "" {
-					title = aliasName
 				}
 
 				fileMd5 := GetRomMd5(utils.ToString(platform), p)
-				infoMd5 := GetRomMd5(title, p, base.Type, base.Year, base.Publisher, base.Country, base.Translate)
+				infoMd5 := GetRomMd5(title, p, base.Type, base.Year, base.Publisher, base.Country, base.Translate,base.Version)
 				//如果游戏名称存在分隔符，说明是子游戏
 				menu := ConstMenuRootKey //无目录，读取默认参数
 				//定义目录，如果有子目录，则记录子目录名称
@@ -305,7 +302,7 @@ func UpdateRomDB(platform uint32, romlist []*db.Rom) error {
 
 	//删除重复数据
 	(&db.Rom{}).DeleteRepeat(platform)
-
+	
 	return nil
 }
 

@@ -524,7 +524,7 @@ func (m *Rom) DeleteByMd5(platform uint32, uniqs []string) error {
 
 //删除重复rom
 func (m *Rom) DeleteRepeat(platform uint32) {
-	sql := "DELETE FROM rom WHERE platform = "+ utils.ToString(platform) +" AND id NOT IN (SELECT max(id) FROM rom WHERE platform = "+ utils.ToString(platform) +" GROUP BY info_md5)"
+	sql := "DELETE FROM rom WHERE platform = " + utils.ToString(platform) + " AND id NOT IN (SELECT max(id) FROM rom WHERE platform = " + utils.ToString(platform) + " GROUP BY info_md5)"
 	tx := getDb().Begin()
 	tx.Exec(sql)
 	tx.Commit()
@@ -606,6 +606,8 @@ func (m *Rom) UpdateRomBase(id uint64) error {
 		"base_version":   m.BaseVersion,
 		"name":           m.Name,
 		"pinyin":         utils.TextToPinyin(m.Name),
+		"info_md5":       m.InfoMd5,
+		"file_md5":       m.FileMd5,
 	}
 
 	result := getDb().Table(m.TableName()).Where("id=?", id).Updates(create)
