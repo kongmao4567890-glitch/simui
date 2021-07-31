@@ -511,7 +511,6 @@ func MoveRom(id uint64, newPlatform uint32, newFolder string) error {
 
 	//移动主rom文件
 	if err := utils.FileMove(oldFile, newFile); err != nil {
-		return err
 	}
 
 	//移动子rom

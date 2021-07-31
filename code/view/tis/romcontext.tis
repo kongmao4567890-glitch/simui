@@ -249,6 +249,9 @@ function deleteRom(obj){
         deleteRes = 1;
     }
 
+    //结束掉侧边栏视频
+    closeRightVideo();
+
     view.DeleteRom(id,deleteRes); //删除实体文件
     alert(CONF.Lang.DeleteSuccess); //删除成功
 
