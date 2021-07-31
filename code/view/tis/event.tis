@@ -279,9 +279,14 @@ view.root.on("ready", function(){
 
     //缩略图点击显示大图
     self.on("click", "#stack img", function(evt) {
-       openSlider(this);
+       openBigSlider(this);
     });
     
+    //图集点击显示大图
+    self.on("click", "#second_thumbs img", function(evt) {
+       openBigSlider(this);
+    });
+
     //缩略图点击隐藏大图
     self.on("click", "#big_thumb_content", function(evt) {
         $(#big_thumb_wrapper).style["display"] = "none";
@@ -340,7 +345,7 @@ view.root.on("ready", function(){
             alert(e);
         }
     });
-
+    
 
 
     

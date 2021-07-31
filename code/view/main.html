@@ -231,6 +231,7 @@ solid-with-shadow
     .stack{overflow:hidden;flow:stack;width:100%;text-align:center;}
     .stack>img{max-width:360dip;width:100%;margin:0 auto}
     .stack>img:hover{cursor:pointer;opacity:0.8;}
+
     /* 右侧边栏遮罩 */
     #mask{background:color(sidebar-background-color) no-repeat center center;width:*;height:100%;position:absolute;z-index:5;text-align:center;vertical-align:middle;display:block;background-size:70%;}
     #mask img{width:60%;display:block;opacity: 0.3;}
@@ -288,6 +289,7 @@ solid-with-shadow
     .sidetabs>panels>:expanded{visibility:visible;height:*;background:none;}
     
     #second_thumbs img{display:block;max-width:360px;width:100%;margin:0 auto}
+    #second_thumbs img:hover{opacity:0.8;}
     #third_strategy{color:color(desc-content-text-color);line-height:1.5em;padding-top:10dip;font-size:14dip;}
     #third_strategy p{line-height:2em;}
     #third_strategy img{display:block;max-width:300px;width:100%;margin:0 auto}
@@ -364,14 +366,15 @@ solid-with-shadow
 
     /* 音频 */
     .audio{padding:0;margin:0}
-    .audio li{display:block;border-bottom:1px solid #666;padding:00;flow:horizontal-flow;}
+    .audio li{display:block;border-bottom:1px solid color(right-audio-border-color);padding:0;flow:horizontal-flow;}
     .audio li:last-child{border-bottom:0}
-    .audio li p{width:*;display:block;vertical-align:middle;color:#999;background:url(this://app/images/fileico_audio.png) no-repeat left center;background-size:12dip;padding-left:18dip}
-    .audio li a{width:12dip;display:block;height:12dip;padding:3dip;vertical-align:middle}
+    .audio li p{width:*;display:block;vertical-align:middle;color:color(right-audio-text-color);background:url(this://app/images/fileico_audio.png) no-repeat left center;background-size:12dip;padding-left:18dip}
+    .audio li a{width:12dip;display:block;height:12dip;padding:3dip;vertical-align:middle;border-radius:3dip}
     .audio li a i{size:*}
     .audio_title_wrapper{flow:horizontal-flow;width:*;}
     .audio_title_wrapper h2{width:*;}
-    .audio_title_wrapper button{margin-top:9dip}
+    .audio_title_wrapper button{margin-top:9dip;size:17dip}
+
 </style>
 
 </head>
@@ -528,7 +531,7 @@ solid-with-shadow
                     <div title="{{FileName}}" id="right_rombase_name"></div>
                     <h2 id="doc_title">{{Doc}}</h2>
                     <div id="doc" class="doc"></div>
-                    <div class="audio_title_wrapper">
+                    <div class="audio_title_wrapper" id="audio_title_wrapper">
                         <h2 id="audio_title">{{Audio}}</h2>
                         <button id="play_audio_all" class="funbtn" title="{{AudioPlayAll}}"><i.video_play></i></button>
                     </div>

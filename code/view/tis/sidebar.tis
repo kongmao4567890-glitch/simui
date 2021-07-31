@@ -275,12 +275,17 @@ function openSidebar(obj){
     //音频文件
     var audioList = detailObj.AudioList;
     var audio = "";
-        for(var f in audioList) {
-            audio += "<li><p>"+ f.name +"</p><a.funbtn.play_audio path=\""+ f.path +"\"><i.video_play></i></a></li>";
-        }
+    for(var f in audioList) {
+        audio += "<li><p>"+ f.name +"</p><a.funbtn.play_audio path=\""+ f.path +"\"><i.video_play></i></a></li>";
+    }
     $(#audio).html = audio;
-
-
+    
+    //是否显示音频标题
+    if(audio == ""){
+        $(#audio_title_wrapper).style["display"] = "none";
+    }else{
+        $(#audio_title_wrapper).style["display"] = "block";
+    }
 }
 
 //视频
@@ -357,19 +362,21 @@ function _createRotate(info){
 
     if(title != ""){ pics += "<img src=\""+ title +"\" />"; }
     if(snap != ""){ pics += "<img src=\""+ snap +"\" />"; }
-    if(poster != ""){ pics += "<img src=\""+ poster +"\" />"; }
-    if(packing != ""){ pics += "<img src=\""+ packing +"\" />"; }
-    if(cassette != ""){ pics += "<img src=\""+ cassette +"\" />"; }
-    if(gif != ""){ pics += "<img src=\""+ gif +"\" />"; }
-    //if(background != ""){ pics += "<img src=\""+ background +"\" />"; }
-    if(wallpaper != ""){ pics += "<img src=\""+ wallpaper +"\" />";}
-
+    
     //游戏缩略图
     if(thumb != ""){
         pics += "<img src=\""+ thumb +"\" />";
     }else if(pics == "" && CONF.Theme[CONF.Default.Theme].Params["default-thumb-image"] != undefined){
         pics += "<img src=\""+ URL.fromPath(CONF.RootPath + "theme/" + CONF.Theme[CONF.Default.Theme].Params["default-thumb-image"]) +"\" />";
     }
+
+    if(poster != ""){ pics += "<img src=\""+ poster +"\" />"; }
+    if(packing != ""){ pics += "<img src=\""+ packing +"\" />"; }
+    if(cassette != ""){ pics += "<img src=\""+ cassette +"\" />"; }
+    if(gif != ""){ pics += "<img src=\""+ gif +"\" />"; }
+    if(background != ""){ pics += "<img src=\""+ background +"\" />"; }
+    if(wallpaper != ""){ pics += "<img src=\""+ wallpaper +"\" />";}
+
 
     //滚动图
     $(#stack).html = pics;

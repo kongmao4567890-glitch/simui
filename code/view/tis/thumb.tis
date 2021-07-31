@@ -112,7 +112,7 @@ function DeleteThumb(evt){
 }
 
 /*打开缩略图大图显示*/
-function openSlider(evt){
+function openBigSlider(evt){
     $(#big_thumb_wrapper).style["display"] = "block";
     var big_thumb = $(#big_thumb);
     big_thumb.attributes["src"] = evt.attributes["src"];
