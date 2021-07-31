@@ -369,7 +369,9 @@ solid-with-shadow
     .audio li p{width:*;display:block;vertical-align:middle;color:#999;background:url(this://app/images/fileico_audio.png) no-repeat left center;background-size:12dip;padding-left:18dip}
     .audio li a{width:12dip;display:block;height:12dip;padding:3dip;vertical-align:middle}
     .audio li a i{size:*}
-
+    .audio_title_wrapper{flow:horizontal-flow;width:*;}
+    .audio_title_wrapper h2{width:*;}
+    .audio_title_wrapper button{margin-top:9dip}
 </style>
 
 </head>
@@ -526,7 +528,10 @@ solid-with-shadow
                     <div title="{{FileName}}" id="right_rombase_name"></div>
                     <h2 id="doc_title">{{Doc}}</h2>
                     <div id="doc" class="doc"></div>
-                    <h2 id="audio_title">{{Audio}}</h2>
+                    <div class="audio_title_wrapper">
+                        <h2 id="audio_title">{{Audio}}</h2>
+                        <button id="play_audio_all" class="funbtn" title="{{AudioPlayAll}}"><i.video_play></i></button>
+                    </div>
                     <ul class="audio" id="audio"></ul>
                 </div>
             </div>
