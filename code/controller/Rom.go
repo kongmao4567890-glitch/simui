@@ -110,10 +110,10 @@ func RomController() {
 	//根据id列表读取rom
 	utils.Window.DefineFunction("GetGameListByIds", func(args ...*sciter.Value) *sciter.Value {
 
-		romIdsStr := strings.Split(args[0].String(), ",");
-		ids := []uint64{};
+		romIdsStr := strings.Split(args[0].String(), ",")
+		ids := []uint64{}
 		for _, v := range romIdsStr {
-			ids = append(ids, uint64(utils.ToInt(v)));
+			ids = append(ids, uint64(utils.ToInt(v)))
 		}
 		newlist, _ := (&db.Rom{}).GetByIds(ids)
 
@@ -222,12 +222,12 @@ func RomController() {
 	//设为隐藏
 	utils.Window.DefineFunction("SetHide", func(args ...*sciter.Value) *sciter.Value {
 
-		romIdsStr := strings.Split(args[0].String(), ",");
+		romIdsStr := strings.Split(args[0].String(), ",")
 		ishide := uint8(utils.ToInt(args[1].String()))
 
 		romIds := []uint64{}
-		for _,v := range romIdsStr{
-			romIds = append(romIds,uint64(utils.ToInt(v)))
+		for _, v := range romIdsStr {
+			romIds = append(romIds, uint64(utils.ToInt(v)))
 		}
 		//更新数据
 		if err := (&db.Rom{}).UpdateHideByIds(romIds, ishide); err != nil {
@@ -311,7 +311,7 @@ func RomController() {
 		d := make(map[string]string)
 		_ = json.Unmarshal([]byte(data), &d)
 
-		dbRom,err := modules.SetRomBase(d)
+		dbRom, err := modules.SetRomBase(d)
 		if err != nil {
 			utils.WriteLog(err.Error())
 			return utils.ErrorMsg(err.Error())
@@ -373,9 +373,10 @@ func RomController() {
 	//删除rom
 	utils.Window.DefineFunction("DeleteRom", func(args ...*sciter.Value) *sciter.Value {
 		id := uint64(utils.ToInt(args[0].String()))
+		deleteRes := utils.ToInt(args[1].String())
 
 		//删除文件
-		err := modules.DeleteRomAndRes(id)
+		err := modules.DeleteRomAndRes(id, deleteRes)
 		if err != nil {
 			utils.WriteLog(err.Error())
 		}
@@ -392,7 +393,7 @@ func RomController() {
 		for _, f := range romFiles {
 			_ = utils.FileDelete(f)
 		}
-		
+
 		err = (&db.Rom{}).DeleteById(id)
 		if err != nil {
 			utils.WriteLog(err.Error())

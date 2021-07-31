@@ -224,12 +224,13 @@ function deleteRom(obj){
         content:CONF.Lang.DeleteRomConfirm, 
         caption:CONF.Lang.DeleteRom,
         buttons:[
-            {id:#yes,text:CONF.Lang.Delete},
+            {id:#rom,text:CONF.Lang.DeleteRomFile},
+            {id:#all,text:CONF.Lang.DeleteRomFileAndRes},
             {id:#cancel,text:CONF.Lang.Cancel,role:"default-button"}
         ]
     };
 
-    if (result != "yes"){
+    if (result == "cancel"){
         return true;
     }
   
@@ -242,7 +243,13 @@ function deleteRom(obj){
     if (dom != undefined){
         dom.remove(); //删除页面dom
     }
-    view.DeleteRom(id); //删除实体文件
+
+    var deleteRes = 0;
+    if(result == "all"){
+        deleteRes = 1;
+    }
+
+    view.DeleteRom(id,deleteRes); //删除实体文件
     alert(CONF.Lang.DeleteSuccess); //删除成功
 
 }

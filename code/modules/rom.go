@@ -385,7 +385,7 @@ func UpdateRomCmd(id uint64, simId uint32, data map[string]string) error {
 }
 
 //读取rom以及相关资源
-func DeleteRomAndRes(id uint64) error {
+func DeleteRomAndRes(id uint64, deleteRes int) error {
 
 	//游戏游戏详细数据
 	info, err := (&db.Rom{}).GetById(id)
@@ -408,6 +408,11 @@ func DeleteRomAndRes(id uint64) error {
 			_ = utils.FileDelete(f)
 		}
 	}()
+
+	//不删除资源文件
+	if deleteRes == 0 {
+		return nil
+	}
 
 	//删除资源文件
 	exts := config.GetResExts()
