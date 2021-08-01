@@ -302,7 +302,16 @@ function _setVideoControl(movie){
         vdom.videoPlay();
         vdom.audioVolume(VIDEO_VALUME);
         VIDEO_PLAY_STATE = 1;
-        $(#right_video_wrapper).style["height"] = vdom.videoHeight();
+        var videoWidth = vdom.videoWidth();
+        var videoHeight = vdom.videoHeight();
+        var wrapperWidth = $(#right_video_wrapper).box(#width);
+        wrapperWidth = wrapperWidth > 350 ? 350 : wrapperWidth;
+        var prop = videoHeight.toFloat() / videoWidth.toFloat()
+        prop = Math.floor(prop * 100) / 100;
+        var realHeight = (wrapperWidth.toFloat() * prop) * 0.8;
+        realHeight = realHeight.toInteger();
+        $(#right_video_wrapper).style["height"] = realHeight;
+
     }catch(e){}
    
     $(#right_video).onControlEvent = function(evt) {

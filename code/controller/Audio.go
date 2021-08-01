@@ -2,7 +2,6 @@ package controller
 
 import (
 	"encoding/json"
-	"fmt"
 	"simUI/code/modules"
 	"simUI/code/utils"
 	"simUI/code/utils/go-sciter"
@@ -57,7 +56,9 @@ func AudioController() {
 		urls := []string{}
 		json.Unmarshal([]byte(args[0].String()), &urls)
 
-		fmt.Println("================",urls)
+		for k,v:= range urls{
+			urls[k] = utils.AbsPath(v)
+		}
 
 		if err := utils.PlayAudio(urls); err != nil {
 			utils.WriteLog(err.Error())
