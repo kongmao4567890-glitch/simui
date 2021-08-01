@@ -6,20 +6,19 @@
     createLang();
     view.windowCaption = CONF.Lang.EditGame;
 
-    /*
-    填充攻略文件
-    */
     var exts = CONF.Platform[view.parameters.platform].RomExts.replace(",",";");
+    var romPath = CONF.Platform[view.parameters.platform].RomPath + CONF.Separator;
+    romPath = romPath.split("\/").join(CONF.Separator.toString());
+    romPath = romPath.split(CONF.RootPath.toString()).join("");
     exts = exts.replace(".","*.");
     var filter = "Files ("+ exts +")|"+ exts +"|All Files (*.*)|*.*";
-    
-    var files = "";
-    var game_list = JSON.parse(mainView.GetGame(view.parameters.id));
+    var game_list = JSON.parse(mainView.GetSubGames(view.parameters.id));
     var i = 0;
+    var files = "";
     for(var s in game_list) {
         files += "<li id='game_li_"+ i +"' value='"+ i +"'>";
-        files += "<input type='text' id='game_name_"+ i + "' value='"+ s.name +"' />";
-        files += "<input type='text' id='game_path_"+ i + "' value='"+ s.path +"' />";
+        files += "<input type='text' id='game_name_"+ i + "' value='"+ s.Name +"' />";
+        files += "<input type='text' id='game_path_"+ i + "' value='"+ romPath + s.RomPath +"' />";
         files += "<button class='openfile' for='game_path_" + i + "' caption='"+ CONF.Lang.SelectFile +"' filter='"+ filter +"'>...</button>";
         files += "<button class='game_delete' value='"+ i +"'>"+CONF.Lang.Delete+"</button>";
         files += "</li>";
@@ -102,7 +101,7 @@ function submitGame(){
         }
 
         //上传文件
-        var newPath = mainView.UploadGameFile(view.parameters.id,name,path);
+        var newPath = mainView.UploadSubGameFile(view.parameters.id,name,path);
         $(#game_list).select("#game_path_" + id).value = newPath;
 
         var obj = {
@@ -114,7 +113,7 @@ function submitGame(){
     }
 
     var datastr = JSON.stringify(data);
-    mainView.UpdateGame(view.parameters.id,datastr);
+    mainView.UpdateSubGameInfo(view.parameters.id,datastr);
     alert(CONF.Lang.UpdateSuccess);
 
 }

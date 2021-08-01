@@ -446,8 +446,8 @@ func (m *Rom) UpdateRomPath() error {
 }
 
 //更新子游戏pname
-func (m *Rom) UpdateSubRomPname(oldName string, newName string) error {
-	result := getDb().Table(m.TableName()).Where("pname=?", oldName).Update("pname", newName)
+func (m *Rom) UpdateSubRomPname(platform uint32, oldName string, newName string) error {
+	result := getDb().Table(m.TableName()).Where("platform = ? AND pname=?", platform, oldName).Update("pname", newName)
 	if result.Error != nil {
 		fmt.Println(result.Error)
 	}
@@ -464,8 +464,8 @@ func (m *Rom) DeleteById(id uint64) error {
 }
 
 //删除一个rom
-func (m *Rom) DeleteSubRom(pname string) error {
-	result := getDb().Where("pname=? ", pname).Delete(&m)
+func (m *Rom) DeleteSubRom(platform uint32, pname string) error {
+	result := getDb().Where("platform = ? AND pname=? ", platform, pname).Delete(&m)
 	if result.Error != nil {
 		fmt.Println(result.Error)
 	}

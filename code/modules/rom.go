@@ -1,6 +1,7 @@
 package modules
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"io/ioutil"
@@ -602,7 +603,7 @@ func SetRomBase(d map[string]string) (*db.Rom, error) {
 
 	//更新子游戏pname
 	if rom.Name != name && rom.Name != "" {
-		if err := dbRom.UpdateSubRomPname(rom.Name, name); err != nil {
+		if err := dbRom.UpdateSubRomPname(rom.Platform, rom.Name, name); err != nil {
 			return nil, err
 		}
 	}
@@ -653,6 +654,95 @@ func BatchSetRomBase(data []map[string]string) error {
 	//写入配置文件
 	if err := CoverRomBaseFile(platform, rombaseList); err != nil {
 		return err
+	}
+
+	return nil
+}
+
+/**
+ * 上传子rom文件
+ **/
+func UploadSubGameFile(id uint64, name string, p string) (string, error) {
+	vo, _ := (&db.Rom{}).GetById(id)
+	if config.Cfg.Platform[vo.Platform].RomPath == "" {
+		return "", errors.New(config.Cfg.Lang["FilesMenuCanNotBeEmpty"])
+	}
+	ext := utils.GetFileExt(p)
+	fileName := utils.GetFileName(vo.RomPath)
+	newPath := config.Cfg.Platform[vo.Platform].RomPath + config.Cfg.Separator + fileName + "__" + name + ext
+
+	rel := strings.Replace(newPath, config.Cfg.RootPath, "", 1)
+	if rel == p {
+		return p, nil
+	}
+
+	if err := utils.FileCopy(p, newPath); err != nil {
+		return "", err
+	}
+	relPath := strings.Replace(newPath, config.Cfg.RootPath, "", -1)
+	return relPath, nil
+}
+
+/**
+ * 更新子rom数据
+ **/
+func UpdateSubGameFiles(id uint64, data string) error {
+	vo, _ := (&db.Rom{}).GetById(id)
+	if config.Cfg.Platform[vo.Platform].RomPath == "" {
+		return errors.New(config.Cfg.Lang["FilesMenuCanNotBeEmpty"])
+	}
+
+	//整理需要删除的文件
+	d := []map[string]string{}
+	json.Unmarshal([]byte(data), &d)
+	newData := []string{}
+	for _, v := range d {
+		newData = append(newData, v["path"])
+	}
+
+	//处理文件
+	exists, _ := utils.ScanDirByKeyword(config.Cfg.Platform[vo.Platform].RomPath, vo.Name+"__")
+	//真正存在的文件
+	realFiles := []string{}
+	for _, v := range exists {
+		rel := strings.Replace(v, config.Cfg.RootPath, "", 1)
+		if !utils.InSliceString(rel, newData) {
+			utils.FileDelete(v)
+		} else {
+			realFiles = append(realFiles, rel)
+
+		}
+	}
+
+	//删除旧缓存
+	_ = (&db.Rom{}).DeleteSubRom(vo.Platform, vo.Name)
+
+	//写入缓存
+	create := []*db.Rom{}
+	for _, r := range realFiles {
+		title := utils.GetFileName(r)
+		titles := strings.Split(title, "__")
+		title = titles[1]
+		r = strings.Replace(utils.AbsPath(r),config.Cfg.Platform[vo.Platform].RomPath + config.Cfg.Separator,"",1)
+
+		fileMd5 := GetRomMd5(utils.ToString(vo.Platform), r)
+		infoMd5 := GetRomMd5(title, r, "", "", "", "", "", "")
+
+		c := &db.Rom{
+			RomPath:  r,
+			Name:     title,
+			Pinyin:   utils.TextToPinyin(title),
+			FileMd5:  fileMd5,
+			InfoMd5:  infoMd5,
+			Pname:    vo.Name,
+			Platform: vo.Platform,
+			Menu:     vo.Menu,
+		}
+		create = append(create, c)
+	}
+
+	if len(create) > 0 {
+		(&db.Rom{}).BatchAdd(create)
 	}
 
 	return nil
