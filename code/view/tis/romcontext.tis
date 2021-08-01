@@ -135,6 +135,19 @@ function baseinfo(evt){
     
 }
 
+//编辑子游戏
+function editSubGame(evt){
+    var data = view.dialog({
+        url:self.url(ROOTPATH + "edit_rom_subgame.html"),
+        width:self.toPixels(550dip),
+        height:self.toPixels(610dip),
+        parameters: {
+            id:evt.attributes["rid"],
+            platform:evt.attributes["platform"],
+        };
+    });
+}
+
 //编辑游戏攻略
 function editStrategy(evt){
     var data = view.dialog({
@@ -200,12 +213,14 @@ function romContextMenu(obj){
     }else{
         btndata += "<li class='hide hide1' value='1' rid='"+ detailObj.Info.Id +"'>"+ CONF.Lang.SetHide +"</li>";
     }
+    btndata += "<hr />";
 
-    btndata += "<li class='rename' rid='"+ detailObj.Info.Id +"'>"+ CONF.Lang.Rename +"</li>";
     btndata += "<li class='baseinfo' rid='"+ detailObj.Info.Id +"'>"+ CONF.Lang.EditBaseInfo +"</li>";
     btndata += "<li class='strategy' rid='"+ detailObj.Info.Id +"'>"+ CONF.Lang.EditDocAndStrategy +"</li>";
+    btndata += "<li class='subgame' platform="+ detailObj.Info.Platform +" rid='"+ detailObj.Info.Id +"'>"+ CONF.Lang.EditSubGame +"</li>";
     btndata += "<li class='audio' rid='"+ detailObj.Info.Id +"'>"+ CONF.Lang.EditAudio +"</li>";
     btndata += "<hr />";
+    btndata += "<li class='rename' rid='"+ detailObj.Info.Id +"'>"+ CONF.Lang.Rename +"</li>";
     btndata += "<li class='move' rid='"+ detailObj.Info.Id +"'>"+ CONF.Lang.RomMove +"</li>";
     btndata += "<li class='delete' rid='"+ detailObj.Info.Id +"'>"+ CONF.Lang.Delete +"</li>";
     btndata += "<hr />";

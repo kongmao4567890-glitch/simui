@@ -51,7 +51,10 @@
 
     //添加攻略文件
     event click $(#audio_add){
+    try{
         addAudio();
+        }catch(e){
+        alert(e);}
     }
 
     //删除攻略文件

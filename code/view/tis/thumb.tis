@@ -5,7 +5,7 @@ function openThumbFile(evt) {
     const initialPath = "";
     const filter = evt.attributes["filter"];
     const caption = evt.attributes["caption"];
-    var url = view.selectFile("#"+evt.attributes["for"], filter, defaultExt, initialPath, caption );
+    var url = view.selectFile(#open, filter, defaultExt, initialPath, caption );
     
     var getjson = view.GetGameDetail(ACTIVE_ROM_ID);
     var detailObj = JSON.parse(getjson);

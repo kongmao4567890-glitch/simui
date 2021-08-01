@@ -400,6 +400,12 @@ view.root.on("ready", function(){
         baseinfo(this);
     });
 
+
+    //编辑子游戏
+    self.on("click", "#romcontext .subgame", function(evt) {
+        editSubGame(this);
+    });
+
     //编辑游戏攻略
     self.on("click", "#romcontext .strategy", function(evt) {
         editStrategy(this);

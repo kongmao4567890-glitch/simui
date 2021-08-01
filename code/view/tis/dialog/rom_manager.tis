@@ -103,7 +103,7 @@ function openFile(evt) {
     const defaultExt = "";
     const initialPath = "";
     const caption = CONF.Lang.SelectFile;
-    var url = view.selectFile("", filter, defaultExt, initialPath, caption );
+    var url = view.selectFile(#open, filter, defaultExt, initialPath, caption );
     if(url){
         url = URL.toPath(url);
         url = url.split("\/").join(CONF.Separator.toString());
@@ -696,7 +696,7 @@ function openFileLua(evt) {
     const defaultExt = "";
     const initialPath = "";
     const caption = CONF.Lang.SelectFile;
-    var url = view.selectFile("", filter, defaultExt, initialPath, caption );
+    var url = view.selectFile(#open, filter, defaultExt, initialPath, caption );
     if(url){
         url = URL.toPath(url);
         url = url.split("\/").join(CONF.Separator.toString());

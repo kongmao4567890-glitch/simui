@@ -18,7 +18,7 @@ view.root.on("ready", function(){
         files += "<li id='audio_li_"+ i +"' value='"+ i +"'>";
         files += "<input type='text' id='audio_name_"+ i + "' value='"+ s.name +"' />";
         files += "<input type='text' id='audio_path_"+ i + "' value='"+ s.path +"' />";
-        files += "<button class='openfile' for='audio_path_" + i + "' caption='' 'Files (*.mp3,*.dmi,*.wma,*.wav)|*.mp3;*.dmi;*.wma;*.wav|All Files (*.*)|*.*'>...</button>";
+        files += "<button class='openfile' for='audio_path_" + i + "' caption='"+ CONF.Lang.SelectFile +"' filter='Files (*.mp3,*.wma,*.wav)|*.mp3;*.wma;*.wav|All Files (*.*)|*.*'>...</button>";
         files += "<button class='audio_delete' value='"+ i +"'>"+CONF.Lang.Delete+"</button>";
         files += "</li>";
         i++;
@@ -33,14 +33,40 @@ view.root.on("ready", function(){
     
 //添加攻略文件
 function addAudio(){
+    const defaultExt = "";
+    const initialPath = "";
+    const filter = "Files (*.mp3,*.wma,*.wav)|*.mp3;*.wma;*.wav|All Files (*.*)|*.*";
+    const caption = CONF.Lang.SelectFile;
+    var selectFile = view.selectFile(#open-multiple, filter, defaultExt, initialPath, caption );
+    var urls= [];
+
+    if(selectFile == undefined){
+        return;
+    }
+
+    if(typeof(selectFile) == "string"){
+        urls[0] = selectFile;
+    }else{
+        urls = selectFile;
+    }
+
     var insertId = $$(#audio_list li).length;
     var audio = "";
-    audio += "<li id='audio_li_"+ insertId +"' value='"+ insertId +"'>";
-    audio += "<input type='text' novalue='"+ CONF.Lang.FileName +"' id='audio_name_"+ insertId + "' value='' />";
-    audio += "<input type='text' novalue='"+ CONF.Lang.FilePath +"' id='audio_path_"+ insertId + "' value='' />";
-    audio += "<button class='openfile' for='audio_path_" + insertId + "' caption='"+ CONF.Lang.SelectFile +"' filter='Files (*.mp3,*.dmi,*.wma,*.wav)|*.mp3;*.dmi;*.wma;*.wav|All Files (*.*)|*.*'>...</button>";
-    audio += "<button class='audio_delete' value='"+ insertId +"'>"+CONF.Lang.Delete+"</button>";
-    audio += "</li>";
+    for(var url in urls){
+        //转换url
+        url = URL.toPath(url);
+        url = url.split("\/").join(CONF.Separator.toString());
+        url = url.split(CONF.RootPath.toString()).join("");
+    
+        //生成页面DOM
+        audio += "<li id='audio_li_"+ insertId +"' value=\""+ insertId +"\">";
+        audio += "<input type='text' value=\""+ getFileName(url) +"\" id='audio_name_"+ insertId + "' />";
+        audio += "<input type='text' value=\""+ url +"\" id='audio_path_"+ insertId + "' />";
+        audio += "<button class='openfile' for='audio_path_" + insertId + "' caption='"+ CONF.Lang.SelectFile +"' filter='Files (*.mp3,*.wma,*.wav)|*.mp3;*.wma;*.wav|All Files (*.*)|*.*'>...</button>";
+        audio += "<button class='audio_delete' value='"+ insertId +"'>"+CONF.Lang.Delete+"</button>";
+        audio += "</li>";
+        insertId++;
+    }
     $(#audio_list).append(audio);
 }
 
@@ -94,7 +120,7 @@ function openFile(evt) {
     const initialPath = "";
     const filter = evt.attributes["filter"];
     const caption = evt.attributes["caption"];
-    var url = view.selectFile("#"+evt.attributes["for"], filter, defaultExt, initialPath, caption );
+    var url = view.selectFile(#open, filter, defaultExt, initialPath, caption );
     var out = self.select("#"+evt.attributes["for"]); 
     if(url){
         url = URL.toPath(url);
