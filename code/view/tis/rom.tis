@@ -104,9 +104,10 @@ function _createRomListList(romobj,cls){
         var romName = getRomName(obj.RomPath);
         //现读图标
         var thumb = getRomPicPath("icon",obj.Platform,romName);
-
+        var noradius = "noradius";
         //没有找到图标，找缩略图，读取默认缩略图
         if (thumb == ""){
+            noradius = "";
             thumb = getRomPicPath(CONF.Default.Thumb,obj.Platform,romName);
             if(thumb == "" && CONF.Theme[CONF.Default.Theme].Params["default-thumb-image"] != undefined){
                 thumb = URL.fromPath(CONF.RootPath + "theme/" + CONF.Theme[CONF.Default.Theme].Params["default-thumb-image"]);
@@ -115,7 +116,7 @@ function _createRomListList(romobj,cls){
         
         data += "<li class='romitem' rid='"+ obj.Id +"' title='"+ title +"'>";
         if(obj.Star == 1){
-            data += "<div.star><img src='"+ thumb +"' /></div>";
+            data += "<div.star><img src='"+ thumb +"' class='"+ noradius +"' /></div>";
         }else{
             data += "<div><img src='"+ thumb +"' /></div>";
         }
