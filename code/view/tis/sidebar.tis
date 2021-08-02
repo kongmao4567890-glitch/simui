@@ -521,7 +521,9 @@ function _getSideSecondDom(type,url){
         html += "<h2>"+title+"</h2>";
         html += "<div class='filedropzone_widget'>";
         html += "<button class='funbtn filedrop_ctl_btn' type='menu'><i.setting></i><menu>";
-        html += "<li class='openfile' for='video' caption='"+CONF.Lang.SelectVideoFile +"' filter='video Files (*.wmv;*.mp4;*.avi,*.flv)|.wmv;.mp4;.avi;.flv|All Files (*.*)|*.*'><div class='file-drop-zone-empty'>" + CONF.Lang.SelectVideo + "</li>";
+        html += "<li class='openfolder' opt='"+ type +"'>" + CONF.Lang.OpenFolder + "</li>";
+        html += "<hr>";
+        html += "<li class='openfile' for='video' caption='"+CONF.Lang.SelectVideoFile +"' filter='video Files (*.wmv;*.mp4;*.avi,*.flv)|.wmv;.mp4;.avi;.flv|All Files (*.*)|*.*'>" + CONF.Lang.SelectVideo + "</li>";
         html += "<li class='thumb_delete' value='video'>"+CONF.Lang.DeleteVideo+"</li>";
         html += "</menu></button>";
         html += "<div.file-drop-zone  opt='video' accept-drop='*.wmv;*.mp4;*.avi;*.flv'>";
@@ -537,6 +539,8 @@ function _getSideSecondDom(type,url){
         html += "<h2>"+title+"</h2>";
         html += "<div class='filedropzone_widget'>";
         html += "<button class='funbtn filedrop_ctl_btn' type='menu'><i.setting></i><menu>";
+        html += "<li class='openfolder' opt='"+ type +"'>" + CONF.Lang.OpenFolder + "</li>";
+        html += "<hr>";
         html += "<li class='openfile' for='"+type+"' caption='"+CONF.Lang.SelectPicFile+"' filter='Images Files (*.gif;*.png;*.jpg;*.jpeg;*.ico;*.bmp)|*.gif;*.png;*.jpg;*.jpeg;*.ico;*.bmp|All Files (*.*)|*.*'>"+CONF.Lang.SelectPic+"</li>";
         html += "<li class='thumb_down' value='"+type+"'>"+CONF.Lang.NetPic+"</li>";
         html += "<li class='thumb_delete' value='"+type+"'>"+CONF.Lang.DeletePic+"</li>";
@@ -843,4 +847,13 @@ function sidebarSize(){
             $(#right).attributes.removeClass("widthMode");
         }
     }
+}
+
+//打开文件夹 - 图集按钮
+//右键菜单定位目录
+function openFolderBySideSecond(evt){
+    if(evt.attributes["opt"] == "" || evt.attributes["opt"] == undefined){
+        return;
+    }
+    view.OpenFolder(ACTIVE_ROM_ID,evt.attributes["opt"],"");
 }

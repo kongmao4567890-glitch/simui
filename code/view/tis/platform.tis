@@ -78,10 +78,15 @@ function initPlatform(){
         if(pf.Icon != ""){
             img = "<img src=\""+  URL.fromPath(pf.Icon) +"\" />";
         }
+
+
+        var btn = "";
+        /*
         var btn = "<button type='menu'><i.down_arrow></i><menu>";
         btn += "<li>1</li>";
         btn += "<li>2</li>";
         btn += "</menu></button>";
+        */
         dd += "<li platform='"+ pf.Id +"'><div class='leftdiv'>" + img + "<p>" + pf.Name + "</p></div>"+ btn +"</li>";
     }
     self.$(#platform_ul).html = dd; //生成dom

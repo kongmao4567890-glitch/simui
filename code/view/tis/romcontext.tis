@@ -5,15 +5,14 @@ function contextRunGame(evt){
 
 //右键菜单定位目录
 function openFolder(evt){
-  if(evt.attributes["opt"] == "" || evt.attributes["opt"] == undefined){
-            return;
-        }
-
-        if(evt.attributes["opt"] == "sim"){
-            view.OpenFolder(evt.attributes["rid"],evt.attributes["opt"],evt.attributes["sid"]);
-        }else{
-            view.OpenFolder(evt.attributes["rid"],evt.attributes["opt"],"");
-        }
+    if(evt.attributes["opt"] == "" || evt.attributes["opt"] == undefined){
+        return;
+    }
+    if(evt.attributes["opt"] == "sim"){
+        view.OpenFolder(evt.attributes["rid"],evt.attributes["opt"],evt.attributes["sid"]);
+    }else{
+        view.OpenFolder(evt.attributes["rid"],evt.attributes["opt"],"");
+    }
 }
 
 //移动rom
@@ -245,7 +244,7 @@ function deleteRom(obj){
         ]
     };
 
-    if (result == "cancel"){
+    if (result == undefined || result == "cancel"){
         return true;
     }
   

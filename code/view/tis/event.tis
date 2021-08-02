@@ -446,6 +446,11 @@ view.root.on("ready", function(){
         openThumbFile(this);
     });
 
+    //侧边栏缩略图编辑功能 - 定位文件目录
+    self.on("click", ".filedropzone_widget .openfolder", function(evt) {
+        openFolderBySideSecond(this);
+    });
+
     self.on("click", ".filedropzone_widget .thumb_down", function(evt) {
          thumbDown(this);
     });
