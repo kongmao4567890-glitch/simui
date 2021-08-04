@@ -369,22 +369,20 @@ function _createRotate(info){
         pics += "</div>";
     }
 
-    if(title != ""){ pics += "<img src=\""+ title +"\" />"; }
-    if(snap != ""){ pics += "<img src=\""+ snap +"\" />"; }
-    
-    //游戏缩略图
-    if(thumb != ""){
-        pics += "<img src=\""+ thumb +"\" />";
-    }else if(pics == "" && CONF.Theme[CONF.Default.Theme].Params["default-thumb-image"] != undefined){
-        pics += "<img src=\""+ URL.fromPath(CONF.RootPath + "theme/" + CONF.Theme[CONF.Default.Theme].Params["default-thumb-image"]) +"\" />";
-    }
+    if(title != ""){pics += "<img src=\""+ title +"\" />";}
+    if(snap != ""){pics += "<img src=\""+ snap +"\" />";}
+    if(thumb != ""){pics += "<img src=\""+ thumb +"\" />";}
+    if(poster != ""){pics += "<img src=\""+ poster +"\" />";}
+    if(packing != ""){pics += "<img src=\""+ packing +"\" />";}
+    if(cassette != ""){pics += "<img src=\""+ cassette +"\" />";}
+    if(gif != ""){pics += "<img src=\""+ gif +"\" />";}
+    if(background != ""){pics += "<img src=\""+ background +"\" />";}
+    if(wallpaper != ""){pics += "<img src=\""+ wallpaper +"\" />";}
 
-    if(poster != ""){ pics += "<img src=\""+ poster +"\" />"; }
-    if(packing != ""){ pics += "<img src=\""+ packing +"\" />"; }
-    if(cassette != ""){ pics += "<img src=\""+ cassette +"\" />"; }
-    if(gif != ""){ pics += "<img src=\""+ gif +"\" />"; }
-    if(background != ""){ pics += "<img src=\""+ background +"\" />"; }
-    if(wallpaper != ""){ pics += "<img src=\""+ wallpaper +"\" />";}
+
+     if(pics == "" && CONF.Theme[CONF.Default.Theme].Params["default-thumb-image"] != undefined){
+        pics = "<img src=\""+ URL.fromPath(CONF.RootPath + "theme/" + CONF.Theme[CONF.Default.Theme].Params["default-thumb-image"]) +"\" />";
+    }
 
 
     //滚动图
