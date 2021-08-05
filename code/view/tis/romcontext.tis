@@ -17,6 +17,10 @@ function openFolder(evt){
 
 //移动rom
 function romMove(evt){
+
+    //结束掉侧边栏视频
+    closeRightVideo();
+
     var response = view.dialog({
         url:self.url(ROOTPATH + "rom_move.html"),
         width:self.toPixels(300dip),
@@ -104,6 +108,10 @@ function rename(evt){
     if(data == undefined){
         return;
     }
+    
+    //结束掉侧边栏视频
+    closeRightVideo();
+
     $(#romlist).select("li[rid="+detailObj.Info.Id+"] div:nth-child(2)").html = data.name;
     view.RomRename(detailObj.Info.Id,data.name);
 }
