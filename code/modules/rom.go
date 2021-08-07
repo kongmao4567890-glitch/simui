@@ -187,7 +187,7 @@ func GetGameDetail(id uint64) (*RomDetail, error) {
 	}
 	//子游戏列表
 	romName := utils.GetFileName(info.RomPath)
-	sub, _ := (&db.Rom{}).GetSubRom(info.Platform,romName)
+	sub, _ := (&db.Rom{}).GetSubRom(info.Platform, romName)
 
 	res.Info = info
 	res.Sublist = sub
@@ -696,7 +696,8 @@ func UpdateSubGameFiles(id uint64, data string) error {
 	}
 
 	//处理文件
-	exists, _ := utils.ScanDirByKeyword(config.Cfg.Platform[vo.Platform].RomPath, vo.Name+"__")
+	romName := utils.GetFileName(vo.RomPath)
+	exists, _ := utils.ScanDirByKeyword(config.Cfg.Platform[vo.Platform].RomPath, romName+"__")
 	//真正存在的文件
 	realFiles := []string{}
 	for _, v := range exists {
@@ -718,7 +719,7 @@ func UpdateSubGameFiles(id uint64, data string) error {
 		title := utils.GetFileName(r)
 		titles := strings.Split(title, "__")
 		title = titles[1]
-		r = strings.Replace(utils.AbsPath(r),config.Cfg.Platform[vo.Platform].RomPath + config.Cfg.Separator,"",1)
+		r = strings.Replace(utils.AbsPath(r), config.Cfg.Platform[vo.Platform].RomPath+config.Cfg.Separator, "", 1)
 
 		fileMd5 := GetRomMd5(utils.ToString(vo.Platform), r)
 		infoMd5 := GetRomMd5(title, r, "", "", "", "", "", "")
@@ -729,7 +730,7 @@ func UpdateSubGameFiles(id uint64, data string) error {
 			Pinyin:   utils.TextToPinyin(title),
 			FileMd5:  fileMd5,
 			InfoMd5:  infoMd5,
-			Pname:    vo.Name,
+			Pname:    utils.GetFileName(vo.RomPath),
 			Platform: vo.Platform,
 			Menu:     vo.Menu,
 		}
@@ -737,7 +738,7 @@ func UpdateSubGameFiles(id uint64, data string) error {
 	}
 
 	if len(create) > 0 {
-		(&db.Rom{}).BatchAdd(create)
+		(&db.Rom{}).BatchAdd(create,0)
 	}
 
 	return nil

@@ -66,21 +66,23 @@ func (m *Rom) BatchUpdate(romlist []*Rom) {
 	tx.Commit()
 }
 
-func (m *Rom) BatchAdd(romlist []*Rom) {
+func (m *Rom) BatchAdd(romlist []*Rom, showLoading int) {
 
 	if len(romlist) == 0 {
 		return
 	}
 
 	count := len(romlist)
-	utils.Loading("[2/3]开始写入缓存(1/"+utils.ToString(count)+")", "")
+	if showLoading == 1 {
+		utils.Loading("[2/3]开始写入缓存(1/"+utils.ToString(count)+")", "")
+	}
 	tx := getDb().Begin()
 	for k, v := range romlist {
 
 		tx.Create(&v)
 		//记录md5数据
 
-		if k%TIP_NUM == 0 {
+		if showLoading == 1 && k%TIP_NUM == 0 {
 			utils.Loading("[2/3]开始写入缓存("+utils.ToString(k+1)+"/"+utils.ToString(count)+")", "")
 		}
 	}

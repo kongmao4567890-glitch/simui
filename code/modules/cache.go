@@ -295,7 +295,7 @@ func UpdateRomDB(platform uint32, romlist []*db.Rom) error {
 	}
 
 	//添加新rom
-	(&db.Rom{}).BatchAdd(addData)
+	(&db.Rom{}).BatchAdd(addData,1)
 
 	//更新现有rom
 	(&db.Rom{}).BatchUpdate(updateIssetData)

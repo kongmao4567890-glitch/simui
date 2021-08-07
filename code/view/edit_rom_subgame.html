@@ -39,17 +39,17 @@
     include ROOTPATH + "tis/utils.tis";
     include ROOTPATH + "tis/dialog/edit_subgame.tis";
    
-    //更新攻略
+    //更新子游戏
     event click $(#update_game){
         updateGame();
     }
 
-    //删除攻略
+    //删除子游戏
     event click $(#delete_game){
         deleteGame();
     }
 
-    //添加攻略文件
+    //添加子游戏文件
     event click $(#game_add){
     try{
         addGame();
@@ -57,7 +57,7 @@
         alert(e);}
     }
 
-    //删除攻略文件
+    //删除子游戏文件
     event click $(.game_delete){
         deleteGame(this);
     }
