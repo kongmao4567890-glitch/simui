@@ -69,7 +69,7 @@ func GetRomBaseList(platform uint32) (map[string]*RomBase, error) {
 		}
 
 		des[create[0]] = &RomBase{
-			RomName:   strings.Trim(create[0], " "),
+			RomName:   create[0],
 			Name:      strings.Trim(create[1], " "),
 			Type:      strings.Trim(create[2], " "),
 			Year:      strings.Trim(create[3], " "),
@@ -116,7 +116,7 @@ func WriteRomBaseFile(platform uint32, newData *RomBase) error {
 	for _, v := range info {
 
 		writer.Write([]string{
-			strings.Trim(v.RomName, " "),
+			v.RomName,
 			strings.Trim(v.Name, " "),
 			strings.Trim(v.Type, " "),
 			strings.Trim(v.Year, " "),
@@ -160,7 +160,7 @@ func CoverRomBaseFile(platform uint32, newData map[string]*RomBase) error {
 		}
 
 		writer.Write([]string{
-			strings.Trim(v.RomName, " "),
+			v.RomName,
 			strings.Trim(v.Name, " "),
 			strings.Trim(v.Type, " "),
 			strings.Trim(v.Year, " "),

@@ -51,10 +51,11 @@
 
     //添加子游戏文件
     event click $(#game_add){
-    try{
-        addGame();
+        try{
+            addGame();
         }catch(e){
-        alert(e);}
+            alert(e);
+        }
     }
 
     //删除子游戏文件
@@ -64,7 +65,11 @@
 
     //更新配置
     event click $(#submit_game){
-        submitGame();
+        try{
+            submitGame();
+        }catch(e){
+            alert(e);
+        }
     }
 
     //选择文件
@@ -72,7 +77,7 @@
         try{
             openFile(this);
         }catch(e){
-        alert(e);
+            alert(e);
         }
     }
 
