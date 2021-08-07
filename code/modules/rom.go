@@ -186,7 +186,8 @@ func GetGameDetail(id uint64) (*RomDetail, error) {
 		return res, err
 	}
 	//子游戏列表
-	sub, _ := (&db.Rom{}).GetSubRom(info.Platform, info.Name)
+	romName := utils.GetFileName(info.RomPath)
+	sub, _ := (&db.Rom{}).GetSubRom(info.Platform,romName)
 
 	res.Info = info
 	res.Sublist = sub
@@ -208,11 +209,11 @@ func GetGameDetail(id uint64) (*RomDetail, error) {
 	}
 
 	//读取文档内容
-	romName := utils.GetFileName(filepath.Base(info.RomPath)) //生成新文件的完整绝路路径地址
+	romBaseName := utils.GetFileName(filepath.Base(info.RomPath)) //生成新文件的完整绝路路径地址
 	if config.Cfg.Platform[info.Platform].DocPath != "" {
 		docFileName := ""
 		for _, v := range config.DOC_EXTS {
-			docFileName = config.Cfg.Platform[info.Platform].DocPath + config.Cfg.Separator + romName + v
+			docFileName = config.Cfg.Platform[info.Platform].DocPath + config.Cfg.Separator + romBaseName + v
 			res.DocContent = GetDocContent(docFileName)
 			if res.DocContent != "" {
 				break
@@ -601,12 +602,6 @@ func SetRomBase(d map[string]string) (*db.Rom, error) {
 		return nil, err
 	}
 
-	//更新子游戏pname
-	if rom.Name != name && rom.Name != "" {
-		if err := dbRom.UpdateSubRomPname(rom.Platform, rom.Name, name); err != nil {
-			return nil, err
-		}
-	}
 	return dbRom, nil
 }
 

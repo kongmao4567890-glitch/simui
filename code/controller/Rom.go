@@ -433,7 +433,8 @@ func RomController() {
 	utils.Window.DefineFunction("GetSubGames", func(args ...*sciter.Value) *sciter.Value {
 		pid := uint64(utils.ToInt(args[0].String())) //romId
 		rom, _ := (&db.Rom{}).GetById(pid)
-		romlist, _ := (&db.Rom{}).GetSubRom(rom.Platform,rom.Name)
+		romName := utils.GetFileName(rom.RomPath)
+		romlist, _ := (&db.Rom{}).GetSubRom(rom.Platform,romName)
 		jsonRom, _ := json.Marshal(romlist)
 		return sciter.NewValue(string(jsonRom))
 	})
