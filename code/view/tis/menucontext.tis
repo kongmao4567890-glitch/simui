@@ -4,12 +4,12 @@ function menuContextMenu(obj){
     var menucontext = $(#menucontext);
     menucontext.clear();
 
-    var opt = obj.attributes["opt"];
-    if(opt == "" || opt == "favorite" || opt == "hide"){
+    if(obj.attributes.hasClass("fixed")){
         return true;
     }
 
     var btndata = "";
+    var opt = obj.attributes["opt"];
     btndata += "<li class='rename' opt=\""+ opt +"\">"+ CONF.Lang.Rename +"</li>";
     btndata += "<hr />";
     btndata += "<li class='delete' opt=\""+ opt +"\">"+ CONF.Lang.Delete +"</li>";
