@@ -562,6 +562,13 @@ func MoveRom(id uint64, newPlatform uint32, newFolder string) error {
 func SetRomBase(d map[string]string) (*db.Rom, error) {
 
 	rom, _ := (&db.Rom{}).GetById(uint64(utils.ToInt(d["id"])))
+
+	if(config.Cfg.Platform[rom.Platform].Rombase == ""){
+		return nil,errors.New(config.Cfg.Lang["RomBaseFileNotFound"])
+	}
+
+
+
 	romName := utils.GetFileName(rom.RomPath)
 	romBase := &RomBase{
 		RomName:   romName,
