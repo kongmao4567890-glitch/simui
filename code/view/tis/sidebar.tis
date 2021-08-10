@@ -182,6 +182,7 @@ function openSidebar(obj){
     var rombase = "";
     if(info.BaseType != "")      {rombase += "<li title=\""+ CONF.Lang.BaseType +"\">" + info.BaseType      + "</li>";}
     if(info.BaseYear != "")      {rombase += "<li title=\""+ CONF.Lang.BaseYear +"\">" + info.BaseYear      + "</li>";}
+    if(info.BaseProducer != "") {rombase += "<li title=\""+ CONF.Lang.BaseProducer +"\">" + info.BaseProducer + "</li>";}
     if(info.BasePublisher != "") {rombase += "<li title=\""+ CONF.Lang.BasePublisher +"\">" + info.BasePublisher + "</li>";}
     if(info.BaseCountry != "")   {rombase += "<li title=\""+ CONF.Lang.BaseCountry +"\">" + info.BaseCountry + "</li>";}
     if(info.BaseTranslate != "") {rombase += "<li title=\""+ CONF.Lang.BaseTranslate +"\">" + info.BaseTranslate + "</li>";}
@@ -189,10 +190,16 @@ function openSidebar(obj){
     if(detailObj.RomFileSize != ""){
         rombase += "<li title=\""+ CONF.Lang.FileSize +"\">" + detailObj.RomFileSize + "</li>";
     }
-    $(#right_rombase).html = rombase;
 
-    //文件名
-    $(#right_rombase_name).html = info.RomPath;
+    if(info.BaseNameEn != "")      {rombase += "<li title=\""+ CONF.Lang.BaseNameEn +"\">" + info.BaseNameEn      + "</li>";}
+    if(info.BaseNameJp != "")      {rombase += "<li title=\""+ CONF.Lang.BaseNameJp +"\">" + info.BaseNameJp      + "</li>";}
+    if(info.BaseOtherA != "")      {rombase += "<li>" + info.BaseOtherA + "</li>";}
+    if(info.BaseOtherB != "")      {rombase += "<li>" + info.BaseOtherB + "</li>";}
+    if(info.BaseOtherC != "")      {rombase += "<li>" + info.BaseOtherC + "</li>";}
+    if(info.BaseOtherD != "")      {rombase += "<li>" + info.BaseOtherD + "</li>";}
+    rombase += "<li title=\""+ CONF.Lang.FileName +"\">" + info.RomPath + "</li>";
+
+    $(#right_rombase).html = rombase;
 
     //读取相关游戏
     var related = view.GetRelatedGames(obj.attributes["rid"]);
@@ -310,7 +317,7 @@ function _setVideoControl(movie){
         prop = Math.floor(prop * 100) / 100;
         var realHeight = (wrapperWidth.toFloat() * prop) * 0.8;
         realHeight = realHeight.toInteger();
-        $(#right_video_wrapper).style["height"] = realHeight;
+        $(#right_video_wrapper).style["height"] = realHeight + "dip";
 
     }catch(e){}
    

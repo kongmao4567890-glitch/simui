@@ -563,11 +563,9 @@ func SetRomBase(d map[string]string) (*db.Rom, error) {
 
 	rom, _ := (&db.Rom{}).GetById(uint64(utils.ToInt(d["id"])))
 
-	if(config.Cfg.Platform[rom.Platform].Rombase == ""){
-		return nil,errors.New(config.Cfg.Lang["RomBaseFileNotFound"])
+	if config.Cfg.Platform[rom.Platform].Rombase == "" {
+		return nil, errors.New(config.Cfg.Lang["RomBaseFileNotFound"])
 	}
-
-
 
 	romName := utils.GetFileName(rom.RomPath)
 	romBase := &RomBase{
@@ -575,10 +573,17 @@ func SetRomBase(d map[string]string) (*db.Rom, error) {
 		Name:      d["name"],
 		Type:      d["type"],
 		Year:      d["year"],
+		Producer:  d["producer"],
 		Publisher: d["publisher"],
 		Country:   d["country"],
 		Translate: d["translate"],
 		Version:   d["version"],
+		NameEN:    d["name_en"],
+		NameJP:    d["name_jp"],
+		OtherA:    d["other_a"],
+		OtherB:    d["other_b"],
+		OtherC:    d["other_c"],
+		OtherD:    d["other_d"],
 	}
 
 	//写入配置文件
@@ -593,15 +598,22 @@ func SetRomBase(d map[string]string) (*db.Rom, error) {
 
 	//更新到数据库
 	fileMd5 := GetRomMd5(utils.ToString(rom.Platform), rom.RomPath)
-	infoMd5 := GetRomMd5(rom.Name, rom.RomPath, d["type"], d["year"], d["publisher"], d["country"], d["translate"], d["version"])
+	infoMd5 := GetRomMd5(rom.Name, rom.RomPath, d["type"], d["year"], d["producer"], d["publisher"], d["country"], d["translate"], d["version"], d["name_en"], d["name_jp"], d["other_a"], d["other_b"], d["other_c"], d["other_d"])
 	dbRom := &db.Rom{
 		Name:          name,
 		BaseType:      d["type"],
 		BaseYear:      d["year"],
+		BaseProducer:  d["producer"],
 		BasePublisher: d["publisher"],
 		BaseCountry:   d["country"],
 		BaseTranslate: d["translate"],
 		BaseVersion:   d["version"],
+		BaseNameEn:    d["name_en"],
+		BaseNameJp:    d["name_jp"],
+		BaseOtherA:    d["other_a"],
+		BaseOtherB:    d["other_b"],
+		BaseOtherC:    d["other_c"],
+		BaseOtherD:    d["other_d"],
 		InfoMd5:       infoMd5,
 		FileMd5:       fileMd5,
 	}
@@ -643,11 +655,20 @@ func BatchSetRomBase(data []map[string]string) error {
 			Name:      d["name"],
 			Type:      d["type"],
 			Year:      d["year"],
+			Producer:  d["producer"],
 			Publisher: d["publisher"],
 			Country:   d["country"],
 			Translate: d["translate"],
 			Version:   d["version"],
+			NameEN:    d["name_en"],
+			NameJP:    d["name_jp"],
+			OtherA:    d["other_a"],
+			OtherB:    d["other_b"],
+			OtherC:    d["other_c"],
+			OtherD:    d["other_d"],
 		}
+
+		fmt.Println("base", base)
 
 		rombaseList[romName] = base
 
@@ -745,7 +766,7 @@ func UpdateSubGameFiles(id uint64, data string) error {
 	}
 
 	if len(create) > 0 {
-		(&db.Rom{}).BatchAdd(create,0)
+		(&db.Rom{}).BatchAdd(create, 0)
 	}
 
 	return nil

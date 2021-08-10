@@ -56,7 +56,7 @@ solid-with-shadow
     .statebar{background:color(statebar-background-color);height:auto;width:*;margin-top:0;flow:horizontal-flow}
     .statebar .counnum{color:color(statebar-text-color);height:42dip;line-height:42dip;text-align:right;width:max-content;padding-right:10dip}
     .statebar .filter{color:color(statebar-text-color);height:42dip;line-height:42dip;text-align:left;width:*;padding-left:10dip}
-    .statebar .filter select{background:color(filter-background-color);display:inline-block;height:24dip;line-height:1.5em;border:0;max-width:60dip}
+    .statebar .filter select{background:color(filter-background-color);display:inline-block;height:24dip;line-height:1.5em;border:0;max-width:80dip}
     .statebar .filter select > button{fill:color(filter-arrow-text-color);foreground-image:url(stock:chevron-down);background:color(filter-arrow-background-color)}
     .statebar .filter select > popup{background:color(filter-popup-background-color);color:color(filter-popup-text-color);}
     .statebar .filter select > caption{color:color(filter-text-color)}
@@ -75,10 +75,8 @@ solid-with-shadow
     #platform_ul >li .leftdiv{size:*;margin:0;padding:5dip;border-right:1dip solid color(platform-arrow-border-dark);vertical-align:middle;}
     #platform_ul >li img{size:28dip;margin:3dip auto 5dip auto;}
     #platform_ul >li p{margin:0;line-height:1.4em;display:block;font-size:12dip;white-space:pre-wrap;word-wrap:break-word;word-break:break-all;}
-    
     #platform_ul >li button{width:10dip;line-height:1em;padding:0;color:#FFF;background:none;vertical-align:middle;border-radius:0;margin:0;border:0;border-left:1dip solid color(platform-arrow-border-light);}
     #platform_ul >li button i{height:*;line-height:*;vertical-align:middle;background-size: 120%;}
-    
     #platform_ul li:hover{opacity:0.7;}
     #platform_ul li:current{background-color:color(platform-active-background-color);opacity:1;border-right:color(platform-active-background-color);border-left:color(platform-active-background-color)}
 
@@ -213,7 +211,7 @@ solid-with-shadow
     .menulist_menu{position:absolute;top:18dip;right:8dip}
     
     /* 基础信息表格 */
-    #right_rombase{width:*;display:block;clear:both;height:auto;padding:0;margin:0;background:color(right-doc-background-color);}
+    #right_rombase{width:*;overflow:hidden;display:block;clear:both;height:auto;padding:0;margin:0;background:color(right-doc-background-color);}
     #right_rombase li{word-break:break-all;word-wrap:break-word;white-space:pre-wrap;display:inline-block;min-height:10dip;margin:5dip 10dip 5dip 0;padding:5dip 10dip;color:color(right-play-info-text-color);list-style:none;border-radius:15dip;}
     #right_rombase li:nth-child(1){background-color:color(right-play-info-background-color-1);}
     #right_rombase li:nth-child(2){background-color:color(right-play-info-background-color-2);}
@@ -223,7 +221,15 @@ solid-with-shadow
     #right_rombase li:nth-child(6){background-color:color(right-play-info-background-color-6);}
     #right_rombase li:nth-child(7){background-color:color(right-play-info-background-color-7);}
     #right_rombase li:nth-child(8){background-color:color(right-play-info-background-color-8);}
-    #right_rombase_name{word-break:break-all;word-wrap:break-word;white-space:pre-wrap;display:inline-block;min-height:10dip;margin:5dip 10dip 5dip 0;padding:5dip 10dip;color:color(right-play-info-text-color);list-style:none;border-radius:15dip;background-color:color(right-play-info-background-color-8);}
+
+
+
+    #right_rombase li:nth-child(9){background-color:color(right-play-info-background-color-1);}
+    #right_rombase li:nth-child(10){background-color:color(right-play-info-background-color-2);}
+    #right_rombase li:nth-child(11){background-color:color(right-play-info-background-color-3);}
+    #right_rombase li:nth-child(12){background-color:color(right-play-info-background-color-4);}
+    #right_rombase li:nth-child(13){background-color:color(right-play-info-background-color-5);}
+    #right_rombase li:nth-child(14){background-color:color(right-play-info-background-color-6);}
 
     /* 侧边栏滚动图片 */
     .rotate_wrapper{position:relative;}
@@ -413,6 +419,7 @@ solid-with-shadow
                 <li><label><input class="romlist_column" opt="4" type="checkbox"> {{BaseCountry}}</label></li>
                 <li><label><input class="romlist_column" opt="5" type="checkbox"> {{BaseTranslate}}</label></li>
                 <li><label><input class="romlist_column" opt="6" type="checkbox"> {{BaseVersion}}</label></li>
+                <li><label><input class="romlist_column" opt="7" type="checkbox"> {{BaseProducer}}</label></li>
             </menu></li>
             <li id="config_show_name_type">{{ShowNameType}}<menu><li opt="0">{{Alias}}</li><li opt="1">{{FileName}}</li></menu></li>
         </menu></button>
@@ -447,6 +454,7 @@ solid-with-shadow
     <div class="filter">
         <select id="filter_type"><option value="">{{BaseType}}</option></select>
         <select id="filter_year"><option value="">{{BaseYear}}</option></select>
+        <select id="filter_producer"><option value="">{{BaseProducer}}</option></select>
         <select id="filter_publisher"><option value="">{{BasePublisher}}</option></select>
         <select id="filter_country"><option value="">{{BaseCountry}}</option></select>
         <select id="filter_translate"><option value="">{{BaseTranslate}}</option></select>
@@ -530,7 +538,6 @@ solid-with-shadow
                     <h2>{{BaseInfo}}</h2>
                     <ul id="right_rombase">
                     </ul>
-                    <div title="{{FileName}}" id="right_rombase_name"></div>
                     <h2 id="doc_title">{{Doc}}</h2>
                     <div id="doc" class="doc"></div>
                     <div class="audio_title_wrapper" id="audio_title_wrapper">

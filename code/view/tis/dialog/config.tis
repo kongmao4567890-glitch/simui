@@ -92,6 +92,7 @@ function Init(){
 
     //游戏资料枚举
     $(#rombase_type).value = mainView.GetRombaseEnumByType("type");
+    $(#rombase_producer).value = mainView.GetRombaseEnumByType("producer");
     $(#rombase_publisher).value = mainView.GetRombaseEnumByType("publisher");
     $(#rombase_country).value = mainView.GetRombaseEnumByType("country");
     $(#rombase_version).value = mainView.GetRombaseEnumByType("version");
@@ -283,6 +284,7 @@ function interfaceSubmit(obj){
 function rombaseSubmit(){
     mainView.UpdateRomBaseEnumByType("type",$(#rombase_type).value);
     mainView.UpdateRomBaseEnumByType("publisher",$(#rombase_publisher).value);
+    mainView.UpdateRomBaseEnumByType("producer",$(#rombase_producer).value);
     mainView.UpdateRomBaseEnumByType("country",$(#rombase_country).value);
     mainView.UpdateRomBaseEnumByType("version",$(#rombase_version).value);
     view.msgbox(#alert,CONF.Lang.UpdateSuccess);

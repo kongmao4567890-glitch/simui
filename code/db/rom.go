@@ -14,22 +14,31 @@ type Rom struct {
 	Id            uint64
 	Pname         string // 所属主游戏
 	Menu          string // 菜单名称
-	Name          string // 游戏名称
+	Name          string // 中文名
 	Platform      uint32 // 平台
 	RomPath       string // rom路径
 	SimId         uint32 // 正在使用的模拟器id
 	SimConf       string // 模拟器参数独立配置
 	Star          uint8  // 喜好，星级
 	Hide          uint8  // 是否隐藏
+	BaseNameEn    string // 英文名
+	BaseNameJp    string // 日文名
 	BaseType      string // 游戏类型，如RPG
 	BaseYear      string // 游戏年份
+	BaseProducer  string // 游戏出品公司
 	BasePublisher string // 游戏出品公司
 	BaseCountry   string // 游戏国家
 	BaseTranslate string // 汉化组
 	BaseVersion   string // 版本
+	BaseOtherA    string // 其他信息A
+	BaseOtherB    string // 其他信息B
+	BaseOtherC    string // 其他信息C
+	BaseOtherD    string // 其他信息D
 	Pinyin        string // 拼音索引
 	InfoMd5       string // 信息md5，包含资料信息
 	FileMd5       string // 文件md5，仅包含平台和文件名
+	RunNum        uint64 //运行次数
+	RunLasttime   uint32 //最后运行时间
 }
 
 func (*Rom) TableName() string {
@@ -51,10 +60,17 @@ func (m *Rom) BatchUpdate(romlist []*Rom) {
 			"rom_path":       v.RomPath,
 			"base_type":      v.BaseType,
 			"base_year":      v.BaseYear,
+			"base_producer":  v.BaseProducer,
 			"base_publisher": v.BasePublisher,
 			"base_country":   v.BaseCountry,
 			"base_translate": v.BaseTranslate,
 			"base_version":   v.BaseVersion,
+			"base_name_en":   v.BaseNameEn,
+			"base_name_jp":   v.BaseNameJp,
+			"base_other_a":   v.BaseOtherA,
+			"base_other_b":   v.BaseOtherB,
+			"base_other_c":   v.BaseOtherC,
+			"base_other_d":   v.BaseOtherD,
 			"pinyin":         v.Pinyin,
 			"info_md5":       v.InfoMd5,
 		}
@@ -90,7 +106,7 @@ func (m *Rom) BatchAdd(romlist []*Rom, showLoading int) {
 }
 
 //根据条件，查询多条数据
-func (*Rom) Get(showHide uint8, pages int, platform uint32, menu string, keyword string, baseType string, basePublisher string, baseYear string, baseCountry string, baseTranslate string, baseVersion string) ([]*Rom, error) {
+func (*Rom) Get(showHide uint8, pages int, platform uint32, menu string, keyword string, baseType string, basePublisher string, baseYear string, baseCountry string, baseTranslate string, baseVersion string,baseProducer string) ([]*Rom, error) {
 
 	volist := []*Rom{}
 	where := map[string]interface{}{}
@@ -116,7 +132,9 @@ func (*Rom) Get(showHide uint8, pages int, platform uint32, menu string, keyword
 	if baseType != "" {
 		where["base_type"] = baseType
 	}
-
+	if baseProducer != "" {
+		where["base_producer"] = baseProducer
+	}
 	if basePublisher != "" {
 		where["base_publisher"] = basePublisher
 	}
@@ -234,7 +252,7 @@ func (*Rom) GetByPinyin(showHide uint8, pages int, platform uint32, menu string,
 }
 
 //根据满足条件的rom数量
-func (m *Rom) Count(showHide uint8, platform uint32, menu string, keyword string, baseType string, basePublisher string, baseYear string, baseCountry string, baseTranslate string, baseVersion string) (int, error) {
+func (m *Rom) Count(showHide uint8, platform uint32, menu string, keyword string, baseType string, basePublisher string, baseYear string, baseCountry string, baseTranslate string, baseVersion string,baseProducer string) (int, error) {
 	count := 0
 	where := map[string]interface{}{
 	}
@@ -261,7 +279,9 @@ func (m *Rom) Count(showHide uint8, platform uint32, menu string, keyword string
 	if baseType != "" {
 		where["base_type"] = baseType
 	}
-
+	if baseProducer != "" {
+		where["base_producer"] = baseProducer
+	}
 	if basePublisher != "" {
 		where["base_publisher"] = basePublisher
 	}
@@ -571,6 +591,11 @@ func (sim *Rom) GetFilter(platform uint32, t string) ([]string, error) {
 			create = append(create, v.BaseYear)
 		}
 		break
+	case "base_producer":
+		for _, v := range volist {
+			create = append(create, v.BaseProducer)
+		}
+		break
 	case "base_publisher":
 		for _, v := range volist {
 			create = append(create, v.BasePublisher)
@@ -602,10 +627,17 @@ func (m *Rom) UpdateRomBase(id uint64) error {
 	create := map[string]string{
 		"base_type":      m.BaseType,
 		"base_year":      m.BaseYear,
+		"base_producer":  m.BaseProducer,
 		"base_publisher": m.BasePublisher,
 		"base_country":   m.BaseCountry,
 		"base_translate": m.BaseTranslate,
 		"base_version":   m.BaseVersion,
+		"base_name_en":   m.BaseNameEn,
+		"base_name_jp":   m.BaseNameJp,
+		"base_other_a":   m.BaseOtherA,
+		"base_other_b":   m.BaseOtherB,
+		"base_other_c":   m.BaseOtherC,
+		"base_other_d":   m.BaseOtherD,
 		"name":           m.Name,
 		"pinyin":         utils.TextToPinyin(m.Name),
 		"info_md5":       m.InfoMd5,

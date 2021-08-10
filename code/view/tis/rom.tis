@@ -84,6 +84,7 @@ function _createRomListList(romobj,cls){
         if(column[0] == 1){data += "<div>"+CONF.Lang["FilterMenu"]+"</div>";}
         if(column[1] == 1){data += "<div>"+CONF.Lang["BaseType"]+"</div>";}
         if(column[2] == 1){data += "<div>"+CONF.Lang["BaseYear"]+"</div>";}
+        if(column[7] == 1){data += "<div>"+CONF.Lang["BaseProducer"]+"</div>";}
         if(column[3] == 1){data += "<div>"+CONF.Lang["BasePublisher"]+"</div>";}
         if(column[4] == 1){data += "<div>"+CONF.Lang["BaseCountry"]+"</div>";}
         if(column[5] == 1){data += "<div>"+CONF.Lang["BaseTranslate"]+"</div>";}
@@ -132,6 +133,7 @@ function _createRomListList(romobj,cls){
         if(column[0] == 1){data += "<div>"+ obj.Menu.toHtmlString() +"</div>";}
         if(column[1] == 1){data += "<div>"+ obj.BaseType +"</div>";}
         if(column[2] == 1){data += "<div>"+ obj.BaseYear +"</div>";}
+        if(column[7] == 1){data += "<div>"+ obj.BaseProducer +"</div>";}
         if(column[3] == 1){data += "<div>"+ obj.BasePublisher +"</div>";}
         if(column[4] == 1){data += "<div>"+ obj.BaseCountry +"</div>";}
         if(column[5] == 1){data += "<div>"+ obj.BaseTranslate +"</div>";}
@@ -184,7 +186,8 @@ function loadPageRom(){
     var filter_country = $(#filter_country).value;
     var filter_translate = $(#filter_translate).value;
     var filter_version = $(#filter_version).value;
-    ROMJSON = view.GetGameList(0,ACTIVE_PLATFORM,menu,val,num,SCROLL_PAGE,filter_type,filter_publisher,filter_year,filter_country,filter_translate,filter_version);
+    var filter_producer = $(#filter_producer).value;
+    ROMJSON = view.GetGameList(0,ACTIVE_PLATFORM,menu,val,num,SCROLL_PAGE,filter_type,filter_publisher,filter_year,filter_country,filter_translate,filter_version,filter_producer);
 
     if(ROMJSON != "[]"){
         createRomList(0);
@@ -224,6 +227,7 @@ function numSearch(evt){
     $(#filter_publisher).value = "";
     $(#filter_year).value = "";
     $(#filter_country).value = "";
+    $(#filter_producer).value = "";
 
     ROMJSON = view.GetGameList(0,ACTIVE_PLATFORM,menu,"",num,SCROLL_PAGE,"","","","","","");
     createRomList(1);

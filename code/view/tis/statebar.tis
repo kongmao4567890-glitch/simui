@@ -112,6 +112,21 @@ function initBaseFilter(platform){
     $(#filter_year).options.html = filter_yearData;
     $(#filter_year).value = "";
 
+    //制作商
+    $(#filter_producer).value = "";
+    $(#filter_producer).options.clear();
+    var filter_producerData = "<option value=''>" + CONF.Lang.BaseProducer + "</option>";
+
+    getjson = view.GetFilter(platform,"base_producer");
+    jsonObj = JSON.parse(getjson);
+    if (jsonObj.length > 0){
+        for(var obj in jsonObj) {
+            filter_producerData += "<option value=\"" + obj.Name +"\">" + obj.Name + "</option>";
+        }
+    }
+    $(#filter_producer).options.html = filter_producerData;
+    $(#filter_producer).value = "";
+
     //发行商
     $(#filter_publisher).value = "";
     $(#filter_publisher).options.clear();
@@ -181,6 +196,7 @@ function initBaseFilter(platform){
     $(#filter_country).style["display"]   = column[4] == 1 ? "inline-block" : "none";
     $(#filter_translate).style["display"] = column[5] == 1 ? "inline-block" : "none";
     $(#filter_version).style["display"]   = column[6] == 1 ? "inline-block" : "none";
+    $(#filter_producer).style["display"]  = column[7] == 1 ? "inline-block" : "none";
 
 }
 
@@ -243,7 +259,7 @@ function switchRomListStyle(obj){
         self.$(#romlist).attributes.addClass("romblock");
     }
 
-    ROMJSON = view.GetGameList(0,ACTIVE_PLATFORM,ACTIVE_MENU,"","",0,"","","","","","")
+    ROMJSON = view.GetGameList(0,ACTIVE_PLATFORM,ACTIVE_MENU,"","",0,"","","","","","","")
     createRomList(1);
     //更新配置文件
     view.UpdateConfig("romlist_style",obj.attributes["value"]);
@@ -422,17 +438,18 @@ function CB_createCache(){
 
     //初始化rom
     
-    ROMJSON = view.GetGameList(0,ACTIVE_PLATFORM,ACTIVE_MENU,"","",0,"","","","","","")
+    ROMJSON = view.GetGameList(0,ACTIVE_PLATFORM,ACTIVE_MENU,"","",0,"","","","","","","")
     $(#filter_type).value = "";
     $(#filter_publisher).value = "";
     $(#filter_year).value = "";
     $(#filter_country).value = "";
     $(#filter_translate).value = "";
+    $(#filter_producer).value = "";
 
     createRomList(1); //生成rom列表
 
     //生成rom数量
-    var romCount = view.GetGameCount(0,ACTIVE_PLATFORM,"","","","","","","","");
+    var romCount = view.GetGameCount(0,ACTIVE_PLATFORM,"","","","","","","","","");
     $(#rom_count_num).html = romCount; //初始化在线人数
     endLoading(); //关闭loading框
 
@@ -443,6 +460,7 @@ function CB_createCache(){
 function filterClear(){
     $(#filter_type).value = "";
     $(#filter_publisher).value = "";
+    $(#filter_producer).value = "";
     $(#filter_year).value = "";
     $(#filter_country).value = "";
     $(#filter_translate).value = "";

@@ -121,7 +121,7 @@ function baseinfo(evt){
 
     var data = view.dialog({
         url:self.url(ROOTPATH + "edit_rombase.html"),
-        width:self.toPixels(350dip),
+        width:self.toPixels(530dip),
         height:self.toPixels(400dip),
         parameters: {
             id:evt.attributes["rid"],

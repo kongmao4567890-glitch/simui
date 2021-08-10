@@ -165,7 +165,9 @@ view.root.on("ready", function(){
     self.on("change", "#filter_type", function(evt) {
         search();
     });
-
+    self.on("change", "#filter_producer", function(evt) {
+        search();
+    });
     self.on("change", "#filter_publisher", function(evt) {
         search();
     });
