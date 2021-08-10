@@ -332,8 +332,8 @@ function openAbout(){
 function openPlatformConfig(){
     view.dialog({
         url:self.url(ROOTPATH + "platform_config.html"),
-        width:980,
-        height:630
+        width:self.toPixels(1100dip),
+        height:self.toPixels(670dip)
     });
     startLoading();
     initConfig("1");
