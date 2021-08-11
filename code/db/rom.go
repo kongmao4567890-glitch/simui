@@ -2,9 +2,11 @@ package db
 
 import (
 	"fmt"
+	"github.com/jinzhu/gorm"
 	_ "github.com/mattn/go-sqlite3"
 	"simUI/code/utils"
 	"strings"
+	"time"
 )
 
 var ROM_PAGE_NUM = 80 //每页加载rom数量
@@ -106,7 +108,7 @@ func (m *Rom) BatchAdd(romlist []*Rom, showLoading int) {
 }
 
 //根据条件，查询多条数据
-func (*Rom) Get(showHide uint8, pages int, platform uint32, menu string, keyword string, baseType string, basePublisher string, baseYear string, baseCountry string, baseTranslate string, baseVersion string,baseProducer string) ([]*Rom, error) {
+func (*Rom) Get(showHide uint8, pages int, platform uint32, menu string, keyword string, baseType string, basePublisher string, baseYear string, baseCountry string, baseTranslate string, baseVersion string, baseProducer string) ([]*Rom, error) {
 
 	volist := []*Rom{}
 	where := map[string]interface{}{}
@@ -252,7 +254,7 @@ func (*Rom) GetByPinyin(showHide uint8, pages int, platform uint32, menu string,
 }
 
 //根据满足条件的rom数量
-func (m *Rom) Count(showHide uint8, platform uint32, menu string, keyword string, baseType string, basePublisher string, baseYear string, baseCountry string, baseTranslate string, baseVersion string,baseProducer string) (int, error) {
+func (m *Rom) Count(showHide uint8, platform uint32, menu string, keyword string, baseType string, basePublisher string, baseYear string, baseCountry string, baseTranslate string, baseVersion string, baseProducer string) (int, error) {
 	count := 0
 	where := map[string]interface{}{
 	}
@@ -337,26 +339,14 @@ func (*Rom) GetMasterRomByPlatform(platform uint32) ([]*Rom, error) {
 func (*Rom) GetRelatedGames(id uint64) ([]*Rom, error) {
 
 	vo, _ := (&Rom{}).GetById(id)
-	platform := vo.Platform
-	baseType := vo.BaseType
-
 	volist := []*Rom{}
-	//先读取同类型游戏
-	result := getDb().Select("*").Where("id != ? AND platform = ? AND pname='' AND  base_type = ?", id, platform, baseType).Order("random()").Limit(6).Find(&volist)
+
+	result := getDb().Select("*").Where("id != ? AND platform = ? AND pname='' AND hide = 0 ", id, vo.Platform).Order("run_num desc").Limit(6).Find(&volist)
 	if result.Error != nil {
 		fmt.Println(result.Error)
 	}
 
-	//如果找不到同类型游戏，则读取平台下的随机游戏
-	if len(volist) == 0 {
-		result = getDb().Select("*").Where("id != ? AND platform = ? AND  pname=''", id, platform).Order("random()").Limit(6).Find(&volist)
-		if result.Error != nil {
-			fmt.Println(result.Error)
-		}
-	}
-
 	return volist, result.Error
-
 }
 
 //读取相关游戏
@@ -645,6 +635,16 @@ func (m *Rom) UpdateRomBase(id uint64) error {
 	}
 
 	result := getDb().Table(m.TableName()).Where("id=?", id).Updates(create)
+	if result.Error != nil {
+		fmt.Println(result.Error)
+	}
+	return result.Error
+}
+
+//更新运行次数和最后运行时间
+func (m *Rom) UpdateRunNumAndTime(id uint64) error {
+	result := getDb().Table(m.TableName()).Where("id=?", id).Update("run_num", gorm.Expr("run_num + 1"))
+	getDb().Table(m.TableName()).Where("id=?", id).Update("run_lasttime", time.Now().Unix())
 	if result.Error != nil {
 		fmt.Println(result.Error)
 	}

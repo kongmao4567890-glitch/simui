@@ -134,7 +134,8 @@ func RunGame(romId uint64, simId uint32) error {
 		callLua(sim.Lua, sim.Path, cmdStr)
 	}
 
-	fmt.Println(sim.Path, cmd)
+	//记录运行信息
+	_ = (&db.Rom{}).UpdateRunNumAndTime(romId)
 
 	//运行游戏
 	err = utils.RunGame(sim.Path, cmd)
