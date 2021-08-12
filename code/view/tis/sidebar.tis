@@ -100,8 +100,6 @@ function openSidebar(obj){
 
     }
 
-    //$(#right_title).html = info.Name;
-
     //侧边栏指定rom id
     ACTIVE_ROM_ID = info.Id;
     
@@ -491,7 +489,7 @@ function _createSecondThumbs(info){
     if(background != "") topHtml += _getSideSecondDom("background",background);
         else bottomHtml += _getSideSecondDom("background",background);
     if(wallpaper != "") topHtml += _getSideSecondDom("wallpaper",wallpaper);
-        else bottomHtml += _getSideSecondDom("wallpaper",background);
+        else bottomHtml += _getSideSecondDom("wallpaper",wallpaper);
     //视频在最下方且不自动播放
     bottomHtml += _getSideSecondDom("video",video);
 
