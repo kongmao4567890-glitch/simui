@@ -114,12 +114,10 @@ function getRomName(p){
 
 //读取文件扩展名
 function getFileExt(p){
-    var pic = p.replace("\\","/");
-    var parr = pic.split("/");
-    var filename = parr[parr.length-1].split(".");
-    return filename[filename.length-1];
+    var pathInfo = URL.parse(p);
+    return pathInfo.ext.toLowerCase();
 }
-//读取文件扩展名
+//读取文件名
 function getFileName(p){
     var pic = p.replace("\\","/");
     var parr = pic.split("/");

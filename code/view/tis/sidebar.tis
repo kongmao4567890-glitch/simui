@@ -35,17 +35,33 @@ function openSidebar(obj){
 
 
     //列表背景图片
+    var ext = "";
     var background = getRomPicPath("background",info.Platform,romPath.name); //背景图
     if(background != ""){
-        $(#center).style["background-image"] = [url:URL.fromPath(background)];
-        
+        ext = getFileExt(background);
+        if(ext == "mp4" || ext == "wmv" || ext == "flv" || ext == "avi"){
+            //如果是视频背景
+           centerVideoBg(background);
+        }else{
+            $(#center).style["background-image"] = [url:URL.fromPath(background)];
+        }
     }else{
         if(CONF.Default.BackgroundImage != ""){
-            $(#center).style["background-image"] = [url:URL.fromPath(CONF.Default.BackgroundImage)];
+            
+            if (CONF.Default.BackgroundImage != $(#center_video video).attributes["src"]){
+                 ext = getFileExt(CONF.Default.BackgroundImage);
+                if(ext == "mp4" || ext == "wmv" || ext == "flv" || ext == "avi"){
+                    //如果是视频背景
+                    centerVideoBg(CONF.Default.BackgroundImage);
+                }else{
+                    $(#center).style["background-image"] = [url:URL.fromPath(CONF.Default.BackgroundImage)];
+                }
+            }
         }else{
             $(#center).style["background-image"] = "none";
         }
     }
+
 
     //是否显示模糊效果
     if($(#center).style["background-image"] != "" && $(#center).style["background-image"] != "url()" && CONF.Default.BackgroundFuzzy == 1){
@@ -418,9 +434,6 @@ function _createRotate(info){
     self.timer(1s, function(){
         _setVideoControl(video);
     });
-
-//_setVideoControl(video);
-
 
     if($$(#stack > *).length == 1){
         $(#rotate).style["display"] = "none";

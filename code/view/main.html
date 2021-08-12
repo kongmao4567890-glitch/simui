@@ -23,6 +23,8 @@ solid-with-shadow
     #center{background-color:color(center-background-color);box-shadow:inset 0 0 4dip color(center-box-shadow-color);height:*;position:relative;}
     #center_fuzzy{backdrop-filter:blur(3dip);position:absolute;size:*;display:none}
     #center_mask{position:absolute;z-index:2;size:*;background-repeat:repeat}
+    #center_video{position:absolute;size:*;display:none}
+    #center_video video{foreground-size:cover;foreground-repeat:no-repeat;image-rendering:optimize-qualitydisplay:block;width:*;height:*}
     #center_content{position:absolute;z-index:3;size:*;overflow:scroll-indicator;}
     #right{background-color:color(sidebar-background-color);height:*;overflow:scroll-indicator;padding:0 9dip;width:205dip;position:relative;min-width:217dip;max-width:700dip}
     
@@ -485,6 +487,7 @@ solid-with-shadow
     </section>
     <splitter id="menu_splitter" />
     <section id="center" class="scrollbar">
+    <div id="center_video"></div>
     <div id="center_fuzzy"></div>
     <div id="center_mask"></div>
     <div id="center_content">

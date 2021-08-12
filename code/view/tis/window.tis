@@ -132,7 +132,15 @@ function initInterface(){
 
     //更新背景图
     if(CONF.Default.BackgroundImage != ""){
-        $(#center).style["background-image"] = [url:URL.fromPath(CONF.Default.BackgroundImage)];
+        var ext = getFileExt(CONF.Default.BackgroundImage);
+        if(ext == "mp4" || ext == "wmv" || ext == "flv" || ext == "avi"){
+            //如果是视频背景
+           centerVideoBg(CONF.Default.BackgroundImage);
+        }else{
+            //如果是图片背景
+            $(#center).style["background-image"] = [url:URL.fromPath(CONF.Default.BackgroundImage)];
+        }
+
         if(CONF.Default.BackgroundFuzzy == 1){
             $(#center_fuzzy).style["display"] = "block";
         }
@@ -150,6 +158,22 @@ function initInterface(){
     }else{
         $(#center).style["background-repeat"] = repeat;
         $(#center).style["background-size"] = "contain";
+    }
+
+}
+
+
+//视频背景
+function centerVideoBg(p){
+    $(#center_video).style["display"] = "block";
+    $(#center_video).html = "<video src=\"" + p + "\" />";
+    $(#center_video video).audioVolume(0);
+    $(#center_video video).onControlEvent = function(evt) {
+        if(evt.type == Event.VIDEO_STOPPED){
+            if ( this.videoDuration() - this.videoPosition()  < 1){
+                this.videoPlay(0.0);
+            }
+        }
     }
 
 }
