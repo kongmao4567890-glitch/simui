@@ -137,3 +137,19 @@ function closeRightVideo(){
         }catch(e){}
     }
 }
+
+//时间戳转时间
+function timestampToYmdhi(t){
+    if(t == 0){
+        return "";
+    }
+
+    t = t.toFloat() * 1000;
+    var date = new Date (t);//时间戳为10位需*1000，时间戳为13位的话不需乘1000
+    var y = date.year + "-";
+    var m = date.month+ "-";
+    var d = date.day + " ";
+    var h = date.hour+ ":";
+    var i = date.minute;
+    return y+m+d+h+i;
+}

@@ -40,7 +40,7 @@ type Rom struct {
 	InfoMd5       string // 信息md5，包含资料信息
 	FileMd5       string // 文件md5，仅包含平台和文件名
 	RunNum        uint64 //运行次数
-	RunLasttime   uint32 //最后运行时间
+	RunLasttime   string //最后运行时间
 }
 
 func (*Rom) TableName() string {

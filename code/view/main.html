@@ -522,10 +522,10 @@ solid-with-shadow
                     <button id="right_open_folder" type="menu" class="funbtn" rid="" rname="" title="{{OpenFolder}}"><img src="this://app/images/fileico_folder.png" /><menu id="foldercontext" type="menu"></menu></button>
                     <button id="right_delete" class="funbtn" platform="" name="" value="" title="{{DeleteRom}}"><img src="this://app/images/fileico_delete.png" /></button>                
                 </div>
-                <h2 id="game_stat">运行信息</h2>
+                <h2 id="game_stat">{{GameStat}}</h2>
                 <ul class="game_stat">
-                    <li>游戏运行次数：213</li>
-                    <li>最后运行时间：2021-12-34 28:32:52</li>
+                    <li>{{GameRunNum}}：<span id="run_num"></span></li>
+                    <li>{{GameRunLasttime}}：<span id="run_lasttime"></span></li>
                 </ul>
 
             <h2 id="thumb_h2">{{Thumb}}</h2>
