@@ -346,7 +346,8 @@ function _setVideoControl(movie){
         wrapperWidth = wrapperWidth > 350 ? 350 : wrapperWidth;
         var prop = videoHeight.toFloat() / videoWidth.toFloat()
         prop = Math.floor(prop * 100) / 100;
-        var realHeight = (wrapperWidth.toFloat() * prop) * 0.8;
+        //var realHeight = (wrapperWidth.toFloat() * prop) * 0.8;
+        var realHeight = (wrapperWidth.toFloat() * prop);
         realHeight = realHeight.toInteger();
         $(#right_video_wrapper).style["height"] = realHeight + "dip";
     }catch(e){}
@@ -827,10 +828,6 @@ function createOpenFolderMenu(info){
 
     if(CONF.Platform[pfId].DocPath != ""){
         btndata += "<li class='folder' rid='"+ info.Id +"' opt='doc'>"+ CONF.Lang.LocationDocFile +"</li>";
-    }
-
-    if(CONF.Platform[pfId].StrategyPath != ""){
-        btndata += "<li class='folder' rid='"+ info.Id +"' opt='strategy'>"+ CONF.Lang.LocationStrategyFile +"</li>";
     }
 
     if(CONF.Platform[pfId].StrategyPath != ""){
