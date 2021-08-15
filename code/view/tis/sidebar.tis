@@ -33,7 +33,6 @@ function openSidebar(obj){
     var info = detailObj.Info;
     var romPath = URL.parse(info.RomPath);
 
-
     //列表背景图片
     var ext = "";
     var background = getRomPicPath("background",info.Platform,romPath.name); //背景图
@@ -47,8 +46,8 @@ function openSidebar(obj){
         }
     }else{
         if(CONF.Default.BackgroundImage != ""){
-            
-            if (CONF.Default.BackgroundImage != $(#center_video video).attributes["src"]){
+            var src = $(#center_video video) == undefined ? "" : $(#center_video video).attributes["src"];
+            if (CONF.Default.BackgroundImage != src){
                  ext = getFileExt(CONF.Default.BackgroundImage);
                 if(ext == "mp4" || ext == "wmv" || ext == "flv" || ext == "avi"){
                     //如果是视频背景
@@ -61,7 +60,6 @@ function openSidebar(obj){
             $(#center).style["background-image"] = "none";
         }
     }
-
 
     //是否显示模糊效果
     if($(#center).style["background-image"] != "" && $(#center).style["background-image"] != "url()" && CONF.Default.BackgroundFuzzy == 1){
@@ -104,9 +102,10 @@ function openSidebar(obj){
     ACTIVE_ROM_ID = info.Id;
     
     //游戏运行信息
+    
     $(#run_num).html = info.RunNum.toString();
     $(#run_lasttime).html = timestampToYmdhi(info.RunLasttime);
-
+/*
     $(#right_rename).attributes["rid"] = info.Id; //重命名功能
     $(#right_base_info).attributes["rid"] = info.Id; //编辑资料
     $(#right_edit_strategy).attributes["rid"] = info.Id; //编辑攻略
@@ -115,12 +114,14 @@ function openSidebar(obj){
 
 
     //打开文件夹
+    
     var romcontext = $(#foldercontext);
     romcontext.clear();
     var folderData = createOpenFolderMenu(info);
     romcontext.append(folderData);
 
     //生成喜好按钮
+    
     var favorite = $(#right_favorite);
     favorite.attributes["rid"] = info.Id.toHtmlString();
     favorite.attributes["value"] = info.Star.toHtmlString();
@@ -139,6 +140,7 @@ function openSidebar(obj){
     }else{
         hide.html = "<img src='this://app/images/fileico_hide_0.png' />";
     }
+    */
 
     //创建滑动图
     _createRotate(info);
@@ -343,7 +345,7 @@ function _setVideoControl(movie){
         var videoWidth = vdom.videoWidth();
         var videoHeight = vdom.videoHeight();
         var wrapperWidth = $(#right_video_wrapper).box(#width);
-        wrapperWidth = wrapperWidth > 350 ? 350 : wrapperWidth;
+        videoWidth = videoWidth > 350 ? 350 : videoWidth;
         var prop = videoHeight.toFloat() / videoWidth.toFloat()
         prop = Math.floor(prop * 100) / 100;
         //var realHeight = (wrapperWidth.toFloat() * prop) * 0.8;

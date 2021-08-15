@@ -181,8 +181,7 @@ function initBaseFilter(platform){
     jsonObj = JSON.parse(getjson);
     if (jsonObj.length > 0){
         for(var obj in jsonObj) {
-            filter_versionData += "<option value=\"" + obj.Name + "\"}>"+ obj.Name "+</option>";
-
+            filter_versionData += "<option value=\"" + obj.Name + "\">"+ obj.Name +"</option>";
         }
     }
     $(#filter_version).options.html = filter_versionData;

@@ -193,7 +193,7 @@ function managerCreateRombaseByPages(obj){
     var platformId = $(#platform_rombase).value;
     var id = obj.parent.id;
     var num = obj.html.toInteger() - 1;
-    var romjson = mainView.GetGameList(0,platformId,"","","",num,"","","","","","");
+    var romjson = mainView.GetGameList(0,platformId,"","","",num,"","","","","","","");
     $(#romlist_rombase tbody).html = "";
     managerCreateRombase(romjson);
     obj.state.current = true;
@@ -406,7 +406,7 @@ function managerCreateMediaByPages(obj){
     var platformId = $(#platform_media).value;
     var id = obj.parent.id;
     var num = obj.html.toInteger() - 1;
-    var romjson = mainView.GetGameList(0,platformId,"","","",num,"","","","","","");
+    var romjson = mainView.GetGameList(0,platformId,"","","",num,"","","","","","","");
     $(#romlist_media tbody).html = "";
     managerCreateMedia(romjson);
     obj.state.current = true;
@@ -577,7 +577,7 @@ function managerCreateSimulatorByPages(obj){
     var platformId = $(#platform_sim).value;
     var id = obj.parent.id;
     var num = obj.html.toInteger() - 1;
-    var romjson = mainView.GetGameList(0,platformId,"","","",num,"","","","","","");
+    var romjson = mainView.GetGameList(0,platformId,"","","",num,"","","","","","","");
     $(#romlist_sim tbody).html = "";
     managerCreateSimulator(romjson);
     obj.state.current = true;
@@ -835,7 +835,7 @@ function managerCreateRomFileByPages(obj){
     var platformId = $(#platform_file).value;
     var id = obj.parent.id;
     var num = obj.html.toInteger() - 1;
-    var romjson = mainView.GetGameList(1,platformId,"","","",num,"","","","","","");
+    var romjson = mainView.GetGameList(1,platformId,"","","",num,"","","","","","","");
     $(#romlist_file tbody).html = "";
     managerCreateRomFile(romjson);
     obj.state.current = true;

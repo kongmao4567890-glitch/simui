@@ -235,7 +235,7 @@ solid-with-shadow
 
     /* 侧边栏滚动图片 */
     .rotate_wrapper{position:relative;}
-    #rotate{border:0;text-align:center;height:25dip;line-height:25dip;width:25dip;color:color(func-button-text-color);background:color(func-button-background-color);display:inline-block;padding:0;top:-35dip;right:0dip;position:absolute;opacity:0.8}
+    #rotate{border:0;text-align:center;height:25dip;line-height:25dip;width:25dip;color:color(func-button-text-color);background:color(func-button-background-color);display:inline-block;padding:0;top:-30dip;right:0dip;position:absolute;opacity:0.8}
     #rotate:hover{opacity:1}
     .stack{overflow:hidden;flow:stack;width:100%;text-align:center;}
     .stack>img{max-width:360dip;width:100%;margin:0 auto}
@@ -510,6 +510,7 @@ solid-with-shadow
             <div class="right_bg" id="right_bg"></div>
 
             <div class="margin_wrapper">
+            <!--
                 <h2 id="funBtn_h2">{{FunButton}}</h2>
                 <div class="button_wrapper">
                     <button id="right_favorite" class="funbtn" rid="" value="" title="{{SetFavorite}}"></button>
@@ -522,13 +523,11 @@ solid-with-shadow
                     <button id="right_open_folder" type="menu" class="funbtn" rid="" rname="" title="{{OpenFolder}}"><img src="this://app/images/fileico_folder.png" /><menu id="foldercontext" type="menu"></menu></button>
                     <button id="right_delete" class="funbtn" platform="" name="" value="" title="{{DeleteRom}}"><img src="this://app/images/fileico_delete.png" /></button>                
                 </div>
-                <h2 id="game_stat">{{GameStat}}</h2>
-                <ul class="game_stat">
-                    <li>{{GameRunNum}}：<span id="run_num"></span></li>
-                    <li>{{GameRunLasttime}}：<span id="run_lasttime"></span></li>
-                </ul>
+                -->
+                
+                
 
-            <h2 id="thumb_h2">{{Thumb}}</h2>
+            <h2 id="thumb_h2">{{SideTabThumb}}</h2>
             <div class="rotate_wrapper">
                 <button id="rotate">&gt;</button>
                 <div class="stack" id="stack"></div>
@@ -546,6 +545,13 @@ solid-with-shadow
                     <h2>{{BaseInfo}}</h2>
                     <ul id="right_rombase">
                     </ul>
+
+                    <h2 id="game_stat">{{GameStat}}</h2>
+                    <ul class="game_stat">
+                        <li>{{GameRunNum}}：<span id="run_num"></span></li>
+                        <li>{{GameRunLasttime}}：<span id="run_lasttime"></span></li>
+                    </ul>
+
                     <h2 id="doc_title">{{Doc}}</h2>
                     <div id="doc" class="doc"></div>
                     <div class="audio_title_wrapper" id="audio_title_wrapper">
