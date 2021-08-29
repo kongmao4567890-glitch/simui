@@ -342,16 +342,29 @@ function _setVideoControl(movie){
         vdom.videoPlay();
         vdom.audioVolume(VIDEO_VALUME);
         VIDEO_PLAY_STATE = 1;
+        var widthMode = $(#right).attributes.hasClass("widthMode");
         var videoWidth = vdom.videoWidth();
         var videoHeight = vdom.videoHeight();
         var wrapperWidth = $(#right_video_wrapper).box(#width);
-        videoWidth = videoWidth > 350 ? 350 : videoWidth;
-        var prop = videoHeight.toFloat() / videoWidth.toFloat()
-        prop = Math.floor(prop * 100) / 100;
-        //var realHeight = (wrapperWidth.toFloat() * prop) * 0.8;
-        var realHeight = (wrapperWidth.toFloat() * prop);
-        realHeight = realHeight.toInteger();
-        $(#right_video_wrapper).style["height"] = realHeight + "dip";
+
+        if(widthMode){
+            //宽模式
+            var maxHeight = 200;
+            var prop = videoWidth.toFloat() / videoHeight.toFloat()
+            prop = Math.floor(prop * 100) / 100;
+            var realWidth = maxHeight * prop;
+            $(#right_video_wrapper).style["width"] = realWidth;
+            $(#right_video_wrapper).style["height"] = maxHeight;
+        }else{
+            //窄模式
+            videoWidth = videoWidth > 350 ? 350 : videoWidth;
+            var prop = videoHeight.toFloat() / videoWidth.toFloat()
+            prop = Math.floor(prop * 100) / 100;
+            //var realHeight = (wrapperWidth.toFloat() * prop) * 0.8;
+            var realHeight = (wrapperWidth.toFloat() * prop);
+            realHeight = realHeight.toInteger();
+           $(#right_video_wrapper).style["height"] = realHeight;
+        }
     }catch(e){}
    
     $(#right_video).onControlEvent = function(evt) {

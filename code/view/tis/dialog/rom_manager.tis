@@ -998,7 +998,7 @@ function managerCheckRepeat(){
         if (romobj[i].size != upSize){clr = (clr == color1) ? color2 : color1}
         upSize = romobj[i].size
 
-        romData += "<tr opt='" + romobj[i].path + "' rid='"+romobj[i].id+"' class='"+clr+"'>";
+        romData += "<tr opt=\"" + romobj[i].path + "\" rid='"+ romobj[i].id +"' class='"+clr+"'>";
         romData += "<td><input class='check_repeat' type='checkbox' value='"+ romobj[i].id +"' /></td>";
         romData += "<td>"+ romobj[i].name +"</td>";
         romData += "<td>"+ romobj[i].path +"</td>";
@@ -1128,9 +1128,9 @@ function managerCheckZombie(){
         }
 
         romData += "<tr>";
-        romData += "<td><input class='check_zombie' type='checkbox' value='"+ romobj[i].path +"' /></td>";
+        romData += "<td><input class='check_zombie' type='checkbox' value=\""+ romobj[i].path.toHtmlString() +"\" /></td>";
         romData += "<td title='"+ desc +"'>"+ type +"</td>";
-        romData += "<td>"+ romobj[i].path +"</td>";
+        romData += "<td>"+ romobj[i].path.toHtmlString() +"</td>";
         romData += "</tr>"
     }
     $(#romlist_zombie tbody).html = romData;
