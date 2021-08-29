@@ -348,7 +348,7 @@ solid-with-shadow
     .right_bg{display:none}
     .widthMode  .right_bg{background:no-repeat center center;background-size:100%;height:300dip;display:block; box-shadow: inset 0 -100dip 100dip color(sidebar-background-color);position:relative}
     .widthMode .margin_wrapper{margin-top:-50dip;height:*;}
-    .widthMode .button_wrapper{top:20dip;width:50%;z-index:4;}
+    .widthMode .button_wrapper{display:none}
     .widthMode .rotate_wrapper{height:90dip;z-index:3}
     .widthMode  #right_title{display:block}
     .widthMode #rotate{height:35dip;line-height:35dip;width:35dip;top:-40dip;right:0dip;position:absolute;z-index:2;}
@@ -510,9 +510,8 @@ solid-with-shadow
             <div class="right_bg" id="right_bg"></div>
 
             <div class="margin_wrapper">
-            <!--
+            <div class="button_wrapper">
                 <h2 id="funBtn_h2">{{FunButton}}</h2>
-                <div class="button_wrapper">
                     <button id="right_favorite" class="funbtn" rid="" value="" title="{{SetFavorite}}"></button>
                     <button id="right_hide" class="funbtn" rid="" rname="" title="{{SetHide}}"></button>
                     <button id="right_rename" class="funbtn" rid="" rname="" title="{{Rename}}"><img src="this://app/images/fileico_rename.png" /></button>
@@ -522,10 +521,7 @@ solid-with-shadow
                     <button id="right_move" class="funbtn" platform="" name="" value="" rid="" title="{{RomMove}}"><img src="this://app/images/fileico_move.png" /></button>
                     <button id="right_open_folder" type="menu" class="funbtn" rid="" rname="" title="{{OpenFolder}}"><img src="this://app/images/fileico_folder.png" /><menu id="foldercontext" type="menu"></menu></button>
                     <button id="right_delete" class="funbtn" platform="" name="" value="" title="{{DeleteRom}}"><img src="this://app/images/fileico_delete.png" /></button>                
-                </div>
-                -->
-                
-                
+            </div>
 
             <h2 id="thumb_h2">{{SideTabThumb}}</h2>
             <div class="rotate_wrapper">

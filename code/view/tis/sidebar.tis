@@ -105,7 +105,7 @@ function openSidebar(obj){
     
     $(#run_num).html = info.RunNum.toString();
     $(#run_lasttime).html = timestampToYmdhi(info.RunLasttime);
-/*
+
     $(#right_rename).attributes["rid"] = info.Id; //重命名功能
     $(#right_base_info).attributes["rid"] = info.Id; //编辑资料
     $(#right_edit_strategy).attributes["rid"] = info.Id; //编辑攻略
@@ -140,7 +140,7 @@ function openSidebar(obj){
     }else{
         hide.html = "<img src='this://app/images/fileico_hide_0.png' />";
     }
-    */
+    
 
     //创建滑动图
     _createRotate(info);
