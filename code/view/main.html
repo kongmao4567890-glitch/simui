@@ -111,8 +111,8 @@ solid-with-shadow
     .romblock li div:nth-child(8){display:none}
 
     #romlist.textShadow{text-shadow: 1px 1px 1px color(rom-block-text-shadow-color);box-shadow:0}
-    #romlist.textShadow li:current{border:0;box-shadow:0}
-    #romlist.textShadow li:current img {border:0;}
+    #romlist.textShadow li:current{border:0;box-shadow:0;overflow:visable}
+    #romlist.textShadow li:current img {border:5dip solid color(rom-block-active-border-color);box-shadow:0 0 12dip color(rom-block-hover-box-shadow-color);}
     #romlist.fontsize1 li{display:inherit;font-size:8dip;}
     #romlist.fontsize2 li{display:inherit;font-size:9dip}
     #romlist.fontsize3 li{display:inherit;font-size:10dip}
@@ -143,7 +143,6 @@ solid-with-shadow
     .romblock.zoom8 > li{min-width:280dip;max-width:320dip;}
     .romblock.zoom9 > li{min-width:320dip;max-width:360dip;}
 
-
     .romblock.margin1 > li{margin:3dip 6dip;}
     .romblock.margin2 > li{margin:6dip 12dip}
     .romblock.margin3 > li{margin:9dip 18dip;}
@@ -171,9 +170,7 @@ solid-with-shadow
 
     /* rom列表 */
     .romlist{width:*;margin-top:24dip;margin:0 20dip 0 30dip;list-style-type:none;padding:0;}
-    .romlist > li{position:relative;flow:horizontal-flow;vertical-align:middle;line-height:36dip;height:36dip;padding:0 12dip 0 0;margin:0;context-menu:selector(menu#romcontext);}
-    .romlist > li:nth-child(odd){background:color(rom-list-odd-background-color);color:color(rom-list-odd-text-color);}
-    .romlist > li:nth-child(even){background:color(rom-list-even-background-color);color:color(rom-list-even-text-color);}
+    .romlist > li{color:color(rom-list-text-color);text-shadow: 1px 1px 1px color(rom-block-text-shadow-color);position:relative;flow:horizontal-flow;vertical-align:middle;line-height:36dip;height:36dip;padding:0 12dip 0 0;margin:0;context-menu:selector(menu#romcontext);}
     .romlist > li:current{background:color(rom-list-active-background-color);color:color(rom-list-active-text-color);}
     .romlist > li img{border-radius:50%;width:19dip;height:19dip;vertical-align:middle;margin:0;display:block;position:absolute;top:9dip;transform:scale(1);transition:transform sine-in-out 100ms;context-menu:selector(menu#romcontext);}
     .romlist > li .noradius{border-radius:0}
@@ -206,7 +203,7 @@ solid-with-shadow
     .funbtn i{display:block}
 
     .game_stat{margin:0;padding:0;position:relative}
-    .game_stat li{color:color(general-text-color);list-style:none;}
+    .game_stat li{color:color(general-text-color);list-style:none;padding-left:10dip}
 
     .flow_wrapper{;height:*;}
     .flow_wrapper_left{height:auto;flow:none;}

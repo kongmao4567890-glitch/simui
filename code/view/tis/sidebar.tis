@@ -200,24 +200,24 @@ function openSidebar(obj){
 
     //显示游戏基础信息
     var rombase = "";
-    if(info.BaseType != "")      {rombase += "<li title=\""+ CONF.Lang.BaseType +"\">" + info.BaseType      + "</li>";}
-    if(info.BaseYear != "")      {rombase += "<li title=\""+ CONF.Lang.BaseYear +"\">" + info.BaseYear      + "</li>";}
-    if(info.BaseProducer != "")  {rombase += "<li title=\""+ CONF.Lang.BaseProducer +"\">" + info.BaseProducer + "</li>";}
-    if(info.BasePublisher != "") {rombase += "<li title=\""+ CONF.Lang.BasePublisher +"\">" + info.BasePublisher + "</li>";}
-    if(info.BaseCountry != "")   {rombase += "<li title=\""+ CONF.Lang.BaseCountry +"\">" + info.BaseCountry + "</li>";}
-    if(info.BaseTranslate != "") {rombase += "<li title=\""+ CONF.Lang.BaseTranslate +"\">" + info.BaseTranslate + "</li>";}
-    if(info.BaseVersion != "")   {rombase += "<li title=\""+ CONF.Lang.BaseVersion +"\">" + info.BaseVersion + "</li>";}
+    if(info.BaseType != "")      {rombase += "<li title=\""+ CONF.Lang.BaseType +"\">" + info.BaseType.toHtmlString() + "</li>";}
+    if(info.BaseYear != "")      {rombase += "<li title=\""+ CONF.Lang.BaseYear +"\">" + info.BaseYear.toHtmlString() + "</li>";}
+    if(info.BaseProducer != "")  {rombase += "<li title=\""+ CONF.Lang.BaseProducer +"\">" + info.BaseProducer.toHtmlString() + "</li>";}
+    if(info.BasePublisher != "") {rombase += "<li title=\""+ CONF.Lang.BasePublisher +"\">" + info.BasePublisher.toHtmlString() + "</li>";}
+    if(info.BaseCountry != "")   {rombase += "<li title=\""+ CONF.Lang.BaseCountry +"\">" + info.BaseCountry.toHtmlString() + "</li>";}
+    if(info.BaseTranslate != "") {rombase += "<li title=\""+ CONF.Lang.BaseTranslate +"\">" + info.BaseTranslate.toHtmlString() + "</li>";}
+    if(info.BaseVersion != "")   {rombase += "<li title=\""+ CONF.Lang.BaseVersion +"\">" + info.BaseVersion.toHtmlString() + "</li>";}
     if(detailObj.RomFileSize != ""){
-        rombase += "<li title=\""+ CONF.Lang.FileSize +"\">" + detailObj.RomFileSize + "</li>";
+        rombase += "<li title=\""+ CONF.Lang.FileSize +"\">" + detailObj.RomFileSize.toHtmlString() + "</li>";
     }
 
-    if(info.BaseNameEn != "")      {rombase += "<li title=\""+ CONF.Lang.BaseNameEn +"\">" + info.BaseNameEn      + "</li>";}
-    if(info.BaseNameJp != "")      {rombase += "<li title=\""+ CONF.Lang.BaseNameJp +"\">" + info.BaseNameJp      + "</li>";}
-    if(info.BaseOtherA != "")      {rombase += "<li>" + info.BaseOtherA + "</li>";}
-    if(info.BaseOtherB != "")      {rombase += "<li>" + info.BaseOtherB + "</li>";}
-    if(info.BaseOtherC != "")      {rombase += "<li>" + info.BaseOtherC + "</li>";}
-    if(info.BaseOtherD != "")      {rombase += "<li>" + info.BaseOtherD + "</li>";}
-    rombase += "<li title=\""+ CONF.Lang.FileName +"\">" + info.RomPath + "</li>";
+    if(info.BaseNameEn != "")      {rombase += "<li title=\""+ CONF.Lang.BaseNameEn +"\">" + info.BaseNameEn.toHtmlString()      + "</li>";}
+    if(info.BaseNameJp != "")      {rombase += "<li title=\""+ CONF.Lang.BaseNameJp +"\">" + info.BaseNameJp.toHtmlString()      + "</li>";}
+    if(info.BaseOtherA != "")      {rombase += "<li>" + info.BaseOtherA.toHtmlString() + "</li>";}
+    if(info.BaseOtherB != "")      {rombase += "<li>" + info.BaseOtherB.toHtmlString() + "</li>";}
+    if(info.BaseOtherC != "")      {rombase += "<li>" + info.BaseOtherC.toHtmlString() + "</li>";}
+    if(info.BaseOtherD != "")      {rombase += "<li>" + info.BaseOtherD.toHtmlString() + "</li>";}
+    rombase += "<li title=\""+ CONF.Lang.FileName +"\">" + info.RomPath.toHtmlString() + "</li>";
 
     $(#right_rombase).html = rombase;
 

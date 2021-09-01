@@ -88,7 +88,12 @@ func CreateRomData(platform uint32) ([]*db.Rom, error) {
 
 	RomPath := config.Cfg.Platform[platform].RomPath //rom文件路径
 
+	//获取扩展名并转换成map
 	RomExt := strings.Split(config.Cfg.Platform[platform].RomExts, ",") //rom扩展名
+	RomExtMap := map[string]bool{}
+	for _,v := range RomExt{
+		RomExtMap[v] = true
+	}
 	BaseInfo, err := GetRomBaseList(platform)
 
 	if err != nil {
@@ -115,9 +120,14 @@ func CreateRomData(platform uint32) ([]*db.Rom, error) {
 			}
 			subpath := strings.Split(newpath, config.Cfg.Separator)
 			romExt := strings.ToLower(path.Ext(p)) //获取文件后缀
+			romExists := false //rom是否存在
 
-			//如果该文件是游戏rom
-			if f.IsDir() == false && utils.InSliceStringToLower(romExt, RomExt) {
+			if _, ok := RomExtMap[romExt]; ok {
+				romExists = true //rom存在
+			}
+
+			//如果该文件是游戏rom，并是否存在
+			if f.IsDir() == false && romExists == true {
 				romName := utils.GetFileName(f.Name())
 				title := romName
 
