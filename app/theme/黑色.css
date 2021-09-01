@@ -124,10 +124,8 @@ html:theme(dark) {
     
     /* rom列表（列表） */
     var(rom-list-title-text-color) : #FFF;
-    var(rom-list-odd-text-color) : #FFF;
-    var(rom-list-odd-background-color) : #323232;
-    var(rom-list-even-text-color) : #FFF;
-    var(rom-list-even-background-color) : #383838;
+    var(rom-list-text-color) : #FFF;
+    var(rom-list-text-shadow-color) : #000;
     var(rom-list-active-text-color) : #FFF;
     var(rom-list-active-background-color) : #1366cc;
     var(rom-list-text-slave-color) : #999;
