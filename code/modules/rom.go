@@ -187,8 +187,8 @@ func GetGameDetail(id uint64) (*RomDetail, error) {
 		return res, err
 	}
 	//子游戏列表
-	romName := utils.GetFileName(info.RomPath)
-	sub, _ := (&db.Rom{}).GetSubRom(info.Platform, romName)
+	//romName := utils.GetFileName(info.RomPath)
+	sub, _ := (&db.Rom{}).GetSubRom(info.Platform, info.Name)
 
 	res.Info = info
 	res.Sublist = sub
