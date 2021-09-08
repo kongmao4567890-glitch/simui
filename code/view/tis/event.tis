@@ -2,8 +2,12 @@
 view.root.on("ready", function(){
 
     //数据初始化
+    try{
     Init();
- 
+ }catch(e){
+view.msgbox(#alert,e);
+
+ }
     /**
     * 窗口
     **/
@@ -332,6 +336,11 @@ view.root.on("ready", function(){
     //打开资料文件
     self.on("click", "#third_files li", function(evt) {
         view.OpenStrategyFiles(this.attributes["path"]);
+    });
+
+    //播放音频
+    self.on("click", "#audio li", function(evt) {
+        playAudio(this.select("a").attributes["path"]);
     });
 
     //播放音频
