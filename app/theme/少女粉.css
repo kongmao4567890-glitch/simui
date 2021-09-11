@@ -112,6 +112,7 @@ html:theme(girl) {
     var(right-doc-border-color) : #e97283;
     var(right-doc-text-color) : #403739;
     var(right-doc-background-color) : #e97283;
+    var(right-no-doc-text-color) : #fad7dc;
 
     /* 字母索引 */
     var(num-index-text-color) : #666;
@@ -147,6 +148,9 @@ html:theme(girl) {
     var(desc-title-text-color) : #000;
     var(desc-quote-text-color) : #403739;
     var(desc-quote-border-color) : #da7684;
+
+    /* 游戏统计信息 */
+    var(right-stat-text-color) :#403739;
 
     /* 游戏原声 */
     var(right-audio-border-color) : #da7684;

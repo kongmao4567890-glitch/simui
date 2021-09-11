@@ -147,14 +147,13 @@ function openSidebar(obj){
 
     //显示简介
     if(detailObj.DocContent != ""){
-
-        $(#doc_title).style["display"] = "inhert";
+        $(#doc).attributes.removeClass("nodoc");
         $(#doc).style["display"] = "block";
         //$(#doc).html = markdown.parse(detailObj.DocContent);
         $(#doc).html = detailObj.DocContent;
     }else{
-        $(#doc_title).style["display"] = "none";
-        $(#doc).style["display"] = "none";
+        $(#doc).html = CONF.Lang.DocEmpty;
+        $(#doc).attributes.addClass("nodoc");
     }
 
     //生成模拟器列表

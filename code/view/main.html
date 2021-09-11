@@ -195,7 +195,8 @@ solid-with-shadow
     #right .run:active{color:color(run-button-active-text-color);background:color(run-button-active-background-color)}
     #right .filedrop_ctl_btn{top:-28dip;left:0dip;position:absolute;}
     #right_second h2{margin-left:25dip;}
-    #right .doc{height:*;min-height:150dip;overflow:scroll-indicator;margin-bottom:2dip;border:1dip solid color(right-doc-border-color);color:color(right-doc-text-color);background:color(right-doc-background-color);line-height:1.5em;padding:4dip;font-size:14dip;white-space:pre-wrap;word-wrap:break-word;word-break:break-all}
+    .doc{vertical-align:top;height:*;min-height:150dip;overflow:scroll-indicator;margin-bottom:2dip;border:1dip solid color(right-doc-border-color);color:color(right-doc-text-color);background:color(right-doc-background-color);line-height:1.5em;padding:4dip;font-size:14dip;white-space:pre-wrap;word-wrap:break-word;word-break:break-all}
+    .nodoc{vertical-align:middle;text-align:center;font-size:12dip;color:color(right-no-doc-text-color)}
     .button_wrapper{position:relative;z-index:2;}
     .funbtn{border:0;text-align:center;height:19dip;line-height:19dip;width:19dip;color:color(func-button-text-color);background:color(func-button-background-color);display:inline-block;padding:0}
     .funbtn img{width:19dip;vertical-align:middle;margin:auto}
@@ -203,7 +204,7 @@ solid-with-shadow
     .funbtn i{display:block}
 
     .game_stat{margin:0;padding:0;position:relative}
-    .game_stat li{color:color(general-text-color);list-style:none;padding-left:10dip}
+    .game_stat li{color:color(right-stat-text-color);list-style:none;padding:3dip 0 3dip 15dip;background:url(this://app/images/gamestat.gif) no-repeat left center;background-size:9px;}
 
     .flow_wrapper{;height:*;}
     .flow_wrapper_left{height:auto;flow:none;}
@@ -372,8 +373,11 @@ solid-with-shadow
     .widthMode .related > li > p{margin-bottom:0;display:block;font-size:10dip}
 
     /* 音频 */
-    .audio{padding:0;margin:0}
-    .audio li{display:block;border-bottom:1px solid color(right-audio-border-color);padding:0;flow:horizontal-flow;}
+    .audio{padding:0;margin:0;width:*;}
+    .audio li{display:block;border-bottom:1px solid color(right-audio-border-color);width:45%;padding:0;flow:horizontal-flow;}
+    .audio li:nth-child(odd){float:left;}
+    .audio li:nth-child(even){float:right;}
+
     .audio li:hover{opacity:0.8}
     .audio li:active{opacity:0.5}
     .audio li:last-child{border-bottom:0}
@@ -549,13 +553,16 @@ solid-with-shadow
 
                     <h2 id="doc_title">{{Doc}}</h2>
                     <div id="doc" class="doc"></div>
-                    <div class="audio_title_wrapper" id="audio_title_wrapper">
-                        <h2 id="audio_title">{{Audio}}</h2>
-                        <button id="play_audio_all" class="funbtn" title="{{AudioPlayAll}}"><i.video_play></i></button>
-                    </div>
-                    <ul class="audio" id="audio"></ul>
                 </div>
             </div>
+
+
+            <div class="audio_title_wrapper" id="audio_title_wrapper">
+                <h2 id="audio_title">{{Audio}}</h2>
+                <button id="play_audio_all" class="funbtn" title="{{AudioPlayAll}}"><i.video_play></i></button>
+            </div>
+            <ul class="audio" id="audio"></ul>
+
 
             </div>
             </div>

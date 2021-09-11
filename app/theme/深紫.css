@@ -113,6 +113,7 @@ html:theme(purple) {
     var(right-doc-border-color) : #523266;
     var(right-doc-text-color) : #dba3f6;
     var(right-doc-background-color) : #3d274b;
+    var(right-no-doc-text-color) : #d4bfe0;
 
     /* 字母索引 */
     var(num-index-text-color) : #dba3f6;
@@ -148,6 +149,9 @@ html:theme(purple) {
     var(desc-title-text-color) : #FFF;
     var(desc-quote-text-color) : #dba3f6;
     var(desc-quote-border-color) : #311f3c;
+
+    /* 游戏统计信息 */
+    var(right-stat-text-color) :#dba3f6;
 
     /* 游戏原声 */
     var(right-audio-border-color) : #311f3c;

@@ -112,6 +112,7 @@ html:theme(steam) {
     var(right-doc-border-color) : #395371;
     var(right-doc-text-color) : #acdbf5;
     var(right-doc-background-color) : #2E4259;
+    var(right-no-doc-text-color) : #acdbf5;
 
     /* 字母索引 */
     var(num-index-text-color) : #c7d5e0;
@@ -148,6 +149,9 @@ html:theme(steam) {
     var(desc-quote-text-color) : #acdbf5;
     var(desc-quote-border-color) : #27384c;
     
+    /* 游戏统计信息 */
+    var(right-stat-text-color) :#acdbf5;
+
     /* 游戏原声 */
     var(right-audio-border-color) : #27384c;
     var(right-audio-text-color) : #acdbf5;
