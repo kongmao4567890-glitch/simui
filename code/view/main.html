@@ -374,21 +374,13 @@ solid-with-shadow
     .widthMode .related > li > p{margin-bottom:0;display:block;font-size:10dip}
 
     /* 音频 */
-
     .audio{padding:0;margin:0;width:*;}
-    .audio li{display:inline-block;border-bottom:1px solid color(right-audio-border-color);width:*;padding:0;flow:horizontal-flow;float:none;}
-    .widthMode .audio li{width:37%}
-
-/*
-    .widthMode .audio li:nth-child(odd){width:45%}
-    .widthMode .audio li:nth-child(even){width:45%}
-*/
+    .audio li{vertical-align:middle;color:color(right-audio-text-color);background:url(this://app/images/fileico_audio.png) no-repeat left center;background-size:12dip;padding-left:18dip;margin-bottom:15dip;display:block;width:*;float:none;}
+    .widthMode .audio li:nth-child(odd){margin-right:20dip;width:42%;display:inline-block;}
+    .widthMode .audio li:nth-child(even){width:42%;display:inline-block;}
     .audio li:hover{opacity:0.8}
     .audio li:active{opacity:0.5}
     .audio li:last-child{border-bottom:0}
-    .audio li p{width:*;display:block;vertical-align:middle;color:color(right-audio-text-color);background:url(this://app/images/fileico_audio.png) no-repeat left center;background-size:12dip;padding-left:18dip}
-    .audio li a{width:12dip;display:block;height:12dip;padding:3dip;vertical-align:middle;border-radius:3dip}
-    .audio li a i{size:*}
     .audio_title_wrapper{flow:horizontal-flow;width:*;}
     .audio_title_wrapper h2{width:*;}
     .audio_title_wrapper button{margin-top:9dip;size:17dip}

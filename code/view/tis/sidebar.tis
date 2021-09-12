@@ -242,7 +242,7 @@ function openSidebar(obj){
 
         relatedDom += "<li rid='"+obj.Id+"'>";
         relatedDom += "<img src='"+ thumb +"'/>";
-        relatedDom += "<p>"+ obj.Name +"</p></li>";
+        relatedDom += "<p>"+ obj.Name.toHtmlString() +"</p></li>";
     }
     $(#related).html = relatedDom;
 
@@ -308,10 +308,12 @@ function openSidebar(obj){
     var audioList = detailObj.AudioList;
     var audio = "";
     for(var f in audioList) {
-        audio += "<li><p>"+ f.name +"</p><a.funbtn.play_audio path=\""+ f.path +"\"><i.video_play></i></a></li>";
+        audio += "<li path=\""+ f.path +"\">"+ f.name +"</li>";
     }
     $(#audio).html = audio;
     
+//<a.funbtn.play_audio path=\""+ f.path +"\"><i.video_play></i></a>
+
     //是否显示音频标题
     if(audio == ""){
         $(#audio_title_wrapper).style["display"] = "none";

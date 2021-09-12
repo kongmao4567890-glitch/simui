@@ -342,14 +342,9 @@ view.msgbox(#alert,e);
 
     //播放音频
     self.on("click", "#audio li", function(evt) {
-        playAudio(this.select("a").attributes["path"]);
-    });
-
-    //播放音频
-    self.on("click", ".play_audio", function(evt) {
         playAudio(this.attributes["path"]);
     });
-    
+   
     //播放全部音频
     self.on("click", "#play_audio_all", function(evt) {
         playAudio("");

@@ -7,7 +7,7 @@ function playAudio(url){
         var audio = $$(#audio li);
         var i = 0;
         for(var a in audio) {
-            data[i] = a.select(".play_audio").attributes["path"];
+            data[i] = a.attributes["path"];
             i++;
         }
     }    
