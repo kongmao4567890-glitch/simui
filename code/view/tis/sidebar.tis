@@ -152,8 +152,14 @@ function openSidebar(obj){
         //$(#doc).html = markdown.parse(detailObj.DocContent);
         $(#doc).html = detailObj.DocContent;
     }else{
-        $(#doc).html = CONF.Lang.DocEmpty;
-        $(#doc).attributes.addClass("nodoc");
+        if($(#right).attributes.hasClass("widthMode")){
+            $(#doc_title).style["display"] = "block";
+            $(#doc).html = CONF.Lang.DocEmpty;
+            $(#doc).attributes.addClass("nodoc");
+        }else{
+            $(#doc_title).style["display"] = "none";
+            $(#doc).style["display"] = "none";
+        }
     }
 
     //生成模拟器列表
@@ -390,18 +396,18 @@ function _createRotate(info){
     var video = ""; //视频
 
     if(info != false){
-        romPath = URL.parse(info.RomPath);
-        title = getRomPicPath("title",info.Platform,romPath.name);
-        thumb = getRomPicPath("thumb",info.Platform,romPath.name);
-        snap = getRomPicPath("snap",info.Platform,romPath.name);
-        poster = getRomPicPath("poster",info.Platform,romPath.name);
-        packing = getRomPicPath("packing",info.Platform,romPath.name);
-        cassette = getRomPicPath("cassette",info.Platform,romPath.name);
-        icon = getRomPicPath("icon",info.Platform,romPath.name);
-        gif = getRomPicPath("gif",info.Platform,romPath.name);
-        background = getRomPicPath("background",info.Platform,romPath.name);
-        wallpaper = getRomPicPath("wallpaper",info.Platform,romPath.name);
-        video = getRomPicPath("video",info.Platform,romPath.name);
+        var name = getRomName(info.RomPath)
+        title = getRomPicPath("title",info.Platform,name);
+        thumb = getRomPicPath("thumb",info.Platform,name);
+        snap = getRomPicPath("snap",info.Platform,name);
+        poster = getRomPicPath("poster",info.Platform,name);
+        packing = getRomPicPath("packing",info.Platform,name);
+        cassette = getRomPicPath("cassette",info.Platform,name);
+        icon = getRomPicPath("icon",info.Platform,name);
+        gif = getRomPicPath("gif",info.Platform,name);
+        background = getRomPicPath("background",info.Platform,name);
+        wallpaper = getRomPicPath("wallpaper",info.Platform,name);
+        video = getRomPicPath("video",info.Platform,name);
         $(#thumb_h2).style["display"] = undefined;
     }else{
         $(#thumb_h2).style["display"] = "none";
@@ -465,11 +471,9 @@ function _createSecondThumbs(info){
     var getjson = mainView.GetGameDetail(ACTIVE_ROM_ID);
     var detailObj = JSON.parse(getjson);
     var info = detailObj.Info;
-    var romPath = URL.parse(info.RomPath);
     var pfid = info.Platform;
-    var name = romPath.name;
+    var name = getRomName(info.RomPath)
     var platform = CONF.Platform[pfid.toString()];
-
     var thumb = getRomPicPath("thumb",pfid,name);
     var snap = getRomPicPath("snap",pfid,name);
     var poster = getRomPicPath("poster",pfid,name);
@@ -868,7 +872,8 @@ function createOpenFolderMenu(info){
 //调整侧边栏宽度
 function sidebarSize(){
     var width = $(#right).box(#width);
-    view.UpdateConfig("panel_sidebar_width",width);
+    width = Math.round(width * 0.8).toInteger();
+    view.UpdateConfig("panel_sidebar_width",width.toInteger());
 
     //界面宽窄模式
     var right = $(#right);

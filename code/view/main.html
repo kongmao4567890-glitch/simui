@@ -26,7 +26,7 @@ solid-with-shadow
     #center_video{position:absolute;size:*;display:none}
     #center_video video{foreground-size:cover;foreground-repeat:no-repeat;image-rendering:optimize-qualitydisplay:block;width:*;height:*}
     #center_content{position:absolute;z-index:3;size:*;overflow:scroll-indicator;}
-    #right{background-color:color(sidebar-background-color);height:*;overflow:scroll-indicator;padding:0 9dip;width:205dip;position:relative;min-width:217dip;max-width:700dip}
+    #right{background-color:color(sidebar-background-color);height:*;overflow:scroll-indicator;padding:0 9dip;position:relative;min-width:217px;max-width:700px}
     
     /* 菜单 */
     menu{display:none;border:1dip solid color(context-border-color);padding:0}
@@ -45,7 +45,7 @@ solid-with-shadow
     #logo{color:color(logo-text-color);width:202dip;height:36dip;line-height:36dip;display:inline-block;text-align:center;font-size:14dip;background-color:color(titlebar-background-color);}
     #logo img{max-width:202dip;max-height:36dip;width:auto;height:auto;}
     #tb_left{text-align:left;width:*;display:inline-block;height:36dip;overflow:hidden;}
-    #tb_right{text-align:right;width:223dip;display:inline;background-color:color(titlebar-background-color);}
+    #tb_right{text-align:right;width:224dip;display:inline;background-color:color(titlebar-background-color);}
     #titlebar i{display:block;}
     #titlebar .minsize{background-size:60%;}
     #titlebar button{color:color(titlebar-button-text-color);background:color(titlebar-button-background-color);size:36dip;line-height:36dip;display:inline-block;margin-left:1dip;font-size:11dip;padding:0;border:0;border-radius:0}
@@ -185,12 +185,12 @@ solid-with-shadow
     .romlist > li div:nth-child(7){color:color(rom-list-text-slave-color);min-width:50dip;max-width:100dip;width:10%}
     .romlist > li div:nth-child(8){color:color(rom-list-text-slave-color);min-width:50dip;max-width:100dip;width:10%}
     .romth div{color:color(rom-list-title-text-color)!important;font-weight:bold;}
-    .rom_star {background: yellow;position:absolute;top:0; left:0;width:50px; height:10px; transform:rotate(-45deg);transform-origin:top right;-moz-transform:rotate(-45deg);-webkit-transform:rotate(-45deg);-moz-transform-origin:top right;-webkit-transform-origin:top right;}
+    .rom_star {position:absolute;top:0; left:0;width:12px; height:12px;background:url(this://app/images/star.gif) no-repeat left top}
     .romlist > li div.star{border-left:3px solid yellow}
     /* 右侧边栏 */
     #right h1{font-size:20dip;color:color(sidebar-name-text-color);display:none;text-shadow: 1px 1px 2px color(sidebar-name-text-shadow);}
     #right h2{text-align:left;padding:9dip 0;color:color(sidebar-title-text-color);font-weight:normal;font-size:11dip;line-height:19dip;margin:0}
-    #right .run{padding:8dip 4dip;line-height:1.5em;height:auto;width:*;display:block;background:color(run-button-background-color);color:color(run-button-text-color);text-align:center;margin-bottom:9dip;overflow:hidden;white-space:pre-wrap;word-wrap:break-word;word-break:break-all}
+    #right .run{padding:4dip;line-height:1.5em;height:auto;width:*;display:block;background:color(run-button-background-color);color:color(run-button-text-color);text-align:center;margin-bottom:9dip;overflow:hidden;white-space:pre-wrap;word-wrap:break-word;word-break:break-all}
     #right .run:hover{color:color(run-button-hover-text-color);background:color(run-button-hover-background-color);}
     #right .run:active{color:color(run-button-active-text-color);background:color(run-button-active-background-color)}
     #right .filedrop_ctl_btn{top:-28dip;left:0dip;position:absolute;}
@@ -366,18 +366,22 @@ solid-with-shadow
     .related{display:none}
     .related_h2{display:none}
     .widthMode .related_h2{display:inherit}
-    .widthMode .related{flow:horizontal-flow;clear:both;padding:0;display:inherit}
+    .widthMode .related{flow:horizontal-flow;clear:both;padding:0;margin:0;display:inherit}
     .widthMode .related > li{min-width:60dip;width:*;height:82dip;border:1px solid color(related-border-color);background:color(related-background-color);text-align:center;color:color(rom-block-text-color);display:inline-block;position:relative;overflow:hidden;margin:0 5dip 5dip 5dip;padding:10dip}
     .widthMode .related > li:hover{opacity:0.7}
     .widthMode .related > li img{width:48dip;height:48dip;border-radius:48dip;margin:0 auto}
     .widthMode .related > li > p{margin-bottom:0;display:block;font-size:10dip}
 
     /* 音频 */
-    .audio{padding:0;margin:0;width:*;}
-    .audio li{display:block;border-bottom:1px solid color(right-audio-border-color);width:45%;padding:0;flow:horizontal-flow;}
-    .audio li:nth-child(odd){float:left;}
-    .audio li:nth-child(even){float:right;}
 
+    .audio{padding:0;margin:0;width:*;}
+    .audio li{display:inline-block;border-bottom:1px solid color(right-audio-border-color);width:*;padding:0;flow:horizontal-flow;float:none;}
+    .widthMode .audio li{width:37%}
+
+/*
+    .widthMode .audio li:nth-child(odd){width:45%}
+    .widthMode .audio li:nth-child(even){width:45%}
+*/
     .audio li:hover{opacity:0.8}
     .audio li:active{opacity:0.5}
     .audio li:last-child{border-bottom:0}
@@ -553,6 +557,7 @@ solid-with-shadow
 
                     <h2 id="doc_title">{{Doc}}</h2>
                     <div id="doc" class="doc"></div>
+
                 </div>
             </div>
 

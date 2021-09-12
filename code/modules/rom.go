@@ -700,7 +700,7 @@ func UploadSubGameFile(id uint64, name string, p string) (string, error) {
 		return p, nil
 	}
 
-	if err := utils.FileMove(p, newPath); err != nil {
+	if err := utils.FileCopy(p, newPath); err != nil {
 		return "", err
 	}
 	relPath := strings.Replace(newPath, config.Cfg.RootPath, "", -1)

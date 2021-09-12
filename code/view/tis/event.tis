@@ -25,12 +25,14 @@ view.msgbox(#alert,e);
     //调整平台栏宽度
     self.on("mouseup", "#platform_splitter", function(evt) {
         var width = $(#left_platform).box(#width);
+        width = Math.round(width * 0.8).toInteger();
         view.UpdateConfig("panel_platform_width",width);
     });
     
     //调整菜单栏宽度
     self.on("mouseup", "#menu_splitter", function(evt) {
         var width = $(#left_menu).box(#width);
+        width = Math.round(width * 0.8).toInteger();
         view.UpdateConfig("panel_menu_width",width);
     });
     //调整侧边栏宽度
@@ -350,11 +352,7 @@ view.msgbox(#alert,e);
     
     //播放全部音频
     self.on("click", "#play_audio_all", function(evt) {
-        try{
         playAudio("");
-        }catch(e){
-            alert(e);
-        }
     });
     
 

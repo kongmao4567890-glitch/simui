@@ -291,7 +291,6 @@ function getRomPicPath(type,platform,name){
     var pic = ""; //图片地址
     for(var ext in exts) {
         pic = path +"."+ext;
-
         if(System.scanFiles(pic)){ //检查图片是否存在
             isset = true;
             break;
