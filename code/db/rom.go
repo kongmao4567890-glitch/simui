@@ -9,8 +9,8 @@ import (
 	"time"
 )
 
-var ROM_PAGE_NUM = 80 //每页加载rom数量
-var TIP_NUM = 200     //每tip个更新提示一次
+var ROM_PAGE_NUM = 200 //每页加载rom数量
+var TIP_NUM = 200     //每tip个更新提示一次(更新缓存)
 
 type Rom struct {
 	Id            uint64

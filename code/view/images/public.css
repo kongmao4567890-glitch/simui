@@ -129,3 +129,8 @@ i.video_pause {
 .tip:hover {
   background: #67b1fb;
 }
+
+@set constom-scroll {    
+    .slider {background:color(scroll-slider-color);margin:0;}
+    .base {width:8dip;}    
+}

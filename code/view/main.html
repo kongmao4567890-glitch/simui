@@ -25,8 +25,9 @@ solid-with-shadow
     #center_mask{position:absolute;z-index:2;size:*;background-repeat:repeat}
     #center_video{position:absolute;size:*;display:none}
     #center_video video{foreground-size:cover;foreground-repeat:no-repeat;image-rendering:optimize-qualitydisplay:block;width:*;height:*}
-    #center_content{position:absolute;z-index:3;size:*;overflow:scroll-indicator;}
-    #right{background-color:color(sidebar-background-color);height:*;overflow:scroll-indicator;padding:0 9dip;position:relative;min-width:217px;max-width:700px}
+
+    #center_content{position:absolute;z-index:3;size:*;overflow:scroll-indicator;vertical-scrollbar:"constom-scroll";}
+    #right{background-color:color(sidebar-background-color);height:*;overflow:scroll-indicator;vertical-scrollbar:"constom-scroll";padding:0 9dip;position:relative;min-width:217px;max-width:700px}
     
     /* 菜单 */
     menu{display:none;border:1dip solid color(context-border-color);padding:0}
@@ -72,7 +73,7 @@ solid-with-shadow
     #num_search li:current{font-size:14dip;color:color(num-index-active-text-color);}
 
     /* 平台按钮 */
-    #platform_ul{overflow:scroll-indicator;height:*;margin:0;padding:0;background:color(platform-background-color);}
+    #platform_ul{overflow:scroll-indicator;vertical-scrollbar:"constom-scroll";height:*;margin:0;padding:0;background:color(platform-background-color);}
     #platform_ul >li{flow:horizontal-flow;display:block;text-align:center;vertical-align: middle;min-height:40dip;color:color(platform-text-color);background:none;border-top:1dip solid color(platform-arrow-border-light);border-bottom:1dip solid color(platform-arrow-border-dark);}
     #platform_ul >li .leftdiv{size:*;margin:0;padding:5dip;border-right:1dip solid color(platform-arrow-border-dark);vertical-align:middle;}
     #platform_ul >li img{size:28dip;margin:3dip auto 5dip auto;}
@@ -83,7 +84,7 @@ solid-with-shadow
     #platform_ul li:current{background-color:color(platform-active-background-color);opacity:1;border-right:color(platform-active-background-color);border-left:color(platform-active-background-color)}
 
     /* 侧边栏菜单 */
-    #menulist{padding:0 9dip;height:*;}
+    #menulist{padding:0 9dip;height:*;overflow:scroll-indicator;vertical-scrollbar:"constom-scroll";}
     #menulist dt{text-align:left;padding:9dip 0;color:color(sidebar-title-text-color)}
     #menulist dd{color:color(menu-text-color);line-height:1.4em;min-height:25dip;padding:2dip 5dip 2dip 10dip;vertical-align: middle;border-top:1dip solid color(menu-separator-color);context-menu:selector(menu#menucontext);font-size:12dip;}
     #menulist dd:current{background-color:color(menu-active-background-color);color:color(menu-active-text-color);}
@@ -385,7 +386,6 @@ solid-with-shadow
     .audio_title_wrapper h2{width:*;}
     .audio_title_wrapper button{margin-top:9dip;size:17dip}
 
-
 </style>
 
 </head>
@@ -436,7 +436,6 @@ solid-with-shadow
                 <li id="create_cache" opt="platform"><i.cache></i><span>{{CreateCachePlatform}}</span></li>
                 <li id="create_cache" opt="all"><i.cache></i><span>{{CreateCacheAll}}</span></li>
                 <li id="clear_rombase" opt="res"><i.cache></i><span>{{ClearRombase}}</span></li>
-
             </menu>
         </button><button type="menu" title="{{Config}}"><i.config.minsize></i>
             <menu>

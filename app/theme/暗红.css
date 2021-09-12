@@ -1,6 +1,9 @@
 /* 复制出新主题，一定要注意第一行的标识，不能和其他主题重复 */
 html:theme(red) {
 
+    /* 滚动条 */
+    var(scroll-slider-color) : #666;
+
     /* 窗体背景 */
     var(center-background-color) : #3f1722;
     var(center-box-shadow-color) : #34141c;

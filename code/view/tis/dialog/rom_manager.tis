@@ -114,7 +114,8 @@ function openFile(evt) {
 
 //创建分页数据 - 游戏资料管理
 function managerCreatePages(romCount){
-    var num = Math.ceil(romCount.toFloat() / 100);
+    var num = Math.ceil(romCount.toFloat() / 200);
+
     var pages = "";
     for(var i=1;i<=num;i++) {
         pages += "<li>"+i+"</li>";

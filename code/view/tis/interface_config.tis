@@ -92,7 +92,7 @@ function setRomlistSize(obj){
     var romlist = $(#romlist);
 
     //先清除所有缩放样式
-    for(var i=1;i<=9;i++){
+    for(var i=1;i<=10;i++){
         $(#config_romlist_size).select("li[opt="+ i +"]").attributes.removeClass("active");
         if(romlist.attributes.hasClass("zoom" + i)){
             romlist.attributes.removeClass("zoom" + i);
