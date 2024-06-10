@@ -8,3 +8,5 @@ frontend/package.json.md5
 frontend/public/temp
 .env
 cache
+.github
+.gitee

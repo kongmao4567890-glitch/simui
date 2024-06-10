@@ -188,7 +188,7 @@ func runGameSimulator(romInfo *db.Rom, sim *db.Simulator) error {
 			return err
 		}
 		//如果指定了执行文件
-		romInfo.LinkFile = unzipPath + "/" + sim.Unzip
+		romInfo.LinkFile = unzipPath + sim.Unzip
 	}
 
 	if runtime.GOOS == "windows" {
