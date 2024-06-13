@@ -286,5 +286,6 @@ func UpdatePlatformUi(id uint32, theme string, data string) error {
 		err = (&db.Platform{}).UpdateOneField(id, "ui", string(uiJson))
 	}
 	(&db.Platform{}).DelPlatformVOCache() //清空缓存
+	(&db.Config{}).RebuildConfig()        //清空缓存
 	return err
 }
