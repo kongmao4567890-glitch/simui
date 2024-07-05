@@ -6,6 +6,7 @@ var DEV = false
 var DB_ADD_MAX_NUM = 999 //数据库每次查询/写入的最大数量
 
 var VERSION_NO = "" //当前软件版本号
+var BUILD_TIME = "" //软件编译时间
 
 // doc文档支持的扩展名
 var DOC_EXTS = []string{".txt", ".html", ".htm", ".md"}

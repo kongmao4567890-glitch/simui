@@ -117,7 +117,7 @@
 
                 <!--启动按钮-->
                 <div class="run-btn-list">
-                  <q-btn color="primary" no-caps :label="detail.Info.Name + 'aa'" @click="runGame(detail.Info.Id)"/>
+                  <q-btn color="primary" no-caps :label="detail.Info.Name" @click="runGame(detail.Info.Id)"/>
                   <q-btn color="primary sub-btn" no-caps v-for="(sg) in detail.Sublist" :label="sg.Name"
                          @click="runGame(sg.Id)"/>
                 </div>

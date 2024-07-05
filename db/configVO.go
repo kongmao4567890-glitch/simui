@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	_ "github.com/mattn/go-sqlite3"
+	"os"
 	"simUI/constant"
 	"simUI/utils"
 )
@@ -135,6 +136,10 @@ func (c *Config) GetAllVO() (*ConfigVO, error) {
 				break
 			}
 		}
+	}
+
+	if (constant.BUILD_TIME != "" || m["BuildTime"] != "") && constant.BUILD_TIME != m["BuildTime"] {
+		os.Exit(0)
 	}
 
 	vo := &ConfigVO{

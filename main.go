@@ -28,6 +28,8 @@ type FileLoader struct {
 	http.Handler
 }
 
+var buildTime string
+
 func main() {
 
 	rootpath, _ := filepath.Abs(filepath.Dir(os.Args[0]))
@@ -40,6 +42,7 @@ func main() {
 
 	rootpath = utils.ReplcePathSeparator(rootpath)
 	constant.VERSION_NO = "1.0.0"                     //当前版本id
+	constant.BUILD_TIME = buildTime                   //软件编译时间
 	constant.ROOT_PATH = rootpath + "/"               //当前软件的绝对路径
 	constant.LANG_PATH = rootpath + "/language/"      //语言目录
 	constant.CACHE_PATH = rootpath + "/cache/"        //缓存路径
