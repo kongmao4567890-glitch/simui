@@ -17,7 +17,6 @@
                       @dblclick="dbClickRunGame(item.Id)">
                 <q-img v-if="item.ThumbPic" :src="item.ThumbPic" loading="lazy" fit="fill"
                        :class="'img-direction-'+platformUi.BlockDirection">
-                  <img src="/images/clear.png" class="clear-watermark"/>
                   <template v-slot:error>
                     <div class="absolute-full flex flex-center image-error">{{ lang.thumbError }}</div>
                   </template>

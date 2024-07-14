@@ -20,7 +20,6 @@
                 <q-carousel-slide v-for="(item,index) in thumbListCarousel" :name="index" style="padding: 0"
                                   :img-src="item.Type == 'video' ? '' : item.Path"
                                   @click="item.Type != 'video' ?showViewer(item.Index) : null">
-                  <div class="bg-clear-watermark"></div>
                   <video v-if="item.Type == 'video'" ref="carouselVideoRef" @mouseleave="changeVideoVolume" loop
                          controls autoplay
                          :volume="config.VideoVolume" :key="item.Index" class="carousel-video" :src="item.Path">
