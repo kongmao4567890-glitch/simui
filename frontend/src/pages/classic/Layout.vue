@@ -39,12 +39,12 @@
 
 import {onActivated, onBeforeUnmount} from "vue"
 import {useGlobalStore} from 'src/stores/globalData'
-import {callSrv, decodeApiData, firstLetterToLower} from 'components/utils'
+import {callSrv, decodeApiData} from 'components/utils'
 import {
   CheckUpgrade,
   GetAllSimulator,
   GetConfig,
-  GetPlatformUi, GetTheme,
+  GetPlatformUi,
   UpdateOneConfig
 } from 'app/wailsjs/go/controller/Controller'
 import {storeToRefs} from "pinia";
@@ -65,18 +65,6 @@ const global = useGlobalStore();
 const {config,theme, platformUi, simulatorMap} = storeToRefs(global);
 
 theme.value = "Default"
-
-//启动时检查主题，跳转到默认主题
-GetTheme().then((result: string) => {
-  let resp = decodeApiData(result)
-  if (resp.err == "") {
-    let the = resp.data
-    if (the != "" && the != theme.value) {
-      let path = "/" + firstLetterToLower(the)
-      global.goto(path, {}, 1)
-    }
-  }
-})
 
 onActivated(async () => {
 

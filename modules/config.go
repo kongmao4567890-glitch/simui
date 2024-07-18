@@ -83,6 +83,8 @@ func UpdateBaseConfig(data db.ConfigVO) error {
 	}
 	softName, _ := json.Marshal(data.SoftName)
 
+	splashScreen, _ := json.Marshal(data.SplashScreen)
+
 	m := &db.Config{}
 	m.UpdateOne("Cursor", data.Cursor)
 	m.UpdateOne("EnableUpgrade", data.EnableUpgrade)
@@ -92,6 +94,7 @@ func UpdateBaseConfig(data db.ConfigVO) error {
 	m.UpdateOne("AdminRunGame", data.AdminRunGame)
 	m.UpsertOne("WindowZoom", data.WindowZoom)
 	m.UpsertOne("GameMultiOpen", data.GameMultiOpen)
+	m.UpsertOne("SplashScreen", splashScreen)
 	return nil
 }
 

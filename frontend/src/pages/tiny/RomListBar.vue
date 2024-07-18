@@ -4,7 +4,7 @@
     {{ platformName }}
   </div>
 
-  <div class="rom-wrapper" v-if="items.length > 0">
+  <div class="rom-wrapper" v-if="items != null && items.length > 0">
     <div v-if="platformUi.HideCarousel == 0" ref="carouselRef" class="thumb-box animate__animated animate__faster">
       <q-carousel v-if="thumbListCarousel.length > 0" animated infinite :autoplay="2500" v-model="slide"
                   class="carousel">
@@ -35,8 +35,8 @@
               </q-item-section>
               <q-item-section>
                 <div class="rom-title">
-                <div class="master-title">{{ platformUi.NameType == 1 ? item.Name : item.RomName }}</div>
-                <div class="sub-title">{{ item.subTitle }}</div>
+                  <div class="master-title">{{ platformUi.NameType == 1 ? item.Name : item.RomName }}</div>
+                  <div class="sub-title">{{ item.subTitle }}</div>
                 </div>
               </q-item-section>
             </q-item>
@@ -50,7 +50,7 @@
 
 
   </div>
-  <div class="rom-wrapper empty-romlist" v-else>
+  <div class="rom-wrapper empty-romlist" v-else-if="items != null">
     {{ lang.noGame }}
   </div>
 
@@ -118,7 +118,7 @@ const {
   activeVersion, activeScore, activeComplete, activeLetter, menuLike, platformUi, callbackOpts, theme
 } = storeToRefs(global);
 
-const items: any = ref([])
+const items: any = ref(null)
 const detail: any = ref(null)
 const detailIndex: any = ref(0)
 const platformName: any = ref("")
@@ -285,7 +285,6 @@ function nextPage(index: number, done: any) {
   var request = JSON.stringify(req);
   GetGameList(request).then((result: string) => {
     let resp = decodeApiData(result)
-    console.log(resp.data)
     if (resp.data.length > 0) {
 
       resp.data.forEach((item, index) => {

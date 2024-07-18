@@ -38,9 +38,9 @@ type ConfigVO struct {
 }
 
 type SplashScreen struct {
-	Show int
 	Src  string
-	Size int
+	Size string
+	Time int
 }
 type SoftName struct {
 	Name     string //标题

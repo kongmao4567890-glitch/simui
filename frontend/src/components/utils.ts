@@ -209,11 +209,15 @@ export function wailsPathDecode(p: string) {
 export function gotoTheme(theme: string) {
     SetTheme(theme).then(() => {
         switch (theme) {
+            case "Default":
+                global.goto("/default")
+                break
             case "Playnite":
                 global.goto("/playnite")
                 break
-            default:
-                global.goto("/")
+            case "Tiny":
+                global.goto("/tiny")
+                break
         }
     })
 }
