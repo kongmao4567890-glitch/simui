@@ -31,7 +31,7 @@
                     :id="'rom-ele-'+ index" :active="activeRom === item.Id"
                     @click="clickGame(item.Id,index)">
               <q-item-section side v-if="item.ThumbPic">
-                <q-img :src="item.ThumbPic" loading="lazy" fit="cover" class="rom-img"/>
+                <q-img :src="item.ThumbPic" loading="lazy" fit="contain" class="rom-img"/>
               </q-item-section>
               <q-item-section>
                 <div class="rom-title">
