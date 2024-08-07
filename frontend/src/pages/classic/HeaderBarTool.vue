@@ -151,6 +151,9 @@
             <!--            <q-item clickable v-close-popup>
                           <q-item-section>{{lang.output}}</q-item-section>
                         </q-item>-->
+<!--            <q-item clickable v-close-popup @click="copyright()">
+              <q-item-section>{{ lang.copyright }}</q-item-section>
+            </q-item>-->
             <q-item clickable v-close-popup @click="about()">
               <q-item-section>{{ lang.about }}</q-item-section>
             </q-item>
@@ -187,6 +190,7 @@
 <script lang="ts">
 
 import AboutComponent from "src/components/AboutComponent.vue";
+import CopyrightComponent from "components/CopyrightComponent.vue";
 import UpgradeComponent from "src/components/UpgradeComponent.vue";
 import {Dialog, setCssVar} from "quasar";
 import {
@@ -353,6 +357,13 @@ function about() {
   })
 }
 
+//版权窗口
+function copyright() {
+  Dialog.create({
+    component: CopyrightComponent,
+  })
+}
+
 
 function upgrade() {
   //禁用自动更新
@@ -481,6 +492,7 @@ export default {
       changeColor,
       createCache,
       about,
+      copyright,
       windowMinimise,
       windowMaximise,
       windowFullscreen,
