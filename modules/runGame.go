@@ -178,8 +178,6 @@ func runGameSimulator(romInfo *db.Rom, sim *db.Simulator) error {
 		return errors.New(config.Cfg.Lang["simNotFound"])
 	}
 
-	fmt.Println("asdfasdfasdfasdfasdf", sim.Unzip, sim)
-
 	//解压后运行 - 解压zip包
 	if sim.Unzip != "" {
 		//解压文件，返回解压目录

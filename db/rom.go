@@ -145,21 +145,21 @@ func (m *Rom) Get(showHide uint8, pages int, platform uint32, menu string, menuL
 	sort := "pinyin ASC"
 	switch confSort {
 	case 1:
-		sort = "pinyin ASC"
+		sort = "pinyin ASC" //名称升序
 	case 2:
-		sort = "pinyin DESC"
+		sort = "pinyin DESC" //名称降序
 	case 3:
-		sort = "score ASC,pinyin ASC"
+		sort = "base_year ASC,pinyin ASC" //年份升序
 	case 4:
-		sort = "score DESC,pinyin ASC"
+		sort = "base_year DESC,pinyin ASC" //年份降序
 	case 5:
-		sort = "base_year ASC,pinyin ASC"
+		sort = "score ASC,pinyin ASC" //评分升序
 	case 6:
-		sort = "base_year DESC,pinyin ASC"
+		sort = "score DESC,pinyin ASC" //评分降序
 	case 7:
-		sort = "run_num DESC,pinyin ASC"
+		sort = "run_num DESC,pinyin ASC" //运行次数降序
 	case 8:
-		sort = "run_lasttime DESC,pinyin ASC"
+		sort = "run_lasttime DESC,pinyin ASC" //最后运行时间降序
 	}
 	mod := getDb().Select("*").Where(where).Where(likeWhere).Order(sort)
 

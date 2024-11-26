@@ -98,7 +98,7 @@
                 </q-img>
                 <q-card-section>
                   <div class="row no-wrap items-center">
-                    <div class="col ellipsis" v-if="!platformUi.BlockHideTitle"
+                    <div class="col" v-if="!platformUi.BlockHideTitle"
                          :style="{'background':platformUi.BlockHideBackground ?'none' : ''}">
                       {{ platformUi.NameType == 1 ? item.Name : item.RomName }}
                     </div>

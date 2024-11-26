@@ -266,7 +266,7 @@ export function initThemeColor() {
 //读取快捷工具
 export function initShortcuts() {
 
-  GetShortcuts().then((result: string) => {
+  GetShortcuts(true).then((result: string) => {
     let resp = decodeApiData(result)
     if (resp.err == "") {
       shortCutList.value = resp.data
