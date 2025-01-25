@@ -99,16 +99,36 @@ func KillGame() error {
 		return nil
 	}
 
+	task := ""
+	args := []string{}
 	switch runtime.GOOS {
 	case "darwin":
-		c := exec.Command("kill", utils.ToString(LAST_PROCESS))
-		c.Start()
+		task = "kill"
+		args = []string{utils.ToString(LAST_PROCESS)}
 	case "windows":
-		c := exec.Command("taskkill.exe", "/T", "/PID", utils.ToString(LAST_PROCESS))
-		c.Start()
+		task = "taskkill.exe"
+		args = []string{"/T", "/PID", utils.ToString(LAST_PROCESS)}
 	case "linux":
-		c := exec.Command("kill", utils.ToString(LAST_PROCESS))
-		c.Start()
+		task = "kill"
+		args = []string{utils.ToString(LAST_PROCESS)}
+	}
+
+	config := (&db.Config{}).GetConfig(false)
+	if config.AdminRunGame == 1 {
+		fmt.Println("amin")
+		//管理员方式运行
+		result := elevate.Command(task, args...)
+		if err := result.Start(); err != nil {
+			return err
+		}
+	} else {
+		fmt.Println("normal")
+		//普通模式运行
+		result := exec.Command(task, args...)
+		if err := result.Start(); err != nil {
+			fmt.Println("err", err)
+			return err
+		}
 	}
 
 	LAST_PROCESS = 0

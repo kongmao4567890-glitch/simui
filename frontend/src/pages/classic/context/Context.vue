@@ -29,6 +29,7 @@ import {
   RenameRomFile,
   RenameRomLink,
   RunGame,
+  SetFavorite,
   SetHide,
 } from "app/wailsjs/go/controller/Controller";
 import {useGlobalStore} from 'stores/globalData';
@@ -52,11 +53,27 @@ export function showContextMenu(event: any, index: number, id: number, info: any
   romInfo.value = info;
   console.log('Right-clicked', id);
 
+  //加载我的最爱
+  let favorite;
+  if (romInfo.value.Favorite == 1) { //取消最爱
+    favorite = {
+      label: lang.value.cancelFavorite,
+      icon: h('img', {src: '/images/context/fav_0.png', style: CONTEXT_ICON_SIZE}),
+      onClick: () => setFavorite()
+    }
+  } else {
+    favorite = {
+      label: lang.value.setFavorite,
+      icon: h('img', {src: '/images/context/fav_1.png', style: CONTEXT_ICON_SIZE}),
+      onClick: () => setFavorite()
+    }
+  }
+
   let contextData = getContextMenuData(event)
 
   //加载模拟器数据
   let simulator = getContextMenuDataSimulator()
-  contextData.items = [...contextData.items, simulator]
+  contextData.items = [favorite, ...contextData.items, simulator]
 
   //加载游戏列表
   let gameList: any = [];
@@ -322,6 +339,19 @@ function setHide() {
     romInfo.value.Hide = hide;
     console.log(resp.data)
     callback("romHide", targetIndex.value, hide)
+  })
+}
+
+
+//设置西安
+function setFavorite() {
+  let fav = romInfo.value.Favorite == 1 ? 0 : 1;
+  console.log("setFavorite", romInfo.value.Favorite, fav)
+  SetFavorite(targetId.value, fav).then((result: string) => {
+    let resp = decodeApiData(result)
+    romInfo.value.Favorite = fav;
+    console.log(resp.data)
+    callback("setFavorite", targetIndex.value, fav)
   })
 }
 
