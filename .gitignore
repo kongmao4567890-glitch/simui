@@ -4,6 +4,7 @@ node_modules
 frontend/dist
 frontend/.quasar
 frontend/wailsjs
+tmp
 frontend/package.json.md5
 frontend/public/images/custom
 .idea
