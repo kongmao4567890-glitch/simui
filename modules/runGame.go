@@ -59,9 +59,6 @@ func RunGame(romId uint64, simId uint32) error {
 		//直接运行exe
 		cmd := slnk.Params
 		err = RunGameExe(romInfo.LinkFile, cmd)
-	} else if utils.InSlice(ext, constant.EXPLORER_EXTS) {
-		//依赖 explorer 启动
-		err = RunGameExplorer(romInfo.LinkFile)
 	} else {
 		//依赖模拟器
 		sim, err := (&db.Simulator{}).GetDefaultByPlatform(romInfo.Platform, simId)

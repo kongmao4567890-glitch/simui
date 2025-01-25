@@ -25,7 +25,7 @@ var FILE_EXTS = []string{
 }
 
 // 可直接运行的扩展名
-var RUN_EXTS = []string{".exe", ".cmd", ".bat"}
+var RUN_EXTS = []string{".exe", ".cmd", ".bat", ".lnk"}
 
 // 可直接通过explorer运行的扩展名
 var EXPLORER_EXTS = []string{".lnk"}
