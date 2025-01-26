@@ -3,7 +3,7 @@
     <div v-if="activeRom && !isEmpty(detail)">
 
       <div class="bg-wrapper">
-        <div class="bg-mask"></div>
+        <div class="bg-mask" v-if="!thumbListAlumb['video'] || thumbListAlumb['video'].length == 0"></div>
 
         <q-slider v-if="thumbListAlumb['video'] && thumbListAlumb['video'].length > 0"
                   v-model="videoVolumeSlider" class="bg-video-slider" :min="0" :max="100" @change="changeVideoVolume"/>
