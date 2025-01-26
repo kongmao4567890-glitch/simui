@@ -4,6 +4,7 @@ go 1.18
 
 require (
 	github.com/Shopify/go-lua v0.0.0-20221004153744-91867de107cf
+	github.com/adrg/sysfont v0.1.2
 	github.com/axgle/mahonia v0.0.0-20180208002826-3358181d7394
 	github.com/getlantern/elevate v0.0.0-20220903142053-479ab992b264
 	github.com/go-ini/ini v1.67.0
@@ -17,6 +18,8 @@ require (
 )
 
 require (
+	github.com/adrg/strutil v0.2.2 // indirect
+	github.com/adrg/xdg v0.3.0 // indirect
 	github.com/akavel/rsrc v0.10.2 // indirect
 	github.com/bep/debounce v1.2.1 // indirect
 	github.com/dchest/jsmin v0.0.0-20220218165748-59f39799265f // indirect

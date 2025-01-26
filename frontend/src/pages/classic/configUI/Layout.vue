@@ -42,6 +42,13 @@
                       v-model="activeUi.BaseFontsize"
                       :label="lang.baseFontsize"/>
           </q-item-section>
+          <q-item-section>
+            <q-select filled square dense options-dense emit-value map-options :options="fontFamilyOptions"
+                      v-model="activeUi.Font" popup-content-class="q-select-content"
+                      :label="lang.font">
+              <q-tooltip class="bg-red">{{lang.fontWarn}}</q-tooltip>
+            </q-select>
+          </q-item-section>
         </q-item>
       </q-list>
 
@@ -168,7 +175,7 @@ import {decodeApiData, notify, wailsPathDecode} from "components/utils";
 import {useGlobalStore} from 'stores/globalData';
 import {storeToRefs} from 'pinia';
 import {
-  GetConfig,
+  GetConfig, GetFontList,
   GetPlatform,
   GetPlatformUi,
   OpenFileDialog,
@@ -181,6 +188,7 @@ import {
   clickAnimates,
   directionOptions,
   fontsizeOptions,
+  fontFamilyOptions,
   listColumnOptions,
   listStyleOptions,
   marginOptions,
@@ -220,6 +228,13 @@ onMounted(() => {
       });
     }
   })
+
+  //读取字体列表
+  GetFontList().then((result)=>{
+    let resp = decodeApiData(result)
+    fontFamilyOptions.value = resp.data
+  })
+
 })
 
 function changePlatform() {

@@ -1,6 +1,12 @@
 github.com/PuerkitoBio/goquery v1.5.1/go.mod h1:GsLWisAFVj4WgDibEWF4pvYnkVQBpKBKeU+7zCJoLcc=
 github.com/Shopify/go-lua v0.0.0-20221004153744-91867de107cf h1:VSUCKpFV0AfYGslgQSRdBI9HCVp1TCXJmScWD0VXL5g=
 github.com/Shopify/go-lua v0.0.0-20221004153744-91867de107cf/go.mod h1:UCCi6u6YA8oXfJ15vEMiMGIaWWfLiOacinBPHxLXtEU=
+github.com/adrg/strutil v0.2.2 h1:XSd9+o2xaOon2oRum0JymNT+f0nfLiAiDzGOcjcIsMI=
+github.com/adrg/strutil v0.2.2/go.mod h1:EF2fjOFlGTepljfI+FzgTG13oXthR7ZAil9/aginnNQ=
+github.com/adrg/sysfont v0.1.2 h1:MSU3KREM4RhsQ+7QgH7wPEPTgAgBIz0Hw6Nd4u7QgjE=
+github.com/adrg/sysfont v0.1.2/go.mod h1:6d3l7/BSjX9VaeXWJt9fcrftFaD/t7l11xgSywCPZGk=
+github.com/adrg/xdg v0.3.0 h1:BO+k4wFj0IoTolBF1Apn8oZrX3LQrEbBA8+/9vyW9J4=
+github.com/adrg/xdg v0.3.0/go.mod h1:7I2hH/IT30IsupOpKZ5ue7/qNi3CoKzD6tL3HwpaRMQ=
 github.com/akavel/rsrc v0.10.2 h1:Zxm8V5eI1hW4gGaYsJQUhxpjkENuG91ki8B4zCrvEsw=
 github.com/akavel/rsrc v0.10.2/go.mod h1:uLoCtb9J+EyAqh+26kdrTgmzRBFPGOolLWKpdxkKq+c=
 github.com/andybalholm/cascadia v1.1.0/go.mod h1:GsXiBklL0woXo1j/WYWtSYYC4ouU9PqHO0sqidkEA4Y=

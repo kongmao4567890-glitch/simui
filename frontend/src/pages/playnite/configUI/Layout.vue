@@ -39,6 +39,13 @@
                       :label="lang.baseFontsize"/>
           </q-item-section>
           <q-item-section>
+            <q-select filled square dense options-dense emit-value map-options :options="fontFamilyOptions"
+                      v-model="activeUi.Font" popup-content-class="q-select-content"
+                      :label="lang.font">
+              <q-tooltip class="bg-red">{{lang.fontWarn}}</q-tooltip>
+            </q-select>
+          </q-item-section>
+          <q-item-section>
             <q-select filled square dense options-dense emit-value map-options :options="boolOptions"
                       v-model="activeUi.HideCarousel" :label="lang.hideCarousel"/>
           </q-item-section>
@@ -148,7 +155,7 @@ import {decodeApiData, notify, wailsPathDecode} from "components/utils";
 import {useGlobalStore} from 'stores/globalData';
 import {storeToRefs} from 'pinia';
 import {
-  GetConfig,
+  GetConfig, GetFontList,
   GetPlatform,
   GetPlatformUi,
   OpenFileDialog,
@@ -161,12 +168,13 @@ import {
   clickAnimates,
   directionOptions,
   fontsizeOptions,
+  fontFamilyOptions,
   marginOptions,
   sizeOptions,
   sortOptions,
   thumbOptions,
   titleOptions,
-} from 'src/pages/classic/configUI/UiConst.vue';
+} from 'src/pages/playnite/configUI/UiConst.vue';
 
 const global = useGlobalStore();
 const {config, lang, rootPath, theme} = storeToRefs(global);
@@ -195,6 +203,12 @@ onMounted(() => {
         platformList.value.push({value: item.Id, label: item.Name});
       });
     }
+  })
+
+  //读取字体列表
+  GetFontList().then((result)=>{
+    let resp = decodeApiData(result)
+    fontFamilyOptions.value = resp.data
   })
 })
 

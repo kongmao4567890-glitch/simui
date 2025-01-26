@@ -30,6 +30,17 @@ var RUN_EXTS = []string{".exe", ".cmd", ".bat", ".lnk"}
 // 可直接通过explorer运行的扩展名
 var EXPLORER_EXTS = []string{".lnk"}
 
+// 支持的字体类型
+var FONT_EXTS = map[string]string{
+	".woff":  "woff",
+	".woff2": "woff2",
+	".ttf":   "truetype",
+	".otf":   "opentype",
+	".eot":   "embedded-opentype",
+	".svg":   "svg",
+	".svgz":  "svg",
+}
+
 /*EXPLORER_EXTS = []string{
 	".lnk", ".html", ".htm", ".mht", ".mhtml", ".url",
 	".chm", ".doc", ".docx", ".ppt", ".pptx", ".xls", ".xlsx", ".rtf",

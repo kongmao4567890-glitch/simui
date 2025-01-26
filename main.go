@@ -32,6 +32,9 @@ func main() {
 
 	rootpath, _ := filepath.Abs(filepath.Dir(os.Args[0]))
 
+	ss := utils.WailsPathEncode("D:\\work\\go\\src\\simui-pulsar\\build\\bin\\resources\\fonts\\f1.ttf", false)
+	fmt.Println("==========", ss)
+
 	//测试环境配置
 	if utils.FileExists(".env") {
 		rootpath, _ = utils.ReadFile(".env", true)
@@ -39,12 +42,13 @@ func main() {
 	}
 
 	rootpath = utils.ReplcePathSeparator(rootpath)
-	constant.VERSION_NO = "1.0.1"                     //当前版本id
-	constant.BUILD_TIME = ""                          //软件编译时间
-	constant.ROOT_PATH = rootpath + "/"               //当前软件的绝对路径
-	constant.LANG_PATH = rootpath + "/language/"      //语言目录
-	constant.CACHE_PATH = rootpath + "/cache/"        //缓存路径
-	constant.RESOURCE_PATH = rootpath + "/resources/" //软件资源目录
+	constant.VERSION_NO = "1.0.1"                           //当前版本id
+	constant.BUILD_TIME = ""                                //软件编译时间
+	constant.ROOT_PATH = rootpath + "/"                     //当前软件的绝对路径
+	constant.LANG_PATH = rootpath + "/language/"            //语言目录
+	constant.CACHE_PATH = rootpath + "/cache/"              //缓存路径
+	constant.RESOURCE_PATH = rootpath + "/resources/"       //软件资源目录
+	constant.FONT_PATH = constant.RESOURCE_PATH + "/fonts/" //字体目录
 
 	constant.CACHE_UNZIP_PATH = constant.CACHE_PATH + "unzip/"     //解压缓存路径
 	constant.CACHE_THUMB_PATH = constant.CACHE_PATH + "thumb_bak/" //展示图备份目录
