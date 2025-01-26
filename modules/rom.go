@@ -867,8 +867,6 @@ func BatchSetRomBase(platform uint32, data map[string]*db.RomSimpleVO) error {
  **/
 func GetFilter(platform uint32) (map[string][]map[string]any, error) {
 
-	fmt.Println(config.Cfg.Lang)
-
 	volist := []*db.Filter{}
 	if platform == 0 {
 		volist, _ = (&db.Filter{}).GetAll()
@@ -959,7 +957,7 @@ func GetRomSlaveResFile(dir string, prefix string) ([]string, error) {
 	extMap := utils.SliceToMap(constant.MEDIA_EXTS)
 
 	err := filepath.Walk(dir, func(p string, fi os.FileInfo, err error) error { //遍历目录
-		if err != nil { //忽略错误
+		if err != nil {                                                         //忽略错误
 			return err
 		}
 
