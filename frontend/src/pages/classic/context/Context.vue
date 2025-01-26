@@ -57,15 +57,15 @@ export function showContextMenu(event: any, index: number, id: number, info: any
   let favorite;
   if (romInfo.value.Favorite == 1) { //取消最爱
     favorite = {
-      label: lang.value.cancelFavorite,
+      label: lang.value.cancelFavorite + "(C+f)",
       icon: h('img', {src: '/images/context/fav_0.png', style: CONTEXT_ICON_SIZE}),
-      onClick: () => setFavorite()
+      onClick: () => setFavorite(0)
     }
   } else {
     favorite = {
-      label: lang.value.setFavorite,
+      label: lang.value.setFavorite + "(C+f)",
       icon: h('img', {src: '/images/context/fav_1.png', style: CONTEXT_ICON_SIZE}),
-      onClick: () => setFavorite()
+      onClick: () => setFavorite(1)
     }
   }
 
@@ -343,14 +343,14 @@ function setHide() {
 }
 
 
-//设置西安
-function setFavorite() {
-  let fav = romInfo.value.Favorite == 1 ? 0 : 1;
+//设置喜爱
+function setFavorite(fav) {
   console.log("setFavorite", romInfo.value.Favorite, fav)
   SetFavorite(targetId.value, fav).then((result: string) => {
     let resp = decodeApiData(result)
     romInfo.value.Favorite = fav;
     console.log(resp.data)
+    notify("suc", lang.value.operSuc)
     callback("setFavorite", targetIndex.value, fav)
   })
 }
@@ -429,6 +429,9 @@ export function keybordOpenWin(opt: string, index: number, info) {
       break;
     case "setHide": //设为隐藏
       setHide()
+      break;
+    case "setFavorite": //设为喜爱
+      setFavorite(1)
       break;
     case "renameAlias": //修改别名
       renameAlias()

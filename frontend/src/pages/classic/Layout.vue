@@ -159,7 +159,9 @@ const windowResize = debounce(() => {
 
 //初始化字体
 const initFont = () => {
+  
   let ui = platformUi.value
+
   if (ui.Font.Type == 1) {
     //系统字体
     currentFont.value = ui.Font.Family

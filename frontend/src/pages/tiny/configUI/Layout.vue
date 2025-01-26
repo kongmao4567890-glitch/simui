@@ -181,6 +181,10 @@ function changePlatform() {
         activeUi.value.BackgroundMask = wailsPathDecode(activeUi.value.BackgroundMask)
         activeUi.value.BackgroundMask = activeUi.value.BackgroundMask.replace(rootPath.value, "");
       }
+      if (activeUi.value.Font.Type == 2) {
+        activeUi.value.Font.Src = wailsPathDecode(activeUi.value.Font.Src)
+        activeUi.value.Font.Src = activeUi.value.Font.Src.replace(rootPath.value, "");
+      }
     }
   })
 }

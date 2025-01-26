@@ -176,6 +176,8 @@ func ReadRomFiles(platform uint32) (map[string]*db.Rom, error) {
 				}
 				romlist[romName] = rinfo
 
+				fmt.Println("=========", romName)
+
 				return nil
 			}); err != nil {
 			return nil, errors.New(config.Cfg.Lang["romPathNotFound"])
