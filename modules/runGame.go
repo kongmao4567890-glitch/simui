@@ -95,7 +95,7 @@ func RunGame(romId uint64, simId uint32) error {
 		//记录运行次数和时间
 		rid := romId
 		if romInfo.Pid != "" {
-			parent, _ := (&db.Rom{}).GetByPid(romInfo.Platform, romInfo.Pid)
+			parent, _ := (&db.Rom{}).GetMasterRom(romInfo.Platform, romInfo.Pid)
 			if parent != nil {
 				rid = parent.Id
 			}
@@ -160,8 +160,9 @@ func runGameSimulator(romInfo *db.Rom, sim *db.Simulator) error {
 
 	//读取父游戏信息
 	var parent = &db.Rom{}
+	var err error
 	if romInfo.Pid != "" {
-		parent, err := (&db.Rom{}).GetByPid(romInfo.Platform, romInfo.Pid)
+		parent, err = (&db.Rom{}).GetMasterRom(romInfo.Platform, romInfo.Pid)
 		if err != nil {
 			return errors.New(config.Cfg.Lang["masterGameNotFound"])
 		}

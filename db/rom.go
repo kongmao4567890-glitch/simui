@@ -393,9 +393,9 @@ func (*Rom) GetMasterRomByPlatform(platform uint32) ([]*Rom, error) {
 	return volist, result.Error
 }
 
-func (*Rom) GetByPid(platform uint32, romName string) (*Rom, error) {
+func (*Rom) GetMasterRom(platform uint32, romName string) (*Rom, error) {
 	vo := &Rom{}
-	result := getDb().Where("platform = ? AND pid = ?", platform, romName).First(&vo)
+	result := getDb().Where("platform = ? AND rom_name = ?", platform, romName).First(&vo)
 	if result.Error != nil {
 		return nil, result.Error
 	}
