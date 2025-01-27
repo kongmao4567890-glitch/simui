@@ -113,7 +113,7 @@ export const fontsizeOptions = ['12px', '14px', '16px', '18px', '24px', '28px', 
 export const fontFamilyOptions = ref([]);
 
 export const backgroundRepeatOptions = [
-  {value: 'cover', label: lang.value.cover,disable:true,},
+  {value: 'cover', label: lang.value.cover},
   {value: 'repeat', label: lang.value.repeat},
   {value: 'no-repeat', label: lang.value.noRepeat},
 ];
