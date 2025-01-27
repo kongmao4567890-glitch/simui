@@ -1,6 +1,8 @@
 module simUI
 
-go 1.18
+go 1.21
+
+toolchain go1.23.5
 
 require (
 	github.com/Shopify/go-lua v0.0.0-20221004153744-91867de107cf
@@ -13,8 +15,8 @@ require (
 	github.com/mattn/go-sqlite3 v1.14.17
 	github.com/ncruces/zenity v0.10.11
 	github.com/nfnt/resize v0.0.0-20180221191011-83c6a9932646
-	github.com/wailsapp/wails/v2 v2.8.0
-	golang.org/x/text v0.14.0
+	github.com/wailsapp/wails/v2 v2.9.2
+	golang.org/x/text v0.15.0
 )
 
 require (
@@ -54,16 +56,18 @@ require (
 	github.com/tkrajina/go-reflector v0.5.6 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/fasttemplate v1.2.2 // indirect
-	github.com/wailsapp/go-webview2 v1.0.10 // indirect
+	github.com/wailsapp/go-webview2 v1.0.16 // indirect
 	github.com/wailsapp/mimetype v1.4.1 // indirect
 	go.uber.org/atomic v1.7.0 // indirect
 	go.uber.org/multierr v1.6.0 // indirect
 	go.uber.org/zap v1.19.1 // indirect
-	golang.org/x/crypto v0.18.0 // indirect
+	golang.org/x/crypto v0.23.0 // indirect
 	golang.org/x/exp v0.0.0-20230522175609-2e198f4a06a1 // indirect
 	golang.org/x/image v0.15.0 // indirect
-	golang.org/x/net v0.20.0 // indirect
-	golang.org/x/sys v0.16.0 // indirect
+	golang.org/x/net v0.25.0 // indirect
+	golang.org/x/sys v0.20.0 // indirect
 )
+
+replace github.com/wailsapp/go-webview2 => github.com/wailsapp/go-webview2 v1.0.10
 
 // replace github.com/wailsapp/wails/v2 v2.5.1 => /Users/frontlon/go/pkg/mod
