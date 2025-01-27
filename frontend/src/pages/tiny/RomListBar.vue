@@ -583,39 +583,40 @@ function openRunGameDialog() {
   tmpRomFocus = activeFocus.value
 
   //读取rom信息
-
   GetGameDetail(activeRom.value).then((result: string) => {
     let resp = decodeApiData(result)
     if (resp.err == "") {
       detail.value = resp.data
 
       //设置默认模拟器选项
-      if (!isEmpty(simulators.value)) {
-        let simId = 0
+      let simId = 0
+
+      if (simulators.value && simulators.value.length > 0) {
+        simId = 0
         simulators.value.forEach((item: any, index: number) => {
           if (item.Id == detail.value.Info.SimId) {
             simId = item.Id
           }
         })
-        detail.value.Info.SimId = simId > 0 ? simId : simulators.value[0].Id
-
-        console.log("asdfasdfasdfasdfasdf", detail.value)
-
-        if (detail.value.Sublist.length == 0) {
-          //一个游戏，直接打开模拟器对话框
-          openSimDialog(detail.value.Info.Id)
-        } else {
-          showGameDialog.value = true
-
-          //设置默认模拟器选项
-          setTimeout(function () {
-            //activeFocus.value = [4, 0]
-            let ele = document.getElementById('game-ele-0');
-            ele?.focus()
-          }, 100);
-
-        }
       }
+
+      detail.value.Info.SimId = simId
+
+      if (detail.value.Sublist.length == 0) {
+        //一个游戏，直接打开模拟器对话框
+        openSimDialog(detail.value.Info.Id)
+      } else {
+        showGameDialog.value = true
+
+        //设置默认模拟器选项
+        setTimeout(function () {
+          //activeFocus.value = [4, 0]
+          let ele = document.getElementById('game-ele-0');
+          ele?.focus()
+        }, 100);
+
+      }
+
     }
   })
 
@@ -628,30 +629,30 @@ function openSimDialog(romId) {
   simulators.value = []
 
   let platform = detail.value.Info.Platform
-  if (!isEmpty(simulatorMap.value[platform])) {
+  if (!simulatorMap.value[platform] || simulatorMap.value[platform].length == 0) {
+    //无模拟器运行
+    runGame(0)
+  } else if (simulatorMap.value[platform].length == 1) {
+    //只有一个模拟器运行游戏
+    let simId = simulatorMap.value[platform][0].Id
+    runGame(simId)
+  } else if (simulatorMap.value[platform].length > 1) {
+    //选择模拟器
+    simulators.value = simulatorMap.value[platform]
+    showSimDialog.value = true
 
-    if (simulatorMap.value[platform].length == 1) {
-      //运行游戏
-      let simId = simulatorMap.value[platform][0].Id
-      runGame(simId)
-    } else if (simulatorMap.value[platform].length > 1) {
-
-      //选择模拟器
-      simulators.value = simulatorMap.value[platform]
-      showSimDialog.value = true
-
-      //设置默认模拟器选项
-      setTimeout(function () {
-        simulators.value.forEach((item: any, index: number) => {
-          if (item.Id == detail.value.Info.SimId) {
-            let ele = document.getElementById('sim-ele-' + index);
-            ele?.focus()
-            //activeFocus.value = [5, index]
-          }
-        })
-      }, 100);
-    }
+    //设置默认模拟器选项
+    setTimeout(function () {
+      simulators.value.forEach((item: any, index: number) => {
+        if (item.Id == detail.value.Info.SimId) {
+          let ele = document.getElementById('sim-ele-' + index);
+          ele?.focus()
+          //activeFocus.value = [5, index]
+        }
+      })
+    }, 100);
   }
+
   showGameDialog.value = false
 }
 
