@@ -164,6 +164,7 @@ onMounted(() => {
   GetBaseConfig().then((result: string) => {
     let resp = decodeApiData(result)
     config.value = resp.data;
+
     if (config.value.WindowZoom == 0){
       config.value.WindowZoom = 1
     }
@@ -204,7 +205,7 @@ function openFileDialog(opt: string,type:string) {
 
       switch (type){
         case "SoftNameImage":
-          config.SoftName.Image = resp.data;
+          config.value.SoftName.Image = resp.data;
           break;
         case "SplashScreenSrc":
           config.value.SplashScreen.Src = resp.data
