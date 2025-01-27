@@ -65,7 +65,7 @@ const global = useGlobalStore();
 const {lang, config, theme, platformUi, simulatorMap} = storeToRefs(global);
 
 theme.value = "Default"
-const currentFont = ref("")
+const currentFont = ref("Arial")
 onActivated(async () => {
 
   let conf = await callSrv("GetConfig")

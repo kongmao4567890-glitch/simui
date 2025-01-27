@@ -52,7 +52,7 @@ import axios from "axios";
 
 const global = useGlobalStore();
 const {lang,config, theme, activeRom, platformUi, simulatorMap} = storeToRefs(global);
-const currentFont = ref("")
+const currentFont = ref("Arial")
 
 onMounted(async () => {
 
