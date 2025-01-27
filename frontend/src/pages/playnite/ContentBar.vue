@@ -159,7 +159,7 @@
           <q-item v-for="(item,index) in simulators" clickable v-ripple :id="'sim-ele-'+index" :key="index"
                   @click="runGame(item.Id)">
             <q-item-section>
-              {{ item.Name }} - {{ index }}
+              {{ item.Name }}
             </q-item-section>
           </q-item>
         </q-list>
@@ -339,7 +339,7 @@ function openRunGameDialog() {
 
 
 //打开模拟器选择对话框
-function openSimDialog(romId) {
+export function openSimDialog(romId) {
   selectGameId.value = romId
   simulators.value = []
 

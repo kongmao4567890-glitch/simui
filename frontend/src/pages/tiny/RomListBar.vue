@@ -34,7 +34,7 @@
                 <q-img :src="item.ThumbPic" loading="lazy" fit="contain" class="rom-img"/>
               </q-item-section>
               <q-item-section>
-                <div class="rom-title">
+                <div class="rom-title" @dblclick="openRunGameDialog()">
                   <div class="master-title">{{ platformUi.NameType == 1 ? item.Name : item.RomName }}</div>
                   <div class="sub-title">{{ item.subTitle }}</div>
                 </div>
@@ -712,6 +712,7 @@ export default {
       showSimDialog,
       runGame,
       openSimDialog,
+      openRunGameDialog,
     }
   }
 }

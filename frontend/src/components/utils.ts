@@ -36,7 +36,7 @@ export function isEmpty(data: any) {
 
 //调用go服务 同步
 export function decodeApiData(resp: string) {
-    console.log(resp)
+    //console.log(resp)
     return JSON.parse(resp);
 }
 
