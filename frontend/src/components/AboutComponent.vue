@@ -7,9 +7,12 @@
       <q-card-section class="selectable">
         <h5>SIMUI Pulsar v{{versionNo}}</h5>
         <p>编译时间：{{buildTime}}</p>
-        <p>网站：<a target="_blank" href="http://www.simui.net/">www.simui.net</a></p>
+        <p>网站：<a target="_blank" href="https://www.simui.net/">www.simui.net</a></p>
         <p>QQ群：<a target="_blank"
-                   href="https://qm.qq.com/cgi-bin/qm/qr?k=1RxGE9izpXHFnS48ocXzjwpqu6yQUSkb&jump_from=webapi">851347939</a>
+                   href="https://qm.qq.com/q/6OUWHSMpV0">851347939(一群)</a>
+          |
+          <a target="_blank"
+             href="https://qm.qq.com/q/dd08MJdeqk">648286315(二群)</a>
         </p>
         <p>邮箱：front_diablo@163.com</p>
         <h6>特别鸣谢</h6>
