@@ -590,16 +590,13 @@ function openRunGameDialog() {
 
       //设置默认模拟器选项
       let simId = 0
-
       if (simulators.value && simulators.value.length > 0) {
-        simId = 0
         simulators.value.forEach((item: any, index: number) => {
           if (item.Id == detail.value.Info.SimId) {
             simId = item.Id
           }
         })
       }
-
       detail.value.Info.SimId = simId
 
       if (detail.value.Sublist.length == 0) {
