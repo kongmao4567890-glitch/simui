@@ -32,7 +32,7 @@ func main() {
 
 	rootpath, _ := filepath.Abs(filepath.Dir(os.Args[0]))
 
-	//测试环境配置
+	//开发环境配置
 	if utils.FileExists(".env") {
 		rootpath, _ = utils.ReadFile(".env", true)
 		constant.DEV = true
@@ -120,6 +120,12 @@ func main() {
 		conf.WindowHeight = 600
 	}
 
+	//检查是否有固定版本的webview2
+	webviewBrowserPath := constant.ROOT_PATH + "webview2"
+	if !utils.DirExists(webviewBrowserPath) {
+		webviewBrowserPath = ""
+	}
+
 	// https://wails.io/zh-Hans/docs/reference/options
 	app := NewApp()
 	ctl := controller.NewController()
@@ -148,6 +154,7 @@ func main() {
 			IsZoomControlEnabled: true,            //启用窗口缩放
 			ZoomFactor:           conf.WindowZoom, //窗口缩放比例
 			ResizeDebounceMS:     200,
+			WebviewBrowserPath:   webviewBrowserPath,
 			//DisableFramelessWindowDecorations: false,
 			//Messages: &windows.Messages{
 			//	InstallationRequired: "",
