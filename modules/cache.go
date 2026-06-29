@@ -62,7 +62,7 @@ func CreateRomCache(getPlatform uint32) (string, error) {
 		romlist, err := GetRomData(platform, romMap)
 		if err != nil {
 			utils.WriteLog(err.Error())
-			continue
+			return "", err
 		}
 
 		//第三步：更新rom数据
@@ -214,6 +214,10 @@ func GetRomData(platform uint32, romMap map[string]*db.Rom) ([]*db.Rom, error) {
 
 	//csv游戏信息
 	BaseInfo, err := config.GetRomBase(platform, true)
+
+	if err != nil {
+		return nil, err
+	}
 
 	//rom配置信息
 	romSetting, err := config.GetRomSettingByPlatform(platform)
