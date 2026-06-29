@@ -232,8 +232,9 @@ func BindSubGame(pid uint64, sid uint64) error {
 		return errors.New(config.Cfg.Lang["subGameExists"])
 	}
 
-	//更新数据库
-	if (&db.Rom{}).UpdatePidByRomName(master.Platform, slave.RomName, master.RomName) != nil {
+	slave.Pid = master.RomName
+	slave.InfoMd5 = slave.CreateInfoMd5()
+	if (&db.Rom{}).UpdatePidAndInfoMd5(slave.Platform, slave.RomName, slave.Pid, slave.InfoMd5) != nil {
 		return err
 	}
 
@@ -248,8 +249,9 @@ func UnBindSubGame(id uint64) error {
 	//读取子游戏数据
 	vo, err := (&db.Rom{}).GetById(id)
 
-	//更新数据库
-	if (&db.Rom{}).UpdatePidByRomName(vo.Platform, vo.RomName, "") != nil {
+	vo.Pid = ""
+	vo.InfoMd5 = vo.CreateInfoMd5()
+	if (&db.Rom{}).UpdatePidAndInfoMd5(vo.Platform, vo.RomName, "", vo.InfoMd5) != nil {
 		return err
 	}
 

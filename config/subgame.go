@@ -25,6 +25,7 @@ func GetSubGame(platform uint32, build bool) (map[string]string, error) {
 	section := map[string]string{}
 
 	if !utils.FileExists(platformInfo.SubGameFile) {
+		SubGameList[platform] = section
 		return section, nil
 	}
 	content, _ := utils.ReadFile(platformInfo.SubGameFile, false)
