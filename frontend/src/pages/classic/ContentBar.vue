@@ -246,8 +246,8 @@ watch([romState], async(newValue, oldValue) => {
   pageEnd = false;
   pageNum = 0;
   //滚动条回到最顶端
-  scrollAreaRef.value.setScrollPosition("vertical", 0)
 
+  scrollAreaRef.value.setScrollPosition("vertical", 0)
   var req = {
     "theme": theme.value,
     "platform": activePlatform.value,
@@ -270,7 +270,6 @@ watch([romState], async(newValue, oldValue) => {
 
   var request = JSON.stringify(req);
   let result = await GetGameList(request)
-
   let resp = decodeApiData(result)
   items.value = resp.data;
 

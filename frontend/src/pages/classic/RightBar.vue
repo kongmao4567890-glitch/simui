@@ -37,11 +37,8 @@
                 <!--评分-->
                 <div class="right-title">{{ lang.rating }}</div>
                 <div class="rating">
-                  <star-rating v-model:rating="detail.Info.Score" :increment="0.5" @update:rating="updateRating()"
-                               :star-size="20" :active-on-click="true" :animate="true"
-                               :show-rating="false" active-color="orange" inactive-color="var(--color-10)"
-                               :clearable="true"
-                               :star-points="[23,2, 14,17, 0,19, 10,34, 7,50, 23,43, 38,50, 36,34, 46,19, 31,17]"/>
+                  <q-rating v-model="detail.Info.Score" :max="5" size="20px" color="orange" color-half="orange"
+                            icon-half="star_half" @update:model-value="updateRating()"/>
                 </div>
 
                 <!-- 通关状态 -->
@@ -258,7 +255,6 @@ import {
 } from 'app/wailsjs/go/controller/Controller'
 import {changeContentBackground} from 'src/pages/classic/ContentBar.vue'
 import RomSim, {openEditRomSimulatorDialog} from 'src/pages/classic/modules/RomSim.vue'
-import StarRating from 'vue-star-rating'
 
 const global = useGlobalStore();
 const {
@@ -313,8 +309,10 @@ watch(activeRom, (newValue, oldValue) => {
 
     //滚动条回到最顶端
     if (scrollAreaDocRef.value != null) {
+
       scrollAreaDocRef.value.setScrollPosition("vertical", 0)
     }
+
     //读取模拟器信息
     simulators.value = []
     if (!isEmpty(simulatorMap.value[activePlatform.value])) {
@@ -323,6 +321,7 @@ watch(activeRom, (newValue, oldValue) => {
 
     //读取rom信息
     GetGameDetail(activeRom.value).then((result: string) => {
+
       let resp = decodeApiData(result)
       if (resp.err == "") {
         detail.value = resp.data
