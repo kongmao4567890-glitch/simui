@@ -28,7 +28,11 @@ func GetSubGame(platform uint32, build bool) (map[string]string, error) {
 		SubGameList[platform] = section
 		return section, nil
 	}
-	content, _ := utils.ReadFile(platformInfo.SubGameFile, false)
+	content, err := utils.ReadFile(platformInfo.SubGameFile, false)
+	if err != nil {
+		return section, err
+	}
+
 	if content != "" {
 		json.Unmarshal([]byte(content), &section)
 		SubGameList[platform] = section
@@ -89,6 +93,5 @@ func DelSubGame(platform uint32, slave string) error {
 // 覆写子游戏配置
 func WriteDataToSubGameFile(filePath string, data map[string]string) error {
 	content, _ := json.Marshal(data)
-	utils.OverlayWriteFile(filePath, string(content))
-	return nil
+	return utils.OverlayWriteFile(filePath, string(content))
 }

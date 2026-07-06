@@ -78,7 +78,7 @@ func CreateRomCache(getPlatform uint32) (string, error) {
 		updateFilterDB(platform, romlist)
 
 		//第六步：清理rom_config和rom_sub
-		clearRomConfigFile(platform, romlist)
+		//clearRomConfigFile(platform, romlist)
 	}
 
 	//收缩数据库
@@ -221,12 +221,13 @@ func GetRomData(platform uint32, romMap map[string]*db.Rom) ([]*db.Rom, error) {
 
 	//rom配置信息
 	romSetting, err := config.GetRomSettingByPlatform(platform)
-
-	//读取子游戏关系（重建缓存时强制从文件加载）
-	romSubGame, _ := config.GetSubGame(PlatformInfo.Id, true)
-
 	if err != nil {
 		return nil, errors.New(config.Cfg.Lang["csvFormatError"] + err.Error())
+	}
+	//读取子游戏关系（重建缓存时强制从文件加载）
+	romSubGame, err := config.GetSubGame(PlatformInfo.Id, true)
+	if err != nil {
+		return nil, err
 	}
 
 	//进入循环，遍历文件
