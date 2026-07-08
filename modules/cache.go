@@ -734,16 +734,26 @@ func ClearNotExistGameConfig() error {
 			}
 		}
 
-		//清理子游戏配置
-		subgameMap, err := config.GetSubGame(pf.Id, false)
+		//清理子游戏配置（写回前强制从文件加载，并同时校验子游戏与主游戏是否仍存在）
+		subgameMap, err := config.GetSubGame(pf.Id, true)
 		if err != nil {
 			fmt.Println(err)
 			continue
 		}
 		clearSubgame := false
-		for name, _ := range subgameMap {
-			if _, ok := romMap[name]; !ok {
-				delete(subgameMap, name)
+		for slave, master := range subgameMap {
+			if _, ok := romMap[slave]; !ok {
+				delete(subgameMap, slave)
+				clearSubgame = true
+				continue
+			}
+			if master == "" {
+				delete(subgameMap, slave)
+				clearSubgame = true
+				continue
+			}
+			if _, ok := romMap[master]; !ok {
+				delete(subgameMap, slave)
 				clearSubgame = true
 			}
 		}
