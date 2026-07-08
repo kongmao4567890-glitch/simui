@@ -462,21 +462,13 @@ export function romEventKeyboard(direction: string) {
       newIndex = currFocus + 1
       break;
   }
-  console.log("-=-=-=-", currFocus)
-
   let ele = document.getElementById('ele' + newIndex);
-  if (isEmpty(ele)) {
+  if (ele == null) {
     return
   }
 
   activeFocus.value = [focusType, newIndex]
-
-  if (platformUi.value.RomListStyle == 4) {
-    //列表模式点击
-    ele?.click()
-  } else {
-    ele?.focus()
-  }
+  ele.click()
 
 }
 

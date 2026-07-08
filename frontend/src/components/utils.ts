@@ -27,9 +27,12 @@ export function isEmpty(data: any) {
         case "object":
             if (Array.isArray(data)) { //数组
                 return data.length == 0
-            } else { //对象
-                return Object.keys(data).length == 0
             }
+            // DOM 元素没有可枚举自有属性，不能按空对象处理
+            if (typeof Element !== 'undefined' && data instanceof Element) {
+                return false
+            }
+            return Object.keys(data).length == 0
     }
     return true
 }
