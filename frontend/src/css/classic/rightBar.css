@@ -347,7 +347,6 @@
     cursor: pointer;
     aspect-ratio: unset;
     max-height: 200px;
-    background: var(--color-3);
     transition: transform 0.15s ease;
 }
 
@@ -362,6 +361,7 @@
 .thumbs-img {
     width: 100%;
     max-height: 200px;
+    border-radius: 6px;
 }
 
 .thumbs-img-overlay {
