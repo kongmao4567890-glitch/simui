@@ -113,10 +113,12 @@
                     </q-list>
 
                     <div class="run-btn-list">
-                      <q-btn color="primary" icon="play_arrow" no-caps class="run-btn-main"
+                      <q-btn color="primary" no-caps class="run-btn-main"
                              :label="detail.Info.Name" @click="runGame(detail.Info.Id)"/>
-                      <q-btn outline color="primary" no-caps class="run-btn-sub" v-for="(sg) in detail.Sublist"
-                             :key="sg.Id" :label="sg.Name" @click="runGame(sg.Id)"/>
+                      <div v-if="detail.Sublist?.length" class="run-btn-sublist">
+                        <q-btn flat no-caps class="run-btn-sub" v-for="(sg) in detail.Sublist"
+                               :key="sg.Id" :label="sg.Name" @click="runGame(sg.Id)"/>
+                      </div>
                     </div>
                   </div>
 

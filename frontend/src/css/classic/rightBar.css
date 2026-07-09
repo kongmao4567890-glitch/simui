@@ -226,13 +226,32 @@
 .run-btn-list .run-btn-main {
     width: 100%;
     min-height: 40px;
-    font-weight: 600;
 }
 
-.run-btn-list .run-btn-sub {
+.run-btn-sublist {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-top: 2px;
+}
+
+.run-btn-list .run-btn-sub.q-btn--flat {
     width: 100%;
-    min-height: 34px;
-    opacity: 0.85;
+    min-height: 32px;
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--color-11);
+    background: var(--color-2);
+    border-radius: 4px;
+    justify-content: flex-start;
+    padding: 0 10px;
+    transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.run-btn-list .run-btn-sub.q-btn--flat:hover {
+    background: var(--color-3);
+    border-color: var(--color-5);
+    color: var(--color-14);
 }
 
 /*资料*/
