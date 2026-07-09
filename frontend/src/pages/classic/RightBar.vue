@@ -212,7 +212,7 @@
 
                     <div
                       v-if="typ != 'video'"
-                      :class="['thumbs-grid', { 'thumbs-grid--single': thumbListAlumb[typ].length === 1 }]"
+                      class="thumbs-grid"
                     >
                       <div
                         v-for="item in thumbListAlumb[typ]"
@@ -223,7 +223,7 @@
                         <q-img
                           :src="item.Path"
                           class="thumbs-img"
-                          :fit="thumbListAlumb[typ].length === 1 ? 'contain' : 'cover'"
+                          fit="contain"
                         />
                         <div class="thumbs-img-overlay">
                           <q-icon name="zoom_in" size="20px"/>
