@@ -205,17 +205,42 @@
               </div>
             </q-tab-panel>
 
-            <q-tab-panel name="strategy">
-              <q-list>
-                <q-item v-ripple clickable v-for="item in strategyFiles" @click="runProgram(item.Path)">
-                  <q-item-section>
-                    {{ item.Name }}
-                  </q-item-section>
-                </q-item>
-              </q-list>
-              <div class="strategy">
-                <div v-if="strategy != ''" v-html="strategy"></div>
-                <div v-else-if="strategy == '' && strategyFiles.length == 0" class="empty">{{ lang.noStrategy }}</div>
+            <q-tab-panel name="strategy" class="strategy-panel">
+              <div v-if="strategyFiles.length > 0" class="strategy-files-box">
+                <div class="strategy-section-title">
+                  <q-icon name="folder_open" size="18px"/>
+                  <span>{{ lang.strategyFiles }}</span>
+                </div>
+                <q-list class="strategy-file-list" dense>
+                  <q-item
+                    v-for="item in strategyFiles"
+                    :key="item.Path"
+                    v-ripple
+                    clickable
+                    class="strategy-file-item"
+                    @click="runProgram(item.Path)"
+                  >
+                    <q-item-section avatar>
+                      <q-avatar size="28px" class="strategy-file-icon">
+                        <q-icon name="description" size="16px"/>
+                      </q-avatar>
+                    </q-item-section>
+                    <q-item-section>
+                      <q-item-label class="strategy-file-name">{{ item.Name }}</q-item-label>
+                    </q-item-section>
+                    <q-item-section side>
+                      <q-icon name="launch" size="14px" class="strategy-file-action"/>
+                    </q-item-section>
+                  </q-item>
+                </q-list>
+              </div>
+
+              <div v-if="strategy != '' || strategyFiles.length == 0" class="strategy-content-box">
+                <div v-if="strategy != ''" class="strategy-content selectable" v-html="formattedStrategy"></div>
+                <div v-else-if="strategy == '' && strategyFiles.length == 0" class="strategy-empty">
+                  <q-icon name="menu_book" size="48px"/>
+                  <div>{{ lang.noStrategy }}</div>
+                </div>
               </div>
             </q-tab-panel>
           </q-tab-panels>
@@ -234,7 +259,7 @@
 </template>
 
 <script setup lang="ts">
-import {onMounted, ref, watch} from 'vue'
+import {computed, onMounted, ref, watch} from 'vue'
 import 'viewerjs/dist/viewer.css'
 import {api} from 'v-viewer'
 import {useGlobalStore} from 'stores/globalData';
@@ -274,6 +299,7 @@ const autoplay = ref(true)
 const detail: any = ref(null)
 const simulators: any = ref([])
 const strategy: any = ref("")
+const formattedStrategy = computed(() => formatStrategyContent(strategy.value))
 const PlatformDesc = ref("")
 const thumbListCarousel: any = ref([]);
 const thumbListAlumb: any = ref({});
@@ -487,6 +513,15 @@ function runProgram(path: string) {
       return;
     }
   })
+}
+
+function formatStrategyContent(content: string) {
+  if (!content) {
+    return ""
+  }
+  return content
+    .replace(/\[([^\]]+)\]/g, '<div class="strategy-block-title">$1</div>')
+    .replace(/(^|<br\s*\/?>)\s*--\s*(<br\s*\/?>|$)/gi, '$1<div class="strategy-block-divider"></div>$2')
 }
 
 //修改视频音量

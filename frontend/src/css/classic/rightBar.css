@@ -168,16 +168,137 @@
     height: 200px;
     padding:4px 0;
 }
-.strategy{
-    padding: 16px;
+
+/* 攻略 */
+.strategy-panel {
+    padding: 12px !important;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
 }
 
-.strategy :deep(.ctl){
+.strategy-section-title {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0 2px 8px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--color-8);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.strategy-files-box {
+    background: var(--color-2);
+    border: 1px solid var(--color-4);
+    border-radius: 8px;
+    padding: 10px 10px 4px;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.strategy-file-list {
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.strategy-file-list .strategy-file-item {
+    border-radius: 6px;
+    margin-bottom: 4px;
+    padding: 6px 8px;
+    min-height: 40px;
+    background: var(--color-3);
+    border: 1px solid transparent;
+    transition: background 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
+}
+
+.strategy-file-list .strategy-file-item:hover {
+    background: var(--color-4);
+    border-color: var(--color-5);
+}
+
+.strategy-file-list .strategy-file-item:active {
+    transform: scale(0.99);
+}
+
+.strategy-file-icon {
+    background: var(--color-4);
+    color: var(--q-primary);
+}
+
+.strategy-file-name {
+    font-size: 13px;
+    color: var(--color-9);
+    line-height: 1.4;
+}
+
+.strategy-file-action {
+    color: var(--color-7);
+    opacity: 0.7;
+    transition: opacity 0.2s ease, color 0.2s ease;
+}
+
+.strategy-file-item:hover .strategy-file-action {
+    opacity: 1;
+    color: var(--q-primary);
+}
+
+.strategy-content-box {
+    background: var(--color-2);
+    border: 1px solid var(--color-4);
+    border-radius: 8px;
+    padding: 14px 16px;
+    line-height: 1.7;
+    font-size: 13px;
+    color: var(--color-9);
+}
+
+.strategy-content {
+    word-break: break-word;
+    white-space: pre-wrap;
+}
+
+.strategy-content :deep(.ctl) {
     width: 16px;
+    vertical-align: middle;
+    margin: 0 1px;
 }
 
-.strategy :deep(img){
+.strategy-content :deep(img) {
     max-width: 100%;
+    vertical-align: middle;
+}
+
+.strategy-content :deep(.strategy-block-title) {
+    margin: 14px 0 8px;
+    padding: 5px 10px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--color-15);
+    background: var(--color-3);
+    border-left: 3px solid var(--q-primary);
+    border-radius: 0 4px 4px 0;
+}
+
+.strategy-content :deep(.strategy-block-title:first-child) {
+    margin-top: 0;
+}
+
+.strategy-content :deep(.strategy-block-divider) {
+    height: 1px;
+    margin: 8px 0;
+    background: linear-gradient(to right, transparent, var(--color-5) 20%, var(--color-5) 80%, transparent);
+}
+
+.strategy-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 40px 16px;
+    color: var(--color-6);
+    text-align: center;
 }
 
 .empty {
