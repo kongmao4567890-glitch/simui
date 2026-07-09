@@ -287,12 +287,12 @@
                 </q-list>
               </div>
 
-              <div v-if="strategy != '' || strategyFiles.length == 0" class="strategy-content-box">
-                <div v-if="strategy != ''" class="strategy-content selectable" v-html="formattedStrategy"></div>
-                <div v-else-if="strategy == '' && strategyFiles.length == 0" class="strategy-empty">
-                  <q-icon name="menu_book" size="48px"/>
-                  <div>{{ lang.noStrategy }}</div>
-                </div>
+              <div v-if="strategy != ''" class="strategy-content-box">
+                <div class="strategy-content selectable" v-html="formattedStrategy"></div>
+              </div>
+              <div v-else-if="strategy == '' && strategyFiles.length == 0" class="strategy-empty">
+                <q-icon name="menu_book" size="48px"/>
+                <div>{{ lang.noStrategy }}</div>
               </div>
             </q-tab-panel>
           </q-tab-panels>
