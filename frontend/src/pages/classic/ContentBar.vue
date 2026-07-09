@@ -32,7 +32,7 @@
                 </q-img>
 
                 <q-card-section v-if="!platformUi.BlockHideTitle" class="module-title"
-                                :style="{'background':platformUi.BlockHideBackground ?'none' : ''}">
+                                :style="{...getTitleBorderStyle(platformUi), background: platformUi.BlockHideBackground ? 'none' : ''}">
                   {{ platformUi.NameType == 1 ? item.Name : item.RomName }}
                 </q-card-section>
               </q-card>
@@ -54,7 +54,7 @@
                 <q-img v-if="item.ThumbPic" :src="item.ThumbPic" loading="lazy" fit="contain"
                        :class="'img-direction-'+platformUi.BlockDirection">
                   <div class="absolute-bottom text-center" v-if="!platformUi.BlockHideTitle"
-                       :style="{'padding':'10px 0','color':'var(--color-text)','background':platformUi.BlockHideBackground ?'none' : ''}">
+                       :style="{...getTitleBorderStyle(platformUi), padding: '10px 0', color: 'var(--color-text)', background: platformUi.BlockHideBackground ? 'none' : ''}">
                     {{ platformUi.NameType == 1 ? item.Name : item.RomName }}
                   </div>
                   <template v-slot:error>
@@ -101,7 +101,7 @@
                 <q-card-section>
                   <div class="row no-wrap items-center">
                     <div class="col" v-if="!platformUi.BlockHideTitle"
-                         :style="{'background':platformUi.BlockHideBackground ?'none' : ''}">
+                         :style="{...getTitleBorderStyle(platformUi), background: platformUi.BlockHideBackground ? 'none' : ''}">
                       {{ platformUi.NameType == 1 ? item.Name : item.RomName }}
                     </div>
                   </div>
@@ -184,7 +184,7 @@ import FabInputRom, {openInputDialog} from 'pages/classic/modules/FabInputRom.vu
 import FabOutputRom, {openOutputDialog} from 'pages/classic/modules/FabOutputRom.vue';
 
 import 'animate.css'
-import {decodeApiData, deepClone, firstLetterToLower, isEmpty, loading, notify} from "components/utils";
+import {decodeApiData, deepClone, firstLetterToLower, getTitleBorderStyle, isEmpty, loading, notify} from "components/utils";
 import {useGlobalStore} from 'stores/globalData';
 import {storeToRefs} from 'pinia';
 import {CreateRomCache, GetGameCount, GetGameList, RunGame} from "app/wailsjs/go/controller/Controller";
@@ -640,6 +640,7 @@ export default {
       menuLike,
       platformUi,
       callbackOpts,
+      getTitleBorderStyle,
       items,
       rating,
       listColumns,

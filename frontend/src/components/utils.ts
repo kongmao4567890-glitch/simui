@@ -115,6 +115,27 @@ export function getGradientColors(rgbString: string) {
     return gradientColors;
 }
 
+// 模块标题边框/阴影样式
+export function getTitleBorderStyle(platformUi: any) {
+    if (!platformUi || !platformUi.BlockTitleBorderType) {
+        return {}
+    }
+    const color = platformUi.BlockTitleBorderColor || '#000000'
+    const size = platformUi.BlockTitleBorderSize || 2
+    if (platformUi.BlockTitleBorderType === 'shadow') {
+        return {
+            textShadow: `0 0 ${size}px ${color}, 0 0 ${size * 2}px ${color}`
+        }
+    }
+    if (platformUi.BlockTitleBorderType === 'border') {
+        return {
+            WebkitTextStroke: `${size}px ${color}`,
+            paintOrder: 'stroke fill'
+        }
+    }
+    return {}
+}
+
 export function getDate(timestamp: number) {
     let date = new Date(timestamp * 1000);
     let year = date.getFullYear();
