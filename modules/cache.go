@@ -62,7 +62,7 @@ func CreateRomCache(getPlatform uint32) (string, error) {
 		romlist, err := GetRomData(platform, romMap)
 		if err != nil {
 			utils.WriteLog(err.Error())
-			continue
+			return "", err
 		}
 
 		//第三步：更新rom数据
@@ -78,7 +78,7 @@ func CreateRomCache(getPlatform uint32) (string, error) {
 		updateFilterDB(platform, romlist)
 
 		//第六步：清理rom_config和rom_sub
-		clearRomConfigFile(platform, romlist)
+		//clearRomConfigFile(platform, romlist)
 	}
 
 	//收缩数据库
@@ -215,14 +215,19 @@ func GetRomData(platform uint32, romMap map[string]*db.Rom) ([]*db.Rom, error) {
 	//csv游戏信息
 	BaseInfo, err := config.GetRomBase(platform, true)
 
+	if err != nil {
+		return nil, err
+	}
+
 	//rom配置信息
 	romSetting, err := config.GetRomSettingByPlatform(platform)
-
-	//读取子游戏关系（重建缓存时强制从文件加载）
-	romSubGame, _ := config.GetSubGame(PlatformInfo.Id, true)
-
 	if err != nil {
 		return nil, errors.New(config.Cfg.Lang["csvFormatError"] + err.Error())
+	}
+	//读取子游戏关系（重建缓存时强制从文件加载）
+	romSubGame, err := config.GetSubGame(PlatformInfo.Id, true)
+	if err != nil {
+		return nil, err
 	}
 
 	//进入循环，遍历文件
@@ -729,16 +734,26 @@ func ClearNotExistGameConfig() error {
 			}
 		}
 
-		//清理子游戏配置
-		subgameMap, err := config.GetSubGame(pf.Id, false)
+		//清理子游戏配置（写回前强制从文件加载，并同时校验子游戏与主游戏是否仍存在）
+		subgameMap, err := config.GetSubGame(pf.Id, true)
 		if err != nil {
 			fmt.Println(err)
 			continue
 		}
 		clearSubgame := false
-		for name, _ := range subgameMap {
-			if _, ok := romMap[name]; !ok {
-				delete(subgameMap, name)
+		for slave, master := range subgameMap {
+			if _, ok := romMap[slave]; !ok {
+				delete(subgameMap, slave)
+				clearSubgame = true
+				continue
+			}
+			if master == "" {
+				delete(subgameMap, slave)
+				clearSubgame = true
+				continue
+			}
+			if _, ok := romMap[master]; !ok {
+				delete(subgameMap, slave)
 				clearSubgame = true
 			}
 		}

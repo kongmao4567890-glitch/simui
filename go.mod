@@ -69,6 +69,4 @@ require (
 	golang.org/x/sys v0.30.0 // indirect
 )
 
-replace github.com/wailsapp/go-webview2 => github.com/wailsapp/go-webview2 v1.0.10
-
 // replace github.com/wailsapp/wails/v2 v2.5.1 => /Users/frontlon/go/pkg/mod
