@@ -119,47 +119,34 @@
 
 /*游戏运行信息*/
 .state-row {
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
     align-items: stretch;
     background: var(--color-2);
     border-radius: 8px;
-    padding: 4px;
-    gap: 0;
 }
 
 .state-stat {
-    flex: 1;
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     gap: 4px;
-    padding: 6px 4px;
-    margin: 3px 0;
+    padding: 10px 4px;
     min-width: 0;
     text-align: center;
-    position: relative;
-    border-right: none;
 }
 
-.state-stat:not(:last-child)::after {
-    content: '';
-    position: absolute;
-    right: 0;
-    top: 12%;
-    height: 76%;
-    width: 1px;
-    background: var(--color-4);
+.state-stat--middle {
+    border-left: 1px solid var(--color-4);
+    border-right: 1px solid var(--color-4);
 }
 
 .state-stat--clickable {
     cursor: pointer;
-    margin: 3px 10px 3px 3px;
+    margin: 4px;
     border-radius: 6px;
     transition: background 0.2s ease;
-}
-
-.state-stat--clickable::after {
-    right: -5px;
 }
 
 .state-stat--clickable:hover {

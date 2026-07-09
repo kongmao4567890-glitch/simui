@@ -67,7 +67,7 @@
                         </div>
                         <div class="state-label">{{ lang.complete }}</div>
                       </div>
-                      <div class="state-stat">
+                      <div class="state-stat state-stat--middle">
                         <q-icon name="img:/images/svg/number.svg" size="22px"/>
                         <div class="state-val">{{ detail.Info.RunNum }}</div>
                         <div class="state-label">{{ lang.runNum }}</div>
