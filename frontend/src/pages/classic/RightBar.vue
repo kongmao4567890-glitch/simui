@@ -187,21 +187,61 @@
 
             </q-tab-panel>
 
-            <q-tab-panel name="thumbs">
-              <!--图集-->
-              <div class="q-pa-md thumbs-wrapper">
-                <div v-if="thumbListCarousel.length > 0" v-for="typ in config.ThumbOrders">
-                  <div v-if="thumbListAlumb[typ]">
-                    <div class="right-title">{{ albumTitle[typ] }}</div>
-                    <q-img v-if="typ != 'video'" v-for="item in thumbListAlumb[typ]" :key="item.Index" :src="item.Path"
-                           @click="showViewer(item.Index)"/>
-                    <video v-else v-for="item in thumbListAlumb[typ]" style="width: 100%" ref="albumVideoRef"
-                           @mouseleave="changeVideoVolume" loop controls autoplay
-                           :volume="config.VideoVolume" :key="item.Index" class="carousel-video" :src="item.Path">
-                    </video>
+            <q-tab-panel name="thumbs" class="thumbs-panel">
+              <template v-if="thumbListCarousel.length > 0">
+                <template v-for="typ in config.ThumbOrders" :key="typ">
+                  <div
+                    v-if="thumbListAlumb[typ]"
+                    class="thumbs-album-box"
+                  >
+                    <div class="strategy-section-title">
+                      <q-icon :name="albumIcon[typ] || 'image'" size="18px"/>
+                      <span>{{ albumTitle[typ] }}</span>
+                      <span class="thumbs-album-count">{{ thumbListAlumb[typ].length }}</span>
+                    </div>
+
+                    <div
+                      v-if="typ != 'video'"
+                      :class="['thumbs-grid', { 'thumbs-grid--single': thumbListAlumb[typ].length === 1 }]"
+                    >
+                      <div
+                        v-for="item in thumbListAlumb[typ]"
+                        :key="item.Index"
+                        class="thumbs-grid-item"
+                        @click="showViewer(item.Index)"
+                      >
+                        <q-img
+                          :src="item.Path"
+                          class="thumbs-img"
+                          :fit="thumbListAlumb[typ].length === 1 ? 'contain' : 'cover'"
+                        />
+                        <div class="thumbs-img-overlay">
+                          <q-icon name="zoom_in" size="20px"/>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div v-else class="thumbs-video-list">
+                      <video
+                        v-for="item in thumbListAlumb[typ]"
+                        :key="item.Index"
+                        ref="albumVideoRef"
+                        class="thumbs-video"
+                        @mouseleave="changeVideoVolume"
+                        loop
+                        controls
+                        autoplay
+                        :volume="config.VideoVolume"
+                        :src="item.Path"
+                      />
+                    </div>
                   </div>
-                </div>
-                <div v-else class="empty">{{ lang.noThumb }}</div>
+                </template>
+              </template>
+
+              <div v-else class="thumbs-empty">
+                <q-icon name="photo_library" size="48px"/>
+                <div>{{ lang.noThumb }}</div>
               </div>
             </q-tab-panel>
 
@@ -323,6 +363,19 @@ const albumTitle = {
   "gif": lang.value.gif,
   "background": lang.value.background,
   "video": lang.value.video,
+}
+
+const albumIcon: Record<string, string> = {
+  "thumb": "image",
+  "snap": "photo_camera",
+  "poster": "style",
+  "packing": "inventory_2",
+  "title": "title",
+  "cassette": "album",
+  "icon": "widgets",
+  "gif": "gif_box",
+  "background": "wallpaper",
+  "video": "videocam",
 }
 
 onMounted(() => {

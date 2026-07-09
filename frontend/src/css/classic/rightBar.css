@@ -57,11 +57,6 @@
     cursor: pointer;
 }
 
-.thumbs-wrapper .q-img:hover{
-    opacity: 0.8;
-    cursor: pointer;
-}
-
 .carousel-video{
     width: 100%;height:200px
 }
@@ -158,9 +153,118 @@
 }
 
 /*图集*/
+.thumbs-panel {
+    padding: 12px !important;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
 
-.thumbs-wrapper .q-img {
-    margin-bottom: 15px
+.thumbs-album-box {
+    background: var(--color-2);
+    border: 1px solid var(--color-4);
+    border-radius: 8px;
+    padding: 10px;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.thumbs-album-count {
+    margin-left: auto;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--color-7);
+    background: var(--color-3);
+    border-radius: 10px;
+    padding: 1px 7px;
+    letter-spacing: normal;
+    text-transform: none;
+}
+
+.thumbs-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+}
+
+.thumbs-grid--single {
+    grid-template-columns: 1fr;
+}
+
+.thumbs-grid--single .thumbs-grid-item {
+    aspect-ratio: unset;
+    max-height: 200px;
+    background: var(--color-3);
+}
+
+.thumbs-grid--single .thumbs-img {
+    max-height: 200px;
+}
+
+.thumbs-grid-item {
+    position: relative;
+    border-radius: 6px;
+    overflow: hidden;
+    cursor: pointer;
+    border: 1px solid var(--color-4);
+    aspect-ratio: 4 / 3;
+    transition: border-color 0.2s ease, transform 0.15s ease;
+}
+
+.thumbs-grid-item:hover {
+    border-color: var(--q-primary);
+    transform: scale(1.02);
+}
+
+.thumbs-grid-item:active {
+    transform: scale(0.98);
+}
+
+.thumbs-img {
+    width: 100%;
+    height: 100%;
+}
+
+.thumbs-img-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.45);
+    color: #fff;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.thumbs-grid-item:hover .thumbs-img-overlay {
+    opacity: 1;
+}
+
+.thumbs-video-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.thumbs-video {
+    width: 100%;
+    border-radius: 6px;
+    border: 1px solid var(--color-4);
+    background: var(--color-3);
+}
+
+.thumbs-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 40px 16px;
+    background: var(--color-2);
+    border: 1px solid var(--color-4);
+    border-radius: 8px;
+    color: var(--color-6);
+    text-align: center;
 }
 
 .doc{
