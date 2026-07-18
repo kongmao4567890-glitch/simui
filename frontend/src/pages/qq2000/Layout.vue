@@ -7,7 +7,7 @@
           <div class="qq-titlebar-icon" style="--wails-draggable: no-drag;"></div>
           <div class="qq-titlebar-text">simui</div>
           <div class="qq-titlebar-btns" style="--wails-draggable: no-drag;">
-            <button type="button" class="qq-sys-btn" title="最小化" @click.stop="onMinimise">_</button>
+            <button type="button" class="qq-sys-btn" title="最小化" @click.stop="onMinimise">-</button>
             <button type="button" class="qq-sys-btn" title="关闭" @click.stop="onClose">×</button>
           </div>
         </div>

@@ -1,12 +1,16 @@
 /* QQ2000 / Win98 怀旧皮肤 —— 系统窗口即为 220×480 */
 
 .qq-desktop {
+  /* Win98 3D 边框：凸起 / 凹陷 */
+  --qq-border-outset: #f7fbfe #808080 #808080 #f7fbfe;
+  --qq-border-inset: #000 #f7fbfe #f7fbfe #808080;
+
   position: relative;
   width: 100vw;
   height: 100vh;
   overflow: hidden;
   background: #d4d0c7;
-  font-family: "SimSun", "宋体", "MS Sans Serif", Tahoma, sans-serif;
+  font-family: "宋体","SimSun",  "MS Sans Serif", Tahoma, sans-serif;
   font-size: 12px;
   user-select: none;
   color: #000;
@@ -30,7 +34,7 @@
   margin: 2px;
   min-height: 0;
   border: 1px solid;
-  border-color: #fff #808080 #808080 #fff;
+  border-color: var(--qq-border-outset);
   background: #d4d0c7;
   box-sizing: border-box;
 }
@@ -86,8 +90,9 @@
 }
 
 .qq-sys-btn {
-  width: 16px;
-  height: 14px;
+  width: 12px;
+  height: 12px;
+  line-height: 12px;
   padding: 0;
   margin: 0;
   display: flex;
@@ -95,18 +100,17 @@
   justify-content: center;
   background: #d4d0c7;
   border: 1px solid;
-  border-color: #fff #808080 #808080 #fff;
+  border-color: var(--qq-border-outset);
   box-shadow: 1px 1px 0 #000;
   color: #000;
-  font-size: 11px;
-  font-weight: bold;
-  line-height: 1;
+  font-size: 10px;
+
   cursor: pointer;
   --wails-draggable: no-drag;
 }
 
 .qq-sys-btn:active {
-  border-color: #808080 #fff #fff #808080;
+  border-color: var(--qq-border-inset);
   box-shadow: none;
   padding-top: 1px;
   padding-left: 1px;
@@ -132,7 +136,7 @@
   justify-content: center;
   background: #d4d0c7;
   border: 1px solid;
-  border-color: #fff #808080 #808080 #fff;
+  border-color: var(--qq-border-outset);
   cursor: pointer;
   font-size: 14px;
   line-height: 1;
@@ -140,7 +144,7 @@
 
 .qq-tool-btn:active,
 .qq-tool-btn.is-pressed {
-  border-color: #808080 #fff #fff #808080;
+  border-color: var(--qq-border-inset);
   padding-top: 1px;
   padding-left: 1px;
 }
@@ -152,8 +156,10 @@
   display: flex;
   flex-direction: column;
   background: #817fc0;
-  border: 1px solid;
-  border-color: #808080 #fff #fff #808080;
+  border-top: 1px solid;
+  border-left: 1px solid;
+  border-top-color: #444;
+  border-left-color: #444;
   margin: 2px;
   overflow: hidden;
   color: #000;
@@ -193,14 +199,14 @@
 .qq-list-scroll::-webkit-scrollbar-thumb {
   background: #d4d0c7;
   border: 1px solid;
-  border-color: #fff #808080 #808080 #fff;
+  border-color: var(--qq-border-outset);
 }
 
 .qq-list-scroll::-webkit-scrollbar-button {
   height: 16px;
   background: #d4d0c7;
   border: 1px solid;
-  border-color: #fff #808080 #808080 #fff;
+  border-color: var(--qq-border-outset);
 }
 
 /* 平台分组条 —— Win98 凸起 3D */
@@ -210,12 +216,12 @@
   justify-content: center;
   height: 22px;
   padding: 0 4px;
-  margin: 1px 0;
   background: #d4d0c7;
-  border-width: 2px;
+  border-width: 1px;
+  border-bottom-width: 2px;
+
   border-style: solid;
-  border-color: #fff #808080 #808080 #fff;
-  box-shadow: 1px 1px 0 #000;
+  border-color: var(--qq-border-outset);
   cursor: pointer;
   font-weight: normal;
   color: #000;
@@ -225,7 +231,7 @@
 
 .qq-platform-bar:active,
 .qq-platform-bar.is-open:active {
-  border-color: #808080 #fff #fff #808080;
+  border-color: var(--qq-border-inset);
   box-shadow: none;
   padding-top: 1px;
   padding-left: 5px;
@@ -293,8 +299,6 @@
 }
 
 .qq-game-item.is-active {
-  background: #000080;
-  color: #fff;
 }
 
 .qq-game-thumb {
@@ -312,6 +316,7 @@
   white-space: nowrap;
   text-overflow: ellipsis;
   line-height: 1.2;
+  color: #000;
 }
 
 .qq-empty-hint {
@@ -344,13 +349,13 @@
   justify-content: center;
   background: #d4d0c7;
   border: 1px solid;
-  border-color: #fff #808080 #808080 #fff;
+  border-color: var(--qq-border-outset);
   cursor: pointer;
   font-size: 12px;
 }
 
 .qq-footer-icon:active {
-  border-color: #808080 #fff #fff #808080;
+  border-color: var(--qq-border-inset);
 }
 
 .qq-footer-btn {
@@ -359,7 +364,7 @@
   padding: 0 6px;
   background: #d4d0c7;
   border: 1px solid;
-  border-color: #fff #808080 #808080 #fff;
+  border-color: var(--qq-border-outset);
   box-shadow: 1px 1px 0 #000;
   font-family: inherit;
   font-size: 12px;
@@ -369,7 +374,7 @@
 
 .qq-footer-btn:active,
 .qq-footer-btn.is-pressed {
-  border-color: #808080 #fff #fff #808080;
+  border-color: var(--qq-border-inset);
   box-shadow: none;
   padding-top: 1px;
   padding-left: 1px;
@@ -384,7 +389,7 @@
   margin-top: 2px;
   background: #d4d0c7;
   border: 1px solid;
-  border-color: #808080 #fff #fff #808080;
+  border-color: var(--qq-border-inset);
   font-size: 11px;
 }
 
