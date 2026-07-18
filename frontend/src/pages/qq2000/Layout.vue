@@ -134,7 +134,7 @@ import 'src/css/qq2000/layout.css'
 const WIN_W = 220
 const WIN_H = 480
 /** 平台条高度（含边框），与 CSS --qq-bar-h 保持一致 */
-const BAR_H = 25
+const BAR_H = 20
 
 const platforms = mockPlatforms
 const openPlatformId = ref<number | null>(platforms[0]?.id ?? null)

@@ -151,7 +151,7 @@
 
 /* —— 列表区（平台条绝对定位，top 过渡实现滑动） —— */
 .qq-list-panel {
-  --qq-bar-h: 25px;
+  --qq-bar-h: 20px;
 
   position: relative;
   flex: 1;
