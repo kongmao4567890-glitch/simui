@@ -30,6 +30,13 @@ const routes: RouteRecordRaw[] = [
         }
     },
     {
+        path: '/qq2000',
+        component: () => import('pages/qq2000/Layout.vue'),
+        meta: {
+            refreshPage: true
+        }
+    },
+    {
         path: '/config',
         component: () => import('pages/config/Layout.vue'),
         meta: {

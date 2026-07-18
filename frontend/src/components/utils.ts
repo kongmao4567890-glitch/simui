@@ -242,6 +242,9 @@ export function gotoTheme(theme: string) {
             case "Tiny":
                 global.goto("/tiny")
                 break
+                case "qq2000":
+                global.goto("/qq2000")
+                break
         }
     })
 }

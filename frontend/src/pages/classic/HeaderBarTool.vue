@@ -82,6 +82,9 @@
             <q-item clickable v-close-popup @click="gotoTheme('Tiny')">
               <q-item-section>Tiny</q-item-section>
             </q-item>
+            <q-item clickable v-close-popup @click="gotoTheme('qq2000')">
+              <q-item-section>QQ2000</q-item-section>
+            </q-item>
           </q-list>
         </q-menu>
       </q-btn>

@@ -13,3 +13,5 @@ frontend/public/temp
 cache
 .github
 .gitee
+.cursor
+_markdown

@@ -1,0 +1,404 @@
+/* QQ2000 / Win98 怀旧皮肤 —— 系统窗口即为 220×480 */
+
+.qq-desktop {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background: #d4d0c7;
+  font-family: "SimSun", "宋体", "MS Sans Serif", Tahoma, sans-serif;
+  font-size: 12px;
+  user-select: none;
+  color: #000;
+}
+
+.qq-window {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: #d4d0c7;
+  border: 2px solid;
+  border-color: #dfdfdf #404040 #404040 #dfdfdf;
+  box-sizing: border-box;
+}
+
+.qq-window-inner {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  margin: 2px;
+  min-height: 0;
+  border: 1px solid;
+  border-color: #fff #808080 #808080 #fff;
+  background: #d4d0c7;
+  box-sizing: border-box;
+}
+
+/* —— 标题栏 —— */
+.qq-titlebar {
+  display: flex;
+  align-items: center;
+  height: 20px;
+  padding: 0 2px 0 4px;
+  background: linear-gradient(90deg, #000080, #1084d0);
+  color: #000;
+  cursor: default;
+  flex-shrink: 0;
+}
+
+.qq-titlebar-icon {
+  width: 14px;
+  height: 14px;
+  margin-right: 4px;
+  background: #ffff00;
+  border: 1px solid #000080;
+  border-radius: 2px;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.qq-titlebar-icon::after {
+  content: "";
+  position: absolute;
+  left: 3px;
+  top: 2px;
+  width: 6px;
+  height: 8px;
+  background: #000080;
+  border-radius: 50% 50% 40% 40%;
+}
+
+.qq-titlebar-text {
+  flex: 1;
+  font-weight: bold;
+  font-size: 12px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  line-height: 18px;
+}
+
+.qq-titlebar-btns {
+  display: flex;
+  gap: 2px;
+  margin-left: 4px;
+}
+
+.qq-sys-btn {
+  width: 16px;
+  height: 14px;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #d4d0c7;
+  border: 1px solid;
+  border-color: #fff #808080 #808080 #fff;
+  box-shadow: 1px 1px 0 #000;
+  color: #000;
+  font-size: 11px;
+  font-weight: bold;
+  line-height: 1;
+  cursor: pointer;
+  --wails-draggable: no-drag;
+}
+
+.qq-sys-btn:active {
+  border-color: #808080 #fff #fff #808080;
+  box-shadow: none;
+  padding-top: 1px;
+  padding-left: 1px;
+}
+
+/* —— 工具栏图标 —— */
+.qq-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 3px 4px;
+  flex-shrink: 0;
+  background: #d4d0c7;
+  border-bottom: 1px solid #808080;
+}
+
+.qq-tool-btn {
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #d4d0c7;
+  border: 1px solid;
+  border-color: #fff #808080 #808080 #fff;
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 1;
+}
+
+.qq-tool-btn:active,
+.qq-tool-btn.is-pressed {
+  border-color: #808080 #fff #fff #808080;
+  padding-top: 1px;
+  padding-left: 1px;
+}
+
+/* —— 列表区（上：平台 / 中：内容可滚动 / 下：后续平台贴底） —— */
+.qq-list-panel {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  background: #817fc0;
+  border: 1px solid;
+  border-color: #808080 #fff #fff #808080;
+  margin: 2px;
+  overflow: hidden;
+  color: #000;
+}
+
+.qq-list-top,
+.qq-list-bottom {
+  flex-shrink: 0;
+}
+
+.qq-list-middle {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.qq-list-middle-empty {
+  flex: 1;
+}
+
+.qq-list-scroll {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  min-height: 0;
+}
+
+.qq-list-scroll::-webkit-scrollbar {
+  width: 16px;
+}
+
+.qq-list-scroll::-webkit-scrollbar-track {
+  background: #d4d0c7;
+}
+
+.qq-list-scroll::-webkit-scrollbar-thumb {
+  background: #d4d0c7;
+  border: 1px solid;
+  border-color: #fff #808080 #808080 #fff;
+}
+
+.qq-list-scroll::-webkit-scrollbar-button {
+  height: 16px;
+  background: #d4d0c7;
+  border: 1px solid;
+  border-color: #fff #808080 #808080 #fff;
+}
+
+/* 平台分组条 —— Win98 凸起 3D */
+.qq-platform-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 22px;
+  padding: 0 4px;
+  margin: 1px 0;
+  background: #d4d0c7;
+  border-width: 2px;
+  border-style: solid;
+  border-color: #fff #808080 #808080 #fff;
+  box-shadow: 1px 1px 0 #000;
+  cursor: pointer;
+  font-weight: normal;
+  color: #000;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.qq-platform-bar:active,
+.qq-platform-bar.is-open:active {
+  border-color: #808080 #fff #fff #808080;
+  box-shadow: none;
+  padding-top: 1px;
+  padding-left: 5px;
+}
+
+.qq-platform-bar.is-open {
+  background: #d4d0c7;
+}
+
+.qq-platform-body {
+  background: transparent;
+}
+
+/* 分类折叠：无背景，叠在紫色列表上 */
+.qq-category-bar {
+  display: flex;
+  align-items: center;
+  height: 20px;
+  padding: 0 4px 0 8px;
+  cursor: pointer;
+  color: #000;
+  background: transparent;
+  font-size: 12px;
+}
+
+.qq-category-bar:hover {
+  background: rgba(0, 0, 128, 0.08);
+}
+
+.qq-category-tri {
+  width: 0;
+  height: 0;
+  margin-right: 5px;
+  border-style: solid;
+  border-width: 4px 0 4px 6px;
+  border-color: transparent transparent transparent #008000;
+  flex-shrink: 0;
+  transition: transform 0.1s;
+}
+
+.qq-category-bar.is-open .qq-category-tri {
+  transform: rotate(90deg);
+}
+
+.qq-category-name {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: #000;
+}
+
+/* 游戏项 */
+.qq-game-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 4px 3px 18px;
+  cursor: pointer;
+  min-height: 28px;
+  color: #000;
+}
+
+.qq-game-item:hover {
+  background: rgba(0, 0, 128, 0.08);
+}
+
+.qq-game-item.is-active {
+  background: #000080;
+  color: #fff;
+}
+
+.qq-game-thumb {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  border: 1px solid #808080;
+  background: #fff;
+  object-fit: cover;
+  image-rendering: pixelated;
+}
+
+.qq-game-name {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  line-height: 1.2;
+}
+
+.qq-empty-hint {
+  padding: 8px 12px;
+  color: #666;
+  font-size: 11px;
+}
+
+/* —— 底部功能区 —— */
+.qq-footer {
+  flex-shrink: 0;
+  padding: 3px;
+  background: #d4d0c7;
+  border-top: 1px solid #fff;
+}
+
+.qq-footer-row {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  margin-bottom: 3px;
+}
+
+.qq-footer-icon {
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #d4d0c7;
+  border: 1px solid;
+  border-color: #fff #808080 #808080 #fff;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.qq-footer-icon:active {
+  border-color: #808080 #fff #fff #808080;
+}
+
+.qq-footer-btn {
+  flex: 1;
+  height: 24px;
+  padding: 0 6px;
+  background: #d4d0c7;
+  border: 1px solid;
+  border-color: #fff #808080 #808080 #fff;
+  box-shadow: 1px 1px 0 #000;
+  font-family: inherit;
+  font-size: 12px;
+  cursor: pointer;
+  text-align: center;
+}
+
+.qq-footer-btn:active,
+.qq-footer-btn.is-pressed {
+  border-color: #808080 #fff #fff #808080;
+  box-shadow: none;
+  padding-top: 1px;
+  padding-left: 1px;
+}
+
+.qq-statusbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 20px;
+  padding: 0 4px;
+  margin-top: 2px;
+  background: #d4d0c7;
+  border: 1px solid;
+  border-color: #808080 #fff #fff #808080;
+  font-size: 11px;
+}
+
+.qq-statusbar-left,
+.qq-statusbar-right {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.qq-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #ffff00;
+  border: 1px solid #000080;
+}
