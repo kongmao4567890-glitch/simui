@@ -28,42 +28,21 @@
           >{{ ico.glyph }}</button>
         </div>
 
-        <!-- 好友列表：展开平台在上，其后的平台贴底（经典 QQ 布局） -->
-        <div class="qq-list-panel">
-          <div class="qq-list-top">
-            <div
-              v-for="platform in platformsAbove"
-              :key="platform.id"
-              class="qq-platform-bar"
-              @click="togglePlatform(platform.id)"
-            >
-              {{ platform.name }}
-            </div>
-
-            <template v-if="openPlatform">
-              <div
-                class="qq-platform-bar is-open"
-                @click="togglePlatform(openPlatform.id)"
-              >
-                {{ openPlatform.name }}
-              </div>
-            </template>
-
-            <!-- 无展开时：全部平台堆在上方 -->
-            <template v-if="!openPlatform">
-              <div
-                v-for="platform in platforms"
-                :key="'all-' + platform.id"
-                class="qq-platform-bar"
-                @click="togglePlatform(platform.id)"
-              >
-                {{ platform.name }}
-              </div>
-            </template>
+        <!-- 好友列表：平台条绝对定位 + top 过渡，实现 QQ 式滑动 -->
+        <div class="qq-list-panel" ref="listPanelRef">
+          <div
+            v-for="(platform, index) in platforms"
+            :key="platform.id"
+            class="qq-platform-bar"
+            :class="{ 'is-open': openPlatformId === platform.id, 'is-anim': layoutReady }"
+            :style="{ top: platformTops[index] + 'px' }"
+            @click="togglePlatform(platform.id)"
+          >
+            {{ platform.name }}
           </div>
 
-          <div v-if="openPlatform" class="qq-list-middle">
-            <div class="qq-list-scroll">
+          <div class="qq-list-middle" :class="{ 'is-anim': layoutReady }" :style="middleStyle">
+            <div v-if="openPlatform" class="qq-list-scroll">
               <template v-if="openPlatform.categories.length">
                 <div v-for="cat in openPlatform.categories" :key="cat.id">
                   <div
@@ -91,18 +70,6 @@
                 </div>
               </template>
               <div v-else class="qq-empty-hint">暂无分类</div>
-            </div>
-          </div>
-          <div v-else class="qq-list-middle qq-list-middle-empty"></div>
-
-          <div class="qq-list-bottom">
-            <div
-              v-for="platform in platformsBelow"
-              :key="platform.id"
-              class="qq-platform-bar"
-              @click="togglePlatform(platform.id)"
-            >
-              {{ platform.name }}
             </div>
           </div>
         </div>
@@ -150,7 +117,7 @@
 </template>
 
 <script setup lang="ts">
-import {computed, onBeforeUnmount, onMounted, reactive, ref} from 'vue'
+import {computed, nextTick, onBeforeUnmount, onMounted, reactive, ref} from 'vue'
 import {
   Quit,
   WindowCenter,
@@ -166,6 +133,8 @@ import 'src/css/qq2000/layout.css'
 
 const WIN_W = 220
 const WIN_H = 480
+/** 平台条高度（含边框），与 CSS --qq-bar-h 保持一致 */
+const BAR_H = 25
 
 const platforms = mockPlatforms
 const openPlatformId = ref<number | null>(platforms[0]?.id ?? null)
@@ -175,6 +144,11 @@ const openCategoryIds = reactive<Record<number, boolean>>(
 const activeGameId = ref<number | null>(platforms[0]?.categories[0]?.games[0]?.id ?? null)
 const pressedTool = ref(-1)
 const pressedFooter = ref('')
+
+const listPanelRef = ref<HTMLElement | null>(null)
+const panelHeight = ref(0)
+const layoutReady = ref(false)
+let resizeObserver: ResizeObserver | null = null
 
 const openIndex = computed(() =>
   openPlatformId.value == null
@@ -186,15 +160,36 @@ const openPlatform = computed(() =>
   openIndex.value >= 0 ? platforms[openIndex.value] : null,
 )
 
-/** 展开项之上的平台（贴顶） */
-const platformsAbove = computed(() =>
-  openIndex.value > 0 ? platforms.slice(0, openIndex.value) : [],
-)
+/** 每个平台条的 top：展开项及之上贴顶，之下贴底 */
+const platformTops = computed(() => {
+  const h = panelHeight.value
+  const open = openIndex.value
+  const n = platforms.length
+  return platforms.map((_, i) => {
+    if (open < 0) return i * BAR_H
+    if (i <= open) return i * BAR_H
+    return Math.max(i * BAR_H, h - (n - i) * BAR_H)
+  })
+})
 
-/** 展开项之下的平台（贴底） */
-const platformsBelow = computed(() =>
-  openIndex.value >= 0 ? platforms.slice(openIndex.value + 1) : [],
-)
+const middleStyle = computed(() => {
+  const open = openIndex.value
+  const n = platforms.length
+  const h = panelHeight.value
+  if (open < 0) {
+    return {
+      top: `${n * BAR_H}px`,
+      bottom: '0px',
+    }
+  }
+  const top = (open + 1) * BAR_H
+  const bottom = (n - open - 1) * BAR_H
+  // 防止高度过小时上下重叠
+  if (top + bottom > h) {
+    return {top: `${top}px`, bottom: `${Math.max(0, h - top)}px`}
+  }
+  return {top: `${top}px`, bottom: `${bottom}px`}
+})
 
 const toolbarIcons = [
   {glyph: '⚓', title: '功能预留'},
@@ -203,9 +198,19 @@ const toolbarIcons = [
   {glyph: '📱', title: '功能预留'},
 ]
 
+function measurePanel() {
+  if (!listPanelRef.value) return
+  panelHeight.value = listPanelRef.value.clientHeight
+  if (!layoutReady.value && panelHeight.value > 0) {
+    // 下一帧再开动画，避免首屏定位时出现滑动
+    requestAnimationFrame(() => {
+      layoutReady.value = true
+    })
+  }
+}
+
 function applyWindowSize() {
   WindowUnmaximise()
-  // 先放开限制，再锁定到 QQ 小窗尺寸
   WindowSetMinSize(0, 0)
   WindowSetMaxSize(0, 0)
   WindowSetSize(WIN_W, WIN_H)
@@ -242,12 +247,19 @@ function noop() {
   // 功能预留
 }
 
-onMounted(() => {
+onMounted(async () => {
   applyWindowSize()
+  await nextTick()
+  measurePanel()
+  if (listPanelRef.value) {
+    resizeObserver = new ResizeObserver(() => measurePanel())
+    resizeObserver.observe(listPanelRef.value)
+  }
 })
 
 onBeforeUnmount(() => {
-  // 切回其他主题时恢复默认可缩放尺寸
+  resizeObserver?.disconnect()
+  resizeObserver = null
   restoreWindowSize()
 })
 </script>
