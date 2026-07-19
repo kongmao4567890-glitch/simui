@@ -86,7 +86,6 @@
                   </div>
                 </div>
               </template>
-              <div v-else class="qq-empty-hint">暂无分类</div>
             </div>
           </div>
         </div>

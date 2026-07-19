@@ -175,20 +175,45 @@
 }
 
 .qq-list-scroll::-webkit-scrollbar-track {
-  background: #d4d0c7;
+  background-color: #d4d0c7;
+  background-image: url("./icon/scrollbar-background-beige.svg");
 }
 
 .qq-list-scroll::-webkit-scrollbar-thumb {
-  background: #d4d0c7;
-  border: 1px solid;
-  border-color: var(--qq-border-outset);
+  background-color: #d4d0c7;
+  border: none;
+  border-radius: 0;
+  box-shadow:
+    inset -1px -1px #0a0a0a,
+    inset 1px 1px #f7fbfe,
+    inset -2px -2px #808080,
+    inset 2px 2px #dfdfdf;
 }
 
-.qq-list-scroll::-webkit-scrollbar-button {
-  height: 16px;
-  background: #d4d0c7;
-  border: 1px solid;
-  border-color: var(--qq-border-outset);
+.qq-list-scroll::-webkit-scrollbar-thumb:hover,
+.qq-list-scroll::-webkit-scrollbar-thumb:active {
+  background-color: #d4d0c7;
+  background-clip: border-box;
+}
+
+/* 仅显示上/下箭头按钮（米色版，对齐窗口背景 #d4d0c7；灰色原版 button-up/down.svg 留给弹窗） */
+.qq-list-scroll::-webkit-scrollbar-button:vertical:start:decrement,
+.qq-list-scroll::-webkit-scrollbar-button:vertical:end:increment {
+  display: block;
+}
+
+.qq-list-scroll::-webkit-scrollbar-button:vertical:start {
+  height: 17px;
+  background-image: url("./icon/button-up-beige.svg");
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.qq-list-scroll::-webkit-scrollbar-button:vertical:end {
+  height: 17px;
+  background-image: url("./icon/button-down-beige.svg");
+  background-repeat: no-repeat;
+  background-position: center;
 }
 
 /* 平台分组条 —— Win98 凸起 3D + 滑动 */
