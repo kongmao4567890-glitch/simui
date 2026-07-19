@@ -15,6 +15,11 @@
   user-select: none;
 }
 
+/* 查找打开时：系统窗口变成桌面，主窗与查找窗并列 */
+.qq-desktop.is-search-open {
+  background: #008080;
+}
+
 .qq-desktop,
 .qq-desktop * {
   color: #000;
@@ -29,6 +34,15 @@
   border: 2px solid;
   border-color: #dfdfdf #404040 #404040 #dfdfdf;
   box-sizing: border-box;
+}
+
+.qq-desktop.is-search-open .qq-window {
+  position: absolute;
+  left: 12px;
+  top: 12px;
+  width: 220px;
+  height: 480px;
+  z-index: 10;
 }
 
 .qq-window-inner {

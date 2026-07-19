@@ -156,6 +156,8 @@ func main() {
 			ZoomFactor:           conf.WindowZoom, //窗口缩放比例
 			ResizeDebounceMS:     200,
 			WebviewBrowserPath:   webviewBrowserPath,
+			//WebviewIsTransparent: true, //允许 WebView 透明（Oicq 查找桌面等）
+			WindowIsTranslucent: true, //无边框窗口透明
 			//DisableFramelessWindowDecorations: false,
 			//Messages: &windows.Messages{
 			//	InstallationRequired: "",

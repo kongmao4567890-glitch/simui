@@ -1,5 +1,5 @@
 <template>
-  <div class="qq-desktop" @contextmenu.prevent>
+  <div class="qq-desktop" :class="{ 'is-search-open': searchOpen }" @contextmenu.prevent>
     <div class="qq-window">
       <div class="qq-window-inner">
         <!-- 标题栏：系统级拖动（无边框窗口） -->
@@ -110,7 +110,7 @@
                 @mousedown="pressedFooter = 'search'"
                 @mouseup="pressedFooter = ''"
                 @mouseleave="pressedFooter = ''"
-                @click="noop"
+                @click="openSearch"
             >
               <img class="qq-footer-btn-ico" src="/images/oicq/search.png" alt="" draggable="false"/>
               <span class="qq-footer-btn-label">查 找</span>
@@ -132,6 +132,14 @@
         </div>
       </div>
     </div>
+    <SearchWizard
+        v-if="searchOpen"
+        :platforms="platforms"
+        :default-platform-id="openPlatformId"
+        @close="closeSearch"
+        @run-game="runMainGame"
+        @game-contextmenu="showGameCtxMenu"
+    />
     <ContextMenu/>
   </div>
 </template>
@@ -164,12 +172,16 @@ import {callSrv, decodeApiData, gotoTheme, notify} from 'components/utils'
 import {useGlobalStore} from 'stores/globalData'
 import {storeToRefs} from 'pinia'
 import ContextMenu from './ContextMenu.vue'
+import SearchWizard from './SearchWizard.vue'
 import {closeContextMenu, openContextMenu, updateContextMenuItems, type QqCtxMenuItem} from './contextMenu'
 import 'src/css/oicq/oicq.css'
 import 'src/css/oicq/layout.css'
 
 const WIN_W = 220
 const WIN_H = 480
+/** 查找打开时的桌面尺寸（容纳主窗 + 查找浮窗） */
+const SEARCH_DESKTOP_W = 740
+const SEARCH_DESKTOP_H = 520
 /** 平台条高度（含边框），与 CSS --qq-bar-h 保持一致 */
 const BAR_H = 20
 const PAGE_SIZE = 100
@@ -220,6 +232,8 @@ const gamesLoading = ref(false)
 /** 当前展开平台的游戏总数 */
 const platformGameCount = ref(0)
 const shortCutList = ref<QqShortcut[]>([])
+/** 查找向导浮窗 */
+const searchOpen = ref(false)
 
 const listPanelRef = ref<HTMLElement | null>(null)
 const listScrollRef = ref<HTMLElement | null>(null)
@@ -280,15 +294,38 @@ function measurePanel() {
   }
 }
 
-function applyWindowSize() {
+function lockWindowSize(w: number, h: number, bg: [number, number, number, number], center = false) {
   WindowUnmaximise()
   WindowSetMinSize(0, 0)
   WindowSetMaxSize(0, 0)
-  WindowSetSize(WIN_W, WIN_H)
-  WindowSetMinSize(WIN_W, WIN_H)
-  WindowSetMaxSize(WIN_W, WIN_H)
-  WindowSetBackgroundColour(192, 192, 192, 255)
-  WindowCenter()
+  WindowSetSize(w, h)
+  WindowSetMinSize(w, h)
+  WindowSetMaxSize(w, h)
+  WindowSetBackgroundColour(bg[0], bg[1], bg[2], bg[3])
+  if (center) WindowCenter()
+}
+
+function applyWindowSize() {
+  lockWindowSize(WIN_W, WIN_H, [192, 192, 192, 255], true)
+}
+
+function applySearchDesktopSize() {
+  // 桌面透明，仅露出主窗与查找浮窗
+  lockWindowSize(SEARCH_DESKTOP_W, SEARCH_DESKTOP_H, [0, 0, 0, 0], true)
+}
+
+function openSearch() {
+  if (searchOpen.value) return
+  closeContextMenu()
+  searchOpen.value = true
+  applySearchDesktopSize()
+}
+
+function closeSearch() {
+  if (!searchOpen.value) return
+  closeContextMenu()
+  searchOpen.value = false
+  applyWindowSize()
 }
 
 function restoreWindowSize() {
@@ -640,6 +677,7 @@ onMounted(async () => {
 onBeforeUnmount(() => {
   resizeObserver?.disconnect()
   resizeObserver = null
+  searchOpen.value = false
   restoreWindowSize()
 })
 </script>
