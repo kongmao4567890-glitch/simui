@@ -31,9 +31,6 @@
   height: 100%;
   display: flex;
   flex-direction: column;
-  background: #d4d0c7;
-  border: 2px solid;
-  border-color: #dfdfdf #404040 #404040 #dfdfdf;
   box-sizing: border-box;
 }
 
@@ -493,9 +490,8 @@
   margin-top: 2px;
 }
 
-/* 原版：左凸右凹 */
+/* 原版：左凸右凹；宽度 4:6 */
 .qq-statusbar-btn {
-  flex: 1;
   display: flex;
   align-items: center;
   text-align: center;
@@ -511,6 +507,7 @@
 }
 
 .qq-statusbar-btn.is-out {
+  flex: 3;
   justify-content: center;
   border-color: var(--qq-border-outset);
 }
@@ -524,6 +521,7 @@
 }
 
 .qq-statusbar-btn.is-in {
+  flex: 7;
   border-color: var(--qq-border-inset);
 }
 
