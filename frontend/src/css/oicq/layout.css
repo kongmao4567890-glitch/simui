@@ -399,8 +399,13 @@
   pointer-events: none;
 }
 
-.qq-footer-icon:active {
+.qq-footer-icon:active:not(:disabled) {
   background: #c0c0c0;
+}
+
+.qq-footer-icon:disabled {
+  opacity: 0.45;
+  cursor: default;
 }
 
 .qq-footer-btn {

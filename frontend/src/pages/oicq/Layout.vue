@@ -93,7 +93,14 @@
         <!-- 底部功能区（仅按下效果） -->
         <div class="qq-footer">
           <div class="qq-footer-row">
-            <button type="button" class="qq-footer-icon" @mousedown.prevent @click="noop">
+            <button
+                type="button"
+                class="qq-footer-icon"
+                title="快捷工具"
+                :disabled="!shortCutList.length"
+                @mousedown.prevent
+                @click="showShortcutMenu"
+            >
               <img src="/images/oicq/tools.png" alt="" draggable="false"/>
             </button>
             <button
@@ -142,8 +149,10 @@ import {
   GetGameList,
   GetMenuList,
   GetPlatform,
+  GetShortcuts,
   GetSubGameList,
   RunGame,
+  RunProgram,
   UpdateOneConfig,
 } from 'app/wailsjs/go/controller/Controller'
 import {callSrv, decodeApiData, notify} from 'components/utils'
@@ -178,6 +187,11 @@ interface QqGame {
   thumb: string
 }
 
+interface QqShortcut {
+  Name: string
+  Path: string
+}
+
 const global = useGlobalStore()
 const {activePlatform, activeMenu, menuLike, lang, theme} = storeToRefs(global)
 
@@ -193,6 +207,7 @@ const pressedFooter = ref('')
 const gamesLoading = ref(false)
 /** 当前展开平台的游戏总数 */
 const platformGameCount = ref(0)
+const shortCutList = ref<QqShortcut[]>([])
 
 const listPanelRef = ref<HTMLElement | null>(null)
 const listScrollRef = ref<HTMLElement | null>(null)
@@ -510,6 +525,39 @@ async function showGameCtxMenu(event: MouseEvent, game: QqGame) {
   }
 }
 
+function runShortcut(path: string) {
+  closeContextMenu()
+  RunProgram(path).then((result: string) => {
+    const resp = decodeApiData(result)
+    if (resp.err) {
+      notify('err', resp.err)
+    }
+  })
+}
+
+function showShortcutMenu(e: MouseEvent) {
+  if (!shortCutList.value.length) return
+  const btn = e.currentTarget as HTMLElement
+  const rect = btn.getBoundingClientRect()
+  const items: QqCtxMenuItem[] = shortCutList.value.map((item) => ({
+    label: item.Name || item.Path,
+    onClick: () => runShortcut(item.Path),
+  }))
+  // 贴按钮左上角打开，由 clamp 自动上移避免超出窗口
+  openContextMenu(rect.left, rect.top, items)
+}
+
+async function loadShortcuts() {
+  const result = await GetShortcuts(true)
+  const resp = decodeApiData(result)
+  if (resp.err) {
+    notify('err', resp.err)
+    shortCutList.value = []
+    return
+  }
+  shortCutList.value = Array.isArray(resp.data) ? resp.data : []
+}
+
 function onMinimise() {
   WindowMinimise()
 }
@@ -526,6 +574,8 @@ async function initData() {
   theme.value = THEME
   const conf = await callSrv('GetConfig')
   global.initData(conf)
+
+  await loadShortcuts()
 
   const result = await GetPlatform()
   const resp = decodeApiData(result)
