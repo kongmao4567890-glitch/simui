@@ -81,29 +81,11 @@ func GetGameList(data *request.GetGameList) (any, error) {
 		thumbsMap := map[uint32]map[string]string{}
 		if data.Platform == 0 {
 			for pfId, _ := range platformMap {
-				blockThumbType := "thumb"
-				if _, ok := platformMap[pfId]; ok {
-					if data.Theme == constant.UI_PLAYNITE {
-						blockThumbType = platformMap[pfId].Ui.Playnite.BlockThumbType
-					} else if data.Theme == constant.UI_TINY {
-						blockThumbType = platformMap[pfId].Ui.Tiny.BlockThumbType
-					} else {
-						blockThumbType = platformMap[pfId].Ui.Default.BlockThumbType
-					}
-				}
+				blockThumbType := resolveBlockThumbType(data.Theme, platformMap[pfId])
 				thumbsMap[pfId] = components.GetMasterRomThumbs(blockThumbType, pfId, romNameMap[pfId])
 			}
 		} else {
-			blockThumbType := "thumb"
-			if _, ok := platformMap[data.Platform]; ok {
-				if data.Theme == constant.UI_PLAYNITE {
-					blockThumbType = platformMap[data.Platform].Ui.Playnite.BlockThumbType
-				} else if data.Theme == constant.UI_TINY {
-					blockThumbType = platformMap[data.Platform].Ui.Tiny.BlockThumbType
-				} else {
-					blockThumbType = platformMap[data.Platform].Ui.Default.BlockThumbType
-				}
-			}
+			blockThumbType := resolveBlockThumbType(data.Theme, platformMap[data.Platform])
 			thumbsMap[data.Platform] = components.GetMasterRomThumbs(blockThumbType, data.Platform, romNameMap[data.Platform])
 		}
 		for k, v := range datas {
@@ -121,16 +103,7 @@ func GetGameList(data *request.GetGameList) (any, error) {
 		thumbsMap := map[uint32]map[string]string{}
 		datas := (&db.Rom{}).ConvertRomListSimplest(romList)
 
-		blockThumbType := "thumb"
-		if _, ok := platformMap[data.Platform]; ok {
-			if data.Theme == constant.UI_PLAYNITE {
-				blockThumbType = platformMap[data.Platform].Ui.Playnite.BlockThumbType
-			} else if data.Theme == constant.UI_TINY {
-				blockThumbType = platformMap[data.Platform].Ui.Tiny.BlockThumbType
-			} else {
-				blockThumbType = platformMap[data.Platform].Ui.Default.BlockThumbType
-			}
-		}
+		blockThumbType := resolveBlockThumbType(data.Theme, platformMap[data.Platform])
 		thumbsMap[data.Platform] = components.GetMasterRomThumbs(blockThumbType, data.Platform, romNameMap[data.Platform])
 
 		for k, v := range datas {
@@ -149,6 +122,23 @@ func GetGameList(data *request.GetGameList) (any, error) {
 	}
 	return nil, errors.New("SimpleMode is error")
 
+}
+
+// Oicq 暂写死 icon，其它主题走平台 UI 配置
+func resolveBlockThumbType(theme string, platform *db.PlatformVO) string {
+	if theme == constant.UI_OICQ {
+		return "icon"
+	}
+	if platform == nil {
+		return "thumb"
+	}
+	if theme == constant.UI_PLAYNITE {
+		return platform.Ui.Playnite.BlockThumbType
+	}
+	if theme == constant.UI_TINY {
+		return platform.Ui.Tiny.BlockThumbType
+	}
+	return platform.Ui.Default.BlockThumbType
 }
 
 // 读取rom游戏数量

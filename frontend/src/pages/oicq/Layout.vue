@@ -38,30 +38,30 @@
         <div class="qq-list-panel" ref="listPanelRef">
           <div
               v-for="(platform, index) in platforms"
-              :key="platform.id"
+              :key="platform.Id"
               class="qq-platform-bar"
-              :class="{ 'is-open': openPlatformId === platform.id, 'is-anim': layoutReady }"
+              :class="{ 'is-open': openPlatformId === platform.Id, 'is-anim': layoutReady }"
               :style="{ top: platformTops[index] + 'px' }"
-              @click="togglePlatform(platform.id)"
+              @click="togglePlatform(platform.Id)"
           >
-            {{ platform.name }}
+            {{ platform.Name }}
           </div>
 
           <div class="qq-list-middle" :class="{ 'is-anim': layoutReady }" :style="middleStyle">
-            <div v-if="openPlatform" class="qq-list-scroll">
-              <template v-if="openPlatform.categories.length">
-                <div v-for="cat in openPlatform.categories" :key="cat.id">
+            <div v-if="openPlatformId != null" class="qq-list-scroll" ref="listScrollRef" @scroll="onListScroll">
+              <template v-if="categories.length">
+                <div v-for="cat in categories" :key="cat.path">
                   <div
                       class="qq-category-bar"
-                      :class="{ 'is-open': openCategoryIds[cat.id] }"
-                      @click="toggleCategory(cat.id)"
+                      :class="{ 'is-open': openCategoryPath === cat.path }"
+                      @click="toggleCategory(cat)"
                   >
                     <span class="qq-category-tri"></span>
                     <span class="qq-category-name">{{ cat.name }}</span>
                   </div>
-                  <div v-show="openCategoryIds[cat.id]">
+                  <div v-show="openCategoryPath === cat.path">
                     <div
-                        v-for="game in cat.games"
+                        v-for="game in games"
                         :key="game.id"
                         class="qq-game-item"
                         :class="{
@@ -71,10 +71,17 @@
                         @click="activeGameId = game.id"
                         @dblclick="noop"
                     >
-                      <img class="qq-game-thumb" :src="game.thumb" :alt="game.name"/>
+                      <img
+                          v-if="game.thumb"
+                          class="qq-game-thumb"
+                          :src="game.thumb"
+                          :alt="game.name"
+                          @error="onThumbError"
+                      />
+                      <span v-else class="qq-game-thumb qq-game-thumb-empty"></span>
                       <span class="qq-game-name">{{ game.name }}</span>
                     </div>
-                    <div v-if="!cat.games.length" class="qq-empty-hint">（空）</div>
+                    <div v-if="!games.length && !gamesLoading" class="qq-empty-hint">（空）</div>
                   </div>
                 </div>
               </template>
@@ -117,7 +124,7 @@
 </template>
 
 <script setup lang="ts">
-import {computed, nextTick, onBeforeUnmount, onMounted, reactive, ref} from 'vue'
+import {computed, nextTick, onBeforeUnmount, onMounted, ref} from 'vue'
 import {
   Quit,
   WindowCenter,
@@ -128,45 +135,78 @@ import {
   WindowSetSize,
   WindowUnmaximise,
 } from 'app/wailsjs/runtime/runtime'
-import {mockPlatforms} from './mockData'
+import {
+  GetGameCountByMenu,
+  GetGameList,
+  GetMenuList,
+  GetPlatform,
+  UpdateOneConfig,
+} from 'app/wailsjs/go/controller/Controller'
+import {callSrv, decodeApiData, notify} from 'components/utils'
+import {useGlobalStore} from 'stores/globalData'
+import {storeToRefs} from 'pinia'
 import 'src/css/oicq/layout.css'
 
 const WIN_W = 220
 const WIN_H = 480
 /** 平台条高度（含边框），与 CSS --qq-bar-h 保持一致 */
 const BAR_H = 20
+const PAGE_SIZE = 100
+const THEME = 'Oicq'
 
-const platforms = mockPlatforms
-const openPlatformId = ref<number | null>(platforms[0]?.id ?? null)
-const openCategoryIds = reactive<Record<number, boolean>>(
-    Object.fromEntries((platforms[0]?.categories.slice(0, 2) ?? []).map((c) => [c.id, true])),
-)
-const activeGameId = ref<number | null>(platforms[0]?.categories[0]?.games[0]?.id ?? null)
+interface QqPlatform {
+  Id: number
+  Name: string
+}
+
+interface QqCategory {
+  path: string
+  name: string
+  like: number
+}
+
+interface QqGame {
+  id: number
+  name: string
+  thumb: string
+}
+
+const global = useGlobalStore()
+const {activePlatform, activeMenu, menuLike, lang, theme} = storeToRefs(global)
+
+const platforms = ref<QqPlatform[]>([])
+const categories = ref<QqCategory[]>([])
+const games = ref<QqGame[]>([])
+const openPlatformId = ref<number | null>(null)
+const openCategoryPath = ref<string | null>(null)
+const activeGameId = ref<number | null>(null)
 /** 小头像：名称在右；大头像：头像居中、昵称在下 */
 const avatarMode = ref<'small' | 'large'>('small')
 const pressedFooter = ref('')
+const gamesLoading = ref(false)
 
 const listPanelRef = ref<HTMLElement | null>(null)
+const listScrollRef = ref<HTMLElement | null>(null)
 const panelHeight = ref(0)
 const layoutReady = ref(false)
 let resizeObserver: ResizeObserver | null = null
 
+let nextPage = 0
+let pageEnd = false
+let gameReqId = 0
+
 const openIndex = computed(() =>
     openPlatformId.value == null
         ? -1
-        : platforms.findIndex((p) => p.id === openPlatformId.value),
-)
-
-const openPlatform = computed(() =>
-    openIndex.value >= 0 ? platforms[openIndex.value] : null,
+        : platforms.value.findIndex((p) => p.Id === openPlatformId.value),
 )
 
 /** 每个平台条的 top：展开项及之上贴顶，之下贴底 */
 const platformTops = computed(() => {
   const h = panelHeight.value
   const open = openIndex.value
-  const n = platforms.length
-  return platforms.map((_, i) => {
+  const n = platforms.value.length
+  return platforms.value.map((_, i) => {
     if (open < 0) return i * BAR_H
     if (i <= open) return i * BAR_H
     return Math.max(i * BAR_H, h - (n - i) * BAR_H)
@@ -175,7 +215,7 @@ const platformTops = computed(() => {
 
 const middleStyle = computed(() => {
   const open = openIndex.value
-  const n = platforms.length
+  const n = platforms.value.length
   const h = panelHeight.value
   if (open < 0) {
     return {
@@ -220,13 +260,169 @@ function restoreWindowSize() {
   WindowSetSize(800, 600)
 }
 
-function togglePlatform(id: number) {
-  if (openPlatformId.value === id) return
-  openPlatformId.value = id
+function clearGames() {
+  gameReqId++
+  games.value = []
+  activeGameId.value = null
+  nextPage = 0
+  pageEnd = false
+  gamesLoading.value = false
 }
 
-function toggleCategory(id: number) {
-  openCategoryIds[id] = !openCategoryIds[id]
+function mapGame(item: any): QqGame {
+  return {
+    id: item.Id,
+    name: item.Name || item.RomName || '',
+    thumb: item.ThumbPic || '',
+  }
+}
+
+async function loadGames(page: number, replace: boolean) {
+  if (openPlatformId.value == null || openCategoryPath.value == null) return
+  if (gamesLoading.value) return
+  if (!replace && pageEnd) return
+
+  const reqId = ++gameReqId
+  gamesLoading.value = true
+  try {
+    const cat = categories.value.find((c) => c.path === openCategoryPath.value)
+    const req = {
+      theme: THEME,
+      platform: openPlatformId.value,
+      catname: openCategoryPath.value,
+      catnameLike: cat?.like ?? 0,
+      page,
+      simpleModel: 'simple',
+      keyword: '',
+      letter: '',
+      baseType: '',
+      basePublisher: '',
+      baseYear: '',
+      baseCountry: '',
+      baseTranslate: '',
+      baseVersion: '',
+      baseProducer: '',
+      score: '',
+      complete: '',
+    }
+    const result = await GetGameList(JSON.stringify(req))
+    if (reqId !== gameReqId) return
+
+    const resp = decodeApiData(result)
+    if (resp.err) {
+      notify('err', resp.err)
+      return
+    }
+
+    const rows = Array.isArray(resp.data) ? resp.data : []
+    const mapped = rows.map(mapGame)
+    if (replace) {
+      games.value = mapped
+      if (listScrollRef.value) {
+        listScrollRef.value.scrollTop = 0
+      }
+    } else {
+      games.value = games.value.concat(mapped)
+    }
+
+    if (rows.length === 0 || rows.length < PAGE_SIZE) {
+      pageEnd = true
+    }
+    nextPage = page + 1
+  } finally {
+    if (reqId === gameReqId) {
+      gamesLoading.value = false
+    }
+  }
+}
+
+function onListScroll(e: Event) {
+  const el = e.target as HTMLElement
+  if (!el || gamesLoading.value || pageEnd) return
+  if (el.scrollTop + el.clientHeight >= el.scrollHeight - 40) {
+    loadGames(nextPage, false)
+  }
+}
+
+async function openCategory(cat: QqCategory) {
+  clearGames()
+  openCategoryPath.value = cat.path
+  activeMenu.value = cat.path
+  menuLike.value = cat.like
+  UpdateOneConfig('Menu', JSON.stringify([cat.path, cat.like]))
+  await loadGames(0, true)
+}
+
+function toggleCategory(cat: QqCategory) {
+  if (openCategoryPath.value === cat.path) {
+    clearGames()
+    openCategoryPath.value = null
+    return
+  }
+  openCategory(cat)
+}
+
+async function loadMenus(platformId: number) {
+  categories.value = []
+  clearGames()
+  openCategoryPath.value = null
+
+  const countResult = await GetGameCountByMenu(platformId)
+  const countResp = decodeApiData(countResult)
+  if (countResp.err) {
+    notify('err', countResp.err)
+    return
+  }
+  const romCountMap = countResp.data || {}
+
+  const menuResult = await GetMenuList(platformId)
+  const menuResp = decodeApiData(menuResult)
+  if (menuResp.err) {
+    notify('err', menuResp.err)
+    return
+  }
+
+  const list: QqCategory[] = []
+  if (romCountMap['/'] != null && romCountMap['/'] > 0) {
+    list.push({
+      path: '/',
+      name: (lang.value as any)?.notCate || '未分类',
+      like: 0,
+    })
+  }
+
+  const menus = Array.isArray(menuResp.data) ? menuResp.data : []
+  menus.forEach((item: any) => {
+    list.push({
+      path: item.Path,
+      name: item.Name,
+      like: 1,
+    })
+  })
+  categories.value = list
+
+  if (!list.length) return
+
+  const cfgPath = activeMenu.value
+  const found = list.find((c) => c.path === cfgPath)
+  await openCategory(found ?? list[0])
+}
+
+async function togglePlatform(id: number) {
+  if (openPlatformId.value === id) return
+  openPlatformId.value = id
+  activePlatform.value = id
+  UpdateOneConfig('Platform', id.toString())
+  await loadMenus(id)
+  await nextTick()
+  measurePanel()
+}
+
+function onThumbError(e: Event) {
+  const img = e.target as HTMLImageElement
+  if (img) {
+    img.style.visibility = 'hidden'
+  }
 }
 
 function onMinimise() {
@@ -241,8 +437,41 @@ function noop() {
   // 功能预留
 }
 
+async function initData() {
+  theme.value = THEME
+  const conf = await callSrv('GetConfig')
+  global.initData(conf)
+
+  const result = await GetPlatform()
+  const resp = decodeApiData(result)
+  if (resp.err) {
+    notify('err', resp.err)
+    return
+  }
+
+  platforms.value = Array.isArray(resp.data) ? resp.data : []
+  if (!platforms.value.length) {
+    openPlatformId.value = null
+    return
+  }
+
+  let pid = Number(conf.Config.Platform)
+  if (!platforms.value.some((p) => p.Id === pid)) {
+    pid = platforms.value[0].Id
+  }
+
+  openPlatformId.value = pid
+  activePlatform.value = pid
+  if (pid !== Number(conf.Config.Platform)) {
+    UpdateOneConfig('Platform', pid.toString())
+  }
+
+  await loadMenus(pid)
+}
+
 onMounted(async () => {
   applyWindowSize()
+  await initData()
   await nextTick()
   measurePanel()
   if (listPanelRef.value) {

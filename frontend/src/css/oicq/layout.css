@@ -328,6 +328,11 @@
   object-fit: contain;
 }
 
+.qq-game-thumb-empty {
+  display: inline-block;
+  box-sizing: border-box;
+}
+
 .qq-game-name {
   overflow: hidden;
   white-space: nowrap;

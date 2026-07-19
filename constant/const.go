@@ -50,6 +50,7 @@ var FONT_EXTS = map[string]string{
 var UI_DEFAULT = "Default"
 var UI_PLAYNITE = "Playnite"
 var UI_TINY = "Tiny"
+var UI_OICQ = "Oicq"
 
 // 平台资源文件夹定义
 var RES_DIR = map[string]string{
