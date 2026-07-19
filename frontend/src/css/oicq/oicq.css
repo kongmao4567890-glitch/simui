@@ -1,0 +1,65 @@
+/* 从 98.css 抽离的 Win98 组件样式（不可直接引用整库） */
+
+.qq-desktop {
+  --qq-98-surface: #c0c0c0;
+  --qq-98-button-highlight: #ffffff;
+  --qq-98-button-face: #dfdfdf;
+  --qq-98-button-shadow: #808080;
+  --qq-98-window-frame: #0a0a0a;
+  --qq-98-border-raised-outer: inset -1px -1px var(--qq-98-window-frame),
+    inset 1px 1px var(--qq-98-button-highlight);
+  --qq-98-border-raised-inner: inset -2px -2px var(--qq-98-button-shadow),
+    inset 2px 2px var(--qq-98-button-face);
+  --qq-98-border-sunken-outer: inset -1px -1px var(--qq-98-button-highlight),
+    inset 1px 1px var(--qq-98-window-frame);
+  --qq-98-border-sunken-inner: inset -2px -2px var(--qq-98-button-face),
+    inset 2px 2px var(--qq-98-button-shadow);
+}
+
+/* —— 标题栏系统按钮（title-bar-controls） —— */
+.qq-titlebar-btns {
+  display: flex;
+  gap: 0;
+  margin-left: 4px;
+}
+
+.qq-sys-btn {
+  box-sizing: border-box;
+  display: block;
+  padding: 0;
+  margin: 0;
+  min-width: 16px;
+  min-height: 14px;
+  width: 16px;
+  height: 14px;
+  border: none;
+  border-radius: 0;
+  background: var(--qq-98-surface);
+  background-repeat: no-repeat;
+  box-shadow: var(--qq-98-border-raised-outer), var(--qq-98-border-raised-inner);
+  font-size: 0;
+  line-height: 0;
+  color: transparent;
+  cursor: pointer;
+  --wails-draggable: no-drag;
+}
+
+.qq-sys-btn:focus {
+  outline: none;
+}
+
+.qq-sys-btn:active {
+  padding: 0;
+  box-shadow: var(--qq-98-border-sunken-outer), var(--qq-98-border-sunken-inner);
+}
+
+.qq-sys-btn.minimize {
+  background-image: url("./icon/minimize.svg");
+  background-position: bottom 3px left 4px;
+}
+
+.qq-sys-btn.close {
+  margin-left: 2px;
+  background-image: url("./icon/close.svg");
+  background-position: top 3px left 4px;
+}

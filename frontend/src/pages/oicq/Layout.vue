@@ -7,8 +7,8 @@
           <div class="qq-titlebar-icon" style="--wails-draggable: no-drag;"></div>
           <div class="qq-titlebar-text">simui</div>
           <div class="qq-titlebar-btns" style="--wails-draggable: no-drag;">
-            <button type="button" class="qq-sys-btn" title="最小化" @click.stop="onMinimise">-</button>
-            <button type="button" class="qq-sys-btn" title="关闭" @click.stop="onClose">×</button>
+            <button type="button" class="qq-sys-btn minimize" title="最小化" aria-label="Minimize" @click.stop="onMinimise"></button>
+            <button type="button" class="qq-sys-btn close" title="关闭" aria-label="Close" @click.stop="onClose"></button>
           </div>
         </div>
 
@@ -145,6 +145,7 @@ import {
 import {callSrv, decodeApiData, notify} from 'components/utils'
 import {useGlobalStore} from 'stores/globalData'
 import {storeToRefs} from 'pinia'
+import 'src/css/oicq/oicq.css'
 import 'src/css/oicq/layout.css'
 
 const WIN_W = 220

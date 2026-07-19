@@ -88,38 +88,6 @@
   color:#FFF;
 }
 
-.qq-titlebar-btns {
-  display: flex;
-  gap: 2px;
-  margin-left: 4px;
-}
-
-.qq-sys-btn {
-  width: 12px;
-  height: 12px;
-  line-height: 12px;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #d4d0c7;
-  border: 1px solid;
-  border-color: var(--qq-border-outset);
-  box-shadow: 1px 1px 0 #000;
-  font-size: 10px;
-
-  cursor: pointer;
-  --wails-draggable: no-drag;
-}
-
-.qq-sys-btn:active {
-  border-color: var(--qq-border-inset);
-  box-shadow: none;
-  padding-top: 1px;
-  padding-left: 1px;
-}
-
 /* —— 工具栏：小头像 / 大头像（Win98 列表·大图标） —— */
 .qq-toolbar {
   display: flex;
