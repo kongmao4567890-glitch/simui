@@ -30,8 +30,8 @@ const routes: RouteRecordRaw[] = [
         }
     },
     {
-        path: '/qq2000',
-        component: () => import('pages/qq2000/Layout.vue'),
+        path: '/oicq',
+        component: () => import('pages/oicq/Layout.vue'),
         meta: {
             refreshPage: true
         }

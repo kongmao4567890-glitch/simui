@@ -21,7 +21,7 @@
               title="小头像"
               @click="avatarMode = 'small'"
           >
-            <img class="qq-tool-ico" src="/images/qq2000/listico_small.png" alt="" draggable="false"/>
+            <img class="qq-tool-ico" src="/images/oicq/listico_small.png" alt="" draggable="false"/>
           </button>
           <button
               type="button"
@@ -30,7 +30,7 @@
               title="大头像"
               @click="avatarMode = 'large'"
           >
-            <img class="qq-tool-ico" src="/images/qq2000/listico_big.png" alt="" draggable="false"/>
+            <img class="qq-tool-ico" src="/images/oicq/listico_big.png" alt="" draggable="false"/>
           </button>
         </div>
 
@@ -87,7 +87,7 @@
         <div class="qq-footer">
           <div class="qq-footer-row">
             <button type="button" class="qq-footer-icon" @mousedown.prevent @click="noop">
-              <img src="/images/qq2000/tools.png" alt="" draggable="false"/>
+              <img src="/images/oicq/tools.png" alt="" draggable="false"/>
             </button>
             <button
                 type="button"
@@ -98,13 +98,13 @@
                 @mouseleave="pressedFooter = ''"
                 @click="noop"
             >
-              <img class="qq-footer-btn-ico" src="/images/qq2000/search.png" alt="" draggable="false"/>
+              <img class="qq-footer-btn-ico" src="/images/oicq/search.png" alt="" draggable="false"/>
               <span class="qq-footer-btn-label">查 找</span>
             </button>
           </div>
           <div class="qq-statusbar">
             <button type="button" class="qq-statusbar-btn is-out" @click="noop">
-              <img class="qq-statusbar-logo" src="/images/qq2000/footer_logo.png" alt="" draggable="false"/>
+              <img class="qq-statusbar-logo" src="/images/oicq/footer_logo.png" alt="" draggable="false"/>
             </button>
             <button type="button" class="qq-statusbar-btn is-in" @click="noop">
               <span>5124个游戏</span>
@@ -129,7 +129,7 @@ import {
   WindowUnmaximise,
 } from 'app/wailsjs/runtime/runtime'
 import {mockPlatforms} from './mockData'
-import 'src/css/qq2000/layout.css'
+import 'src/css/oicq/layout.css'
 
 const WIN_W = 220
 const WIN_H = 480
