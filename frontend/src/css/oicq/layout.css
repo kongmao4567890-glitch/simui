@@ -59,22 +59,9 @@
   width: 14px;
   height: 14px;
   margin-right: 4px;
-  background: #ffff00;
-  border: 1px solid #000080;
-  border-radius: 2px;
   flex-shrink: 0;
-  position: relative;
-}
-
-.qq-titlebar-icon::after {
-  content: "";
-  position: absolute;
-  left: 3px;
-  top: 2px;
-  width: 6px;
-  height: 8px;
-  background: #000080;
-  border-radius: 50% 50% 40% 40%;
+  object-fit: contain;
+  image-rendering: pixelated;
 }
 
 .qq-titlebar-text {

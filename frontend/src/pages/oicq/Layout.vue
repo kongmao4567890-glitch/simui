@@ -4,8 +4,8 @@
       <div class="qq-window-inner">
         <!-- 标题栏：系统级拖动（无边框窗口） -->
         <div class="qq-titlebar" style="--wails-draggable: drag;">
-          <div class="qq-titlebar-icon" style="--wails-draggable: no-drag;"></div>
-          <div class="qq-titlebar-text">simui</div>
+          <img class="qq-titlebar-icon" style="--wails-draggable: no-drag;" src="/images/ico.png" alt="" draggable="false"/>
+          <div class="qq-titlebar-text">{{ config.SoftName?.Name || 'simUI' }}</div>
           <div class="qq-titlebar-btns" style="--wails-draggable: no-drag;">
             <button type="button" class="qq-sys-btn minimize" title="最小化" aria-label="Minimize" @click.stop="onMinimise"></button>
             <button type="button" class="qq-sys-btn close" title="关闭" aria-label="Close" @click.stop="onClose"></button>
@@ -193,7 +193,7 @@ interface QqShortcut {
 }
 
 const global = useGlobalStore()
-const {activePlatform, activeMenu, menuLike, lang, theme} = storeToRefs(global)
+const {activePlatform, activeMenu, menuLike, lang, theme, config} = storeToRefs(global)
 
 const platforms = ref<QqPlatform[]>([])
 const categories = ref<QqCategory[]>([])
