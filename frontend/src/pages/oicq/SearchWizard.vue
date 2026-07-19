@@ -152,6 +152,8 @@ interface FilterOpt {
 const props = defineProps<{
   platforms: QqPlatform[]
   defaultPlatformId: number | null
+  /** 主窗宽度，用于初始贴在主窗右侧 */
+  mainWinW?: number
 }>()
 
 const emit = defineEmits<{
@@ -197,7 +199,7 @@ const loading = ref(false)
 const listRef = ref<HTMLElement | null>(null)
 let reqId = 0
 
-const pos = reactive({x: 248, y: 36})
+const pos = reactive({x: Math.max(248, (props.mainWinW ?? 220) + 28), y: 36})
 let dragging = false
 let dragOx = 0
 let dragOy = 0

@@ -1,4 +1,4 @@
-/* OICQ / Win98 怀旧皮肤 —— 系统窗口即为 220×480 */
+/* OICQ / Win98 怀旧皮肤 —— 默认 220×480，边框可拖拽缩放（最大宽 700） */
 
 .qq-desktop {
   /* Win98 3D 边框：凸起 / 凹陷 */
@@ -26,6 +26,7 @@
 }
 
 .qq-window {
+  position: relative;
   width: 100%;
   height: 100%;
   display: flex;
@@ -40,10 +41,48 @@
   position: absolute;
   left: 12px;
   top: 12px;
-  width: 220px;
-  height: 480px;
+  /* 宽高由 Layout 按 currentW/H 内联设置 */
   z-index: 10;
 }
+
+/* 边框拖拽缩放热区（覆盖 Win98 立体边框） */
+.qq-resize-handle {
+  position: absolute;
+  z-index: 50;
+  background: transparent;
+}
+
+.qq-resize-handle.is-n,
+.qq-resize-handle.is-s {
+  left: 6px;
+  right: 6px;
+  height: 5px;
+}
+
+.qq-resize-handle.is-e,
+.qq-resize-handle.is-w {
+  top: 6px;
+  bottom: 6px;
+  width: 5px;
+}
+
+.qq-resize-handle.is-n { top: 0; cursor: ns-resize; }
+.qq-resize-handle.is-s { bottom: 0; cursor: ns-resize; }
+.qq-resize-handle.is-e { right: 0; cursor: ew-resize; }
+.qq-resize-handle.is-w { left: 0; cursor: ew-resize; }
+
+.qq-resize-handle.is-nw,
+.qq-resize-handle.is-ne,
+.qq-resize-handle.is-sw,
+.qq-resize-handle.is-se {
+  width: 8px;
+  height: 8px;
+}
+
+.qq-resize-handle.is-nw { top: 0; left: 0; cursor: nwse-resize; }
+.qq-resize-handle.is-ne { top: 0; right: 0; cursor: nesw-resize; }
+.qq-resize-handle.is-sw { bottom: 0; left: 0; cursor: nesw-resize; }
+.qq-resize-handle.is-se { bottom: 0; right: 0; cursor: nwse-resize; }
 
 .qq-window-inner {
   flex: 1;

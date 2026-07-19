@@ -1,6 +1,20 @@
 <template>
   <div class="qq-desktop" :class="{ 'is-search-open': searchOpen }" @contextmenu.prevent>
-    <div class="qq-window">
+    <div
+        class="qq-window"
+        :style="searchOpen ? { width: currentW + 'px', height: currentH + 'px' } : undefined"
+    >
+      <!-- 边框拖拽缩放（查找桌面打开时禁用） -->
+      <template v-if="!searchOpen">
+        <div
+            v-for="dir in resizeDirs"
+            :key="dir"
+            class="qq-resize-handle"
+            :class="'is-' + dir"
+            style="--wails-draggable: no-drag;"
+            @mousedown.stop.prevent="onResizeStart(dir, $event)"
+        ></div>
+      </template>
       <div class="qq-window-inner">
         <!-- 标题栏：系统级拖动（无边框窗口） -->
         <div class="qq-titlebar" style="--wails-draggable: drag;">
@@ -136,6 +150,7 @@
         v-if="searchOpen"
         :platforms="platforms"
         :default-platform-id="openPlatformId"
+        :main-win-w="currentW"
         @close="closeSearch"
         @run-game="runMainGame"
         @game-contextmenu="showGameCtxMenu"
@@ -148,11 +163,15 @@
 import {computed, nextTick, onBeforeUnmount, onMounted, ref} from 'vue'
 import {
   Quit,
+  ScreenGetAll,
   WindowCenter,
+  WindowGetPosition,
+  WindowGetSize,
   WindowMinimise,
   WindowSetBackgroundColour,
   WindowSetMaxSize,
   WindowSetMinSize,
+  WindowSetPosition,
   WindowSetSize,
   WindowUnmaximise,
 } from 'app/wailsjs/runtime/runtime'
@@ -179,13 +198,16 @@ import 'src/css/oicq/layout.css'
 
 const WIN_W = 220
 const WIN_H = 480
-/** 查找打开时的桌面尺寸（容纳主窗 + 查找浮窗） */
-const SEARCH_DESKTOP_W = 740
-const SEARCH_DESKTOP_H = 520
+const MAX_WIN_W = 700
+/** 查找浮窗宽度（与 SearchWizard 一致） */
+const SEARCH_WIZARD_W = 460
 /** 平台条高度（含边框），与 CSS --qq-bar-h 保持一致 */
 const BAR_H = 20
 const PAGE_SIZE = 100
 const THEME = 'Oicq'
+
+type ResizeDir = 'n' | 's' | 'e' | 'w' | 'ne' | 'nw' | 'se' | 'sw'
+const resizeDirs: ResizeDir[] = ['n', 's', 'e', 'w', 'ne', 'nw', 'se', 'sw']
 
 interface QqPlatform {
   Id: number
@@ -239,7 +261,22 @@ const listPanelRef = ref<HTMLElement | null>(null)
 const listScrollRef = ref<HTMLElement | null>(null)
 const panelHeight = ref(0)
 const layoutReady = ref(false)
+/** 当前主窗尺寸（关闭查找后恢复） */
+const currentW = ref(WIN_W)
+const currentH = ref(WIN_H)
 let resizeObserver: ResizeObserver | null = null
+let maxWinH = 1080
+
+let resizing = false
+/** mousedown 后异步取尺寸期间为 true，mouseup 可取消 */
+let resizeArming = false
+let resizeDir: ResizeDir = 'se'
+let resizeStartSX = 0
+let resizeStartSY = 0
+let resizeStartW = 0
+let resizeStartH = 0
+let resizeStartX = 0
+let resizeStartY = 0
 
 let nextPage = 0
 let pageEnd = false
@@ -294,6 +331,21 @@ function measurePanel() {
   }
 }
 
+function clamp(n: number, min: number, max: number) {
+  return Math.min(max, Math.max(min, n))
+}
+
+async function refreshMaxHeight() {
+  try {
+    const screens = await ScreenGetAll()
+    const cur = screens.find((s) => s.isCurrent) || screens.find((s) => s.isPrimary) || screens[0]
+    if (cur?.height) maxWinH = cur.height
+  } catch {
+    // 取屏失败时保留上次/默认值
+  }
+}
+
+/** 固定尺寸（查找桌面等）：min=max 锁死 */
 function lockWindowSize(w: number, h: number, bg: [number, number, number, number], center = false) {
   WindowUnmaximise()
   WindowSetMinSize(0, 0)
@@ -305,18 +357,34 @@ function lockWindowSize(w: number, h: number, bg: [number, number, number, numbe
   if (center) WindowCenter()
 }
 
-function applyWindowSize() {
-  lockWindowSize(WIN_W, WIN_H, [192, 192, 192, 255], true)
+/** 可缩放主窗：最小默认尺寸，最大宽 700 / 高不超过屏幕 */
+async function applyWindowSize(center = false) {
+  await refreshMaxHeight()
+  const w = clamp(currentW.value, WIN_W, MAX_WIN_W)
+  const h = clamp(currentH.value, WIN_H, maxWinH)
+  currentW.value = w
+  currentH.value = h
+  WindowUnmaximise()
+  WindowSetMinSize(0, 0)
+  WindowSetMaxSize(0, 0)
+  WindowSetSize(w, h)
+  WindowSetMinSize(WIN_W, WIN_H)
+  WindowSetMaxSize(MAX_WIN_W, maxWinH)
+  WindowSetBackgroundColour(192, 192, 192, 255)
+  if (center) WindowCenter()
 }
 
 function applySearchDesktopSize() {
-  // 桌面透明，仅露出主窗与查找浮窗
-  lockWindowSize(SEARCH_DESKTOP_W, SEARCH_DESKTOP_H, [0, 0, 0, 0], true)
+  // 桌面透明，仅露出主窗与查找浮窗；宽度随主窗放大
+  const deskW = Math.max(740, currentW.value + 24 + SEARCH_WIZARD_W + 24)
+  const deskH = Math.max(520, currentH.value + 24)
+  lockWindowSize(deskW, deskH, [0, 0, 0, 0], true)
 }
 
 function openSearch() {
   if (searchOpen.value) return
   closeContextMenu()
+  endResize()
   searchOpen.value = true
   applySearchDesktopSize()
 }
@@ -325,7 +393,80 @@ function closeSearch() {
   if (!searchOpen.value) return
   closeContextMenu()
   searchOpen.value = false
-  applyWindowSize()
+  applyWindowSize(false)
+}
+
+async function onResizeStart(dir: ResizeDir, e: MouseEvent) {
+  if (searchOpen.value || resizing || resizeArming) return
+  resizeArming = true
+  resizeDir = dir
+  resizeStartSX = e.screenX
+  resizeStartSY = e.screenY
+  resizeStartW = currentW.value
+  resizeStartH = currentH.value
+  resizeStartX = 0
+  resizeStartY = 0
+  await refreshMaxHeight()
+  try {
+    const [size, pos] = await Promise.all([WindowGetSize(), WindowGetPosition()])
+    resizeStartW = size.w
+    resizeStartH = size.h
+    resizeStartX = pos.x
+    resizeStartY = pos.y
+  } catch {
+    // 沿用 currentW/H
+  }
+  if (!resizeArming) return
+  // 拖拽期间放宽约束，由前端 clamp，避免与位置联动冲突
+  WindowSetMinSize(0, 0)
+  WindowSetMaxSize(0, 0)
+  resizing = true
+  resizeArming = false
+}
+
+function onResizeMove(e: MouseEvent) {
+  if (!resizing) return
+  const dx = e.screenX - resizeStartSX
+  const dy = e.screenY - resizeStartSY
+  let w = resizeStartW
+  let h = resizeStartH
+  let x = resizeStartX
+  let y = resizeStartY
+  const dir = resizeDir
+
+  if (dir.includes('e')) {
+    w = clamp(resizeStartW + dx, WIN_W, MAX_WIN_W)
+  }
+  if (dir.includes('w')) {
+    w = clamp(resizeStartW - dx, WIN_W, MAX_WIN_W)
+    x = resizeStartX + (resizeStartW - w)
+  }
+  if (dir.includes('s')) {
+    h = clamp(resizeStartH + dy, WIN_H, maxWinH)
+  }
+  if (dir.includes('n')) {
+    h = clamp(resizeStartH - dy, WIN_H, maxWinH)
+    y = resizeStartY + (resizeStartH - h)
+  }
+
+  currentW.value = w
+  currentH.value = h
+  WindowSetSize(w, h)
+  if (dir.includes('w') || dir.includes('n')) {
+    WindowSetPosition(x, y)
+  }
+}
+
+function endResize() {
+  resizeArming = false
+  if (!resizing) return
+  resizing = false
+  WindowSetMinSize(WIN_W, WIN_H)
+  WindowSetMaxSize(MAX_WIN_W, maxWinH)
+}
+
+function onResizeUp() {
+  endResize()
 }
 
 function restoreWindowSize() {
@@ -664,7 +805,9 @@ async function initData() {
 }
 
 onMounted(async () => {
-  applyWindowSize()
+  window.addEventListener('mousemove', onResizeMove)
+  window.addEventListener('mouseup', onResizeUp)
+  await applyWindowSize(true)
   await initData()
   await nextTick()
   measurePanel()
@@ -675,6 +818,9 @@ onMounted(async () => {
 })
 
 onBeforeUnmount(() => {
+  window.removeEventListener('mousemove', onResizeMove)
+  window.removeEventListener('mouseup', onResizeUp)
+  endResize()
   resizeObserver?.disconnect()
   resizeObserver = null
   searchOpen.value = false
