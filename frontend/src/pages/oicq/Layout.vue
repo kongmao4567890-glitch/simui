@@ -114,7 +114,7 @@
               <img class="qq-statusbar-logo" src="/images/oicq/footer_logo.png" alt="" draggable="false"/>
             </button>
             <button type="button" class="qq-statusbar-btn is-in" @click="noop">
-              <span>5124个游戏</span>
+              <span>{{ platformGameCount }}个游戏</span>
             </button>
           </div>
         </div>
@@ -137,6 +137,7 @@ import {
   WindowUnmaximise,
 } from 'app/wailsjs/runtime/runtime'
 import {
+  GetGameCount,
   GetGameCountByMenu,
   GetGameList,
   GetMenuList,
@@ -190,6 +191,8 @@ const activeGameId = ref<number | null>(null)
 const avatarMode = ref<'small' | 'large'>('small')
 const pressedFooter = ref('')
 const gamesLoading = ref(false)
+/** 当前展开平台的游戏总数 */
+const platformGameCount = ref(0)
 
 const listPanelRef = ref<HTMLElement | null>(null)
 const listScrollRef = ref<HTMLElement | null>(null)
@@ -369,10 +372,43 @@ function toggleCategory(cat: QqCategory) {
   openCategory(cat)
 }
 
+async function loadPlatformGameCount(platformId: number) {
+  const req = {
+    theme: THEME,
+    platform: platformId,
+    catname: '',
+    catnameLike: 0,
+    page: 0,
+    simpleModel: 'simple',
+    keyword: '',
+    letter: '',
+    baseType: '',
+    basePublisher: '',
+    baseYear: '',
+    baseCountry: '',
+    baseTranslate: '',
+    baseVersion: '',
+    baseProducer: '',
+    score: '',
+    complete: '',
+  }
+  const result = await GetGameCount(JSON.stringify(req))
+  const resp = decodeApiData(result)
+  if (resp.err) {
+    notify('err', resp.err)
+    platformGameCount.value = 0
+    return
+  }
+  platformGameCount.value = resp.data || 0
+}
+
 async function loadMenus(platformId: number) {
   categories.value = []
   clearGames()
   openCategoryPath.value = null
+  platformGameCount.value = 0
+
+  await loadPlatformGameCount(platformId)
 
   const countResult = await GetGameCountByMenu(platformId)
   const countResp = decodeApiData(countResult)

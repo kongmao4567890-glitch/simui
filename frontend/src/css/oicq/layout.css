@@ -313,11 +313,9 @@
 }
 
 .qq-game-thumb {
-  width: 24px;
-  height: 24px;
+  width: 18px;
+  height: 18px;
   flex-shrink: 0;
-  border: 1px solid #808080;
-  background: #fff;
   object-fit: contain;
 }
 
