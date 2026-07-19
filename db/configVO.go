@@ -19,8 +19,10 @@ type ConfigVO struct {
 	Menu               string           // 当前菜单
 	SearchEnginesBaidu string           // 搜索引擎地址
 	RootPath           string           // 当前根目录
-	WindowWidth        int              // 当前窗口宽度
-	WindowHeight       int              // 当前窗口高度
+	WindowWidth        int              // 当前窗口宽度（Default/Playnite/Tiny 共用）
+	WindowHeight       int              // 当前窗口高度（Default/Playnite/Tiny 共用）
+	OicqWindowWidth    int              // Oicq 主题窗口宽度（与其它主题独立）
+	OicqWindowHeight   int              // Oicq 主题窗口高度（与其它主题独立）
 	WindowState        int              // 当前窗口显示状态(0默认 1最大化 2最小化 3全屏)
 	WindowZoom         float64          // 窗口缩放比例
 	VersionNo          string           // 记录当前版本号或已跳过的版本号
@@ -155,6 +157,8 @@ func (c *Config) GetAllVO() (*ConfigVO, error) {
 		RootPath:           m["RootPath"],
 		WindowWidth:        utils.ToInt(m["WindowWidth"]),
 		WindowHeight:       utils.ToInt(m["WindowHeight"]),
+		OicqWindowWidth:    utils.ToInt(m["OicqWindowWidth"]),
+		OicqWindowHeight:   utils.ToInt(m["OicqWindowHeight"]),
 		WindowState:        utils.ToInt(m["WindowState"]),
 		WindowZoom:         windowZoom,
 		Cursor:             utils.ToAbsPath(m["Cursor"], ""),

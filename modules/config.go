@@ -70,8 +70,9 @@ func GetBaseConfig() (db.ConfigVO, error) {
 
 // 更新一个配置
 func UpdateOneConfig(key, data string) error {
-	(&db.Config{}).UpsertOne(key, data)
-	return nil
+	err := (&db.Config{}).UpsertOne(key, data)
+	_ = (&db.Config{}).RebuildConfig()
+	return err
 }
 
 func UpdateBaseConfig(data db.ConfigVO) error {

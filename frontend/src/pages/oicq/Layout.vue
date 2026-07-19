@@ -160,7 +160,7 @@
 </template>
 
 <script setup lang="ts">
-import {computed, nextTick, onBeforeUnmount, onMounted, ref} from 'vue'
+import {computed, nextTick, onActivated, onBeforeUnmount, onDeactivated, onMounted, ref} from 'vue'
 import {
   Quit,
   ScreenGetAll,
@@ -264,8 +264,14 @@ const layoutReady = ref(false)
 /** 当前主窗尺寸（关闭查找后恢复） */
 const currentW = ref(WIN_W)
 const currentH = ref(WIN_H)
+/** 打开查找前的主窗尺寸快照 */
+let searchSavedW = WIN_W
+let searchSavedH = WIN_H
 let resizeObserver: ResizeObserver | null = null
 let maxWinH = 1080
+/** 其它主题共用窗口尺寸（离开 Oicq 时恢复） */
+let sharedWindowW = 800
+let sharedWindowH = 600
 
 let resizing = false
 /** mousedown 后异步取尺寸期间为 true，mouseup 可取消 */
@@ -365,13 +371,23 @@ async function applyWindowSize(center = false) {
   currentW.value = w
   currentH.value = h
   WindowUnmaximise()
-  WindowSetMinSize(0, 0)
+  // 其它主题离开时可能留下 MinSize(800,600)；必须先降到 Oicq 下限，再 SetSize，否则缩窄会被系统拒绝
   WindowSetMaxSize(0, 0)
-  WindowSetSize(w, h)
   WindowSetMinSize(WIN_W, WIN_H)
+  WindowSetSize(w, h)
   WindowSetMaxSize(MAX_WIN_W, maxWinH)
   WindowSetBackgroundColour(192, 192, 192, 255)
   if (center) WindowCenter()
+  // 再确认一次：个别环境下 MinSize 切换后首次 SetSize 会落到旧尺寸
+  try {
+    const size = await WindowGetSize()
+    if (Math.abs(size.w - w) > 2 || Math.abs(size.h - h) > 2) {
+      WindowSetMinSize(WIN_W, WIN_H)
+      WindowSetSize(w, h)
+    }
+  } catch {
+    // ignore
+  }
 }
 
 function applySearchDesktopSize() {
@@ -385,15 +401,21 @@ function openSearch() {
   if (searchOpen.value) return
   closeContextMenu()
   endResize()
+  // 先记下主窗尺寸，关闭查找时必须还原（桌面放大不能写回 currentW/H）
+  searchSavedW = currentW.value
+  searchSavedH = currentH.value
   searchOpen.value = true
   applySearchDesktopSize()
 }
 
-function closeSearch() {
+async function closeSearch() {
   if (!searchOpen.value) return
   closeContextMenu()
+  // 先还原系统窗口尺寸，再退出查找桌面布局，避免主窗被撑成桌面宽
+  currentW.value = searchSavedW
+  currentH.value = searchSavedH
+  await applyWindowSize(false)
   searchOpen.value = false
-  applyWindowSize(false)
 }
 
 async function onResizeStart(dir: ResizeDir, e: MouseEvent) {
@@ -463,16 +485,59 @@ function endResize() {
   resizing = false
   WindowSetMinSize(WIN_W, WIN_H)
   WindowSetMaxSize(MAX_WIN_W, maxWinH)
+  void saveOicqWindowSize()
 }
 
 function onResizeUp() {
   endResize()
 }
 
-function restoreWindowSize() {
-  WindowSetMinSize(800, 600)
+/** 将 Oicq 尺寸写入独立配置，不覆盖其它主题共用的 WindowWidth/Height */
+async function saveOicqWindowSize() {
+  const w = clamp(currentW.value, WIN_W, MAX_WIN_W)
+  const h = clamp(currentH.value, WIN_H, maxWinH)
+  currentW.value = w
+  currentH.value = h
+  await Promise.all([
+    UpdateOneConfig('OicqWindowWidth', w.toString()),
+    UpdateOneConfig('OicqWindowHeight', h.toString()),
+  ])
+}
+
+/** 离开 Oicq：恢复 Default/Playnite/Tiny 共用窗口尺寸 */
+function restoreSharedWindowSize() {
+  const w = Math.max(800, sharedWindowW || 800)
+  const h = Math.max(600, sharedWindowH || 600)
+  WindowUnmaximise()
   WindowSetMaxSize(0, 0)
-  WindowSetSize(800, 600)
+  WindowSetMinSize(800, 600)
+  WindowSetSize(w, h)
+  WindowSetBackgroundColour(255, 255, 255, 255)
+}
+
+function loadOicqSizeFromConfig(conf: any) {
+  const cfg = conf?.Config || conf || {}
+  const ow = Number(cfg.OicqWindowWidth) || 0
+  const oh = Number(cfg.OicqWindowHeight) || 0
+  currentW.value = ow >= WIN_W ? ow : WIN_W
+  currentH.value = oh >= WIN_H ? oh : WIN_H
+  const sw = Number(cfg.WindowWidth) || 0
+  const sh = Number(cfg.WindowHeight) || 0
+  sharedWindowW = sw >= 800 ? sw : 800
+  sharedWindowH = sh >= 600 ? sh : 600
+}
+
+/** 切走主题前先落盘 Oicq 尺寸，避免 reload 打断异步写入 */
+async function leaveToTheme(themeId: string) {
+  endResize()
+  if (searchOpen.value) {
+    currentW.value = searchSavedW
+    currentH.value = searchSavedH
+    searchOpen.value = false
+  }
+  await saveOicqWindowSize()
+  restoreSharedWindowSize()
+  gotoTheme(themeId)
 }
 
 function clearGames() {
@@ -742,7 +807,9 @@ function showThemeMenu(e: MouseEvent) {
   const rect = btn.getBoundingClientRect()
   const items: QqCtxMenuItem[] = themeList.map((item) => ({
     label: item.label,
-    onClick: () => gotoTheme(item.id),
+    onClick: () => {
+      void leaveToTheme(item.id)
+    },
   }))
   openContextMenu(rect.left, rect.top, items)
 }
@@ -774,6 +841,7 @@ async function initData() {
   theme.value = THEME
   const conf = await callSrv('GetConfig')
   global.initData(conf)
+  loadOicqSizeFromConfig(conf)
 
   await loadShortcuts()
 
@@ -804,17 +872,36 @@ async function initData() {
   await loadMenus(pid)
 }
 
-onMounted(async () => {
+onMounted(() => {
   window.addEventListener('mousemove', onResizeMove)
   window.addEventListener('mouseup', onResizeUp)
-  await applyWindowSize(true)
+})
+
+onActivated(async () => {
+  // keep-alive：每次切入 Oicq 都要用独立尺寸，不能沿用其它主题的 WindowWidth
+  if (searchOpen.value) {
+    await closeSearch()
+  }
   await initData()
+  await applyWindowSize(true)
   await nextTick()
   measurePanel()
-  if (listPanelRef.value) {
+  if (listPanelRef.value && !resizeObserver) {
     resizeObserver = new ResizeObserver(() => measurePanel())
     resizeObserver.observe(listPanelRef.value)
   }
+})
+
+onDeactivated(() => {
+  endResize()
+  if (searchOpen.value) {
+    // 切主题时若查找仍开着，先合上并回到主窗尺寸再保存
+    currentW.value = searchSavedW
+    currentH.value = searchSavedH
+    searchOpen.value = false
+  }
+  void saveOicqWindowSize()
+  restoreSharedWindowSize()
 })
 
 onBeforeUnmount(() => {
@@ -823,7 +910,12 @@ onBeforeUnmount(() => {
   endResize()
   resizeObserver?.disconnect()
   resizeObserver = null
-  searchOpen.value = false
-  restoreWindowSize()
+  if (searchOpen.value) {
+    currentW.value = searchSavedW
+    currentH.value = searchSavedH
+    searchOpen.value = false
+  }
+  void saveOicqWindowSize()
+  restoreSharedWindowSize()
 })
 </script>
