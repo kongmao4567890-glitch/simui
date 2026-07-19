@@ -1,5 +1,5 @@
 <template>
-  <div class="qq-desktop">
+  <div class="qq-desktop" @contextmenu.prevent>
     <div class="qq-window">
       <div class="qq-window-inner">
         <!-- 标题栏：系统级拖动（无边框窗口） -->
@@ -69,7 +69,8 @@
                         'is-large': avatarMode === 'large',
                       }"
                         @click="activeGameId = game.id"
-                        @dblclick="noop"
+                        @dblclick="runMainGame(game.id)"
+                        @contextmenu.stop.prevent="showGameCtxMenu($event, game)"
                     >
                       <img
                           v-if="game.thumb"
@@ -120,6 +121,7 @@
         </div>
       </div>
     </div>
+    <ContextMenu/>
   </div>
 </template>
 
@@ -140,11 +142,15 @@ import {
   GetGameList,
   GetMenuList,
   GetPlatform,
+  GetSubGameList,
+  RunGame,
   UpdateOneConfig,
 } from 'app/wailsjs/go/controller/Controller'
 import {callSrv, decodeApiData, notify} from 'components/utils'
 import {useGlobalStore} from 'stores/globalData'
 import {storeToRefs} from 'pinia'
+import ContextMenu from './ContextMenu.vue'
+import {closeContextMenu, openContextMenu, updateContextMenuItems, type QqCtxMenuItem} from './contextMenu'
 import 'src/css/oicq/oicq.css'
 import 'src/css/oicq/layout.css'
 
@@ -195,6 +201,7 @@ let resizeObserver: ResizeObserver | null = null
 let nextPage = 0
 let pageEnd = false
 let gameReqId = 0
+let ctxMenuReqId = 0
 
 const openIndex = computed(() =>
     openPlatformId.value == null
@@ -423,6 +430,48 @@ function onThumbError(e: Event) {
   const img = e.target as HTMLImageElement
   if (img) {
     img.style.visibility = 'hidden'
+  }
+}
+
+function runMainGame(id: number) {
+  closeContextMenu()
+  RunGame(id, 0).then((result: string) => {
+    const resp = decodeApiData(result)
+    if (resp.err) {
+      notify('err', resp.err)
+    }
+  })
+}
+
+async function showGameCtxMenu(event: MouseEvent, game: QqGame) {
+  activeGameId.value = game.id
+  const reqId = ++ctxMenuReqId
+  const {clientX, clientY} = event
+  const runPrefix = (lang.value as any)?.run || '启动'
+  const items: QqCtxMenuItem[] = [
+    {
+      label: runPrefix + game.name,
+      onClick: () => runMainGame(game.id),
+    },
+  ]
+  openContextMenu(clientX, clientY, items)
+
+  try {
+    const result = await GetSubGameList(game.id)
+    if (reqId !== ctxMenuReqId) return
+    const resp = decodeApiData(result)
+    if (resp.err || !Array.isArray(resp.data) || resp.data.length === 0) return
+
+    resp.data.forEach((item: any) => {
+      items.push({
+        label: runPrefix + (item.Name || ''),
+        onClick: () => runMainGame(item.Id),
+      })
+    })
+    // 菜单仍开着时刷新子游戏项
+    updateContextMenuItems(items)
+  } catch {
+    // 子游戏加载失败时保留主游戏项
   }
 }
 

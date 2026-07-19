@@ -63,3 +63,90 @@
   background-image: url("./icon/close.svg");
   background-position: top 3px left 4px;
 }
+
+/* —— 右键菜单（98.css 无 menu 组件，边框复用上方抽离变量） —— */
+.qq-ctx-menu {
+  --qq-98-surface: #c0c0c0;
+  --qq-98-button-highlight: #ffffff;
+  --qq-98-button-face: #dfdfdf;
+  --qq-98-button-shadow: #808080;
+  --qq-98-window-frame: #0a0a0a;
+  --qq-98-border-raised-outer: inset -1px -1px var(--qq-98-window-frame),
+    inset 1px 1px var(--qq-98-button-highlight);
+  --qq-98-border-raised-inner: inset -2px -2px var(--qq-98-button-shadow),
+    inset 2px 2px var(--qq-98-button-face);
+
+  position: fixed;
+  z-index: 10000;
+  min-width: 120px;
+  max-width: min(280px, calc(100vw - 8px));
+  padding: 2px;
+  margin: 0;
+  background: var(--qq-98-surface);
+  border: none;
+  border-radius: 0;
+  box-shadow: var(--qq-98-border-raised-outer), var(--qq-98-border-raised-inner);
+  box-sizing: border-box;
+  font-family: "宋体", "SimSun", "MS Sans Serif", Tahoma, sans-serif;
+  font-size: 12px;
+  color: #000;
+  user-select: none;
+}
+
+.qq-ctx-item {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: 18px;
+  margin: 0;
+  padding: 2px 16px 2px 18px;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  font: inherit;
+  color: #000;
+  text-align: left;
+  cursor: default;
+  box-sizing: border-box;
+}
+
+.qq-ctx-item:hover:not(:disabled):not(.is-disabled),
+.qq-ctx-item:focus-visible:not(:disabled):not(.is-disabled) {
+  background: #000080;
+  color: #fff;
+  outline: none;
+}
+
+.qq-ctx-item:hover:not(:disabled):not(.is-disabled) .qq-ctx-item-label,
+.qq-ctx-item:focus-visible:not(:disabled):not(.is-disabled) .qq-ctx-item-label {
+  color: #fff;
+}
+
+.qq-ctx-item.is-disabled,
+.qq-ctx-item:disabled {
+  color: var(--qq-98-button-shadow);
+  text-shadow: 1px 1px 0 var(--qq-98-button-highlight);
+  cursor: default;
+}
+
+.qq-ctx-item.is-disabled .qq-ctx-item-label,
+.qq-ctx-item:disabled .qq-ctx-item-label {
+  color: var(--qq-98-button-shadow);
+}
+
+.qq-ctx-item.has-divider {
+  margin-bottom: 3px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid var(--qq-98-button-shadow);
+  box-shadow: 0 1px 0 var(--qq-98-button-highlight);
+}
+
+.qq-ctx-item-label {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  line-height: 1.2;
+  color: #000;
+}
