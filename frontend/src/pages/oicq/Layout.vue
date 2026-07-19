@@ -117,7 +117,12 @@
             </button>
           </div>
           <div class="qq-statusbar">
-            <button type="button" class="qq-statusbar-btn is-out" @click="noop">
+            <button
+                type="button"
+                class="qq-statusbar-btn is-out"
+                title="主题"
+                @click="showThemeMenu"
+            >
               <img class="qq-statusbar-logo" src="/images/oicq/footer_logo.png" alt="" draggable="false"/>
             </button>
             <button type="button" class="qq-statusbar-btn is-in" @click="noop">
@@ -155,7 +160,7 @@ import {
   RunProgram,
   UpdateOneConfig,
 } from 'app/wailsjs/go/controller/Controller'
-import {callSrv, decodeApiData, notify} from 'components/utils'
+import {callSrv, decodeApiData, gotoTheme, notify} from 'components/utils'
 import {useGlobalStore} from 'stores/globalData'
 import {storeToRefs} from 'pinia'
 import ContextMenu from './ContextMenu.vue'
@@ -191,6 +196,13 @@ interface QqShortcut {
   Name: string
   Path: string
 }
+
+/** 可切换主题（不含当前 Oicq） */
+const themeList = [
+  {id: 'Default', label: 'Default'},
+  {id: 'Playnite', label: 'Playnite'},
+  {id: 'Tiny', label: 'Tiny'},
+]
 
 const global = useGlobalStore()
 const {activePlatform, activeMenu, menuLike, lang, theme, config} = storeToRefs(global)
@@ -544,6 +556,16 @@ function showShortcutMenu(e: MouseEvent) {
     onClick: () => runShortcut(item.Path),
   }))
   // 贴按钮左上角打开，由 clamp 自动上移避免超出窗口
+  openContextMenu(rect.left, rect.top, items)
+}
+
+function showThemeMenu(e: MouseEvent) {
+  const btn = e.currentTarget as HTMLElement
+  const rect = btn.getBoundingClientRect()
+  const items: QqCtxMenuItem[] = themeList.map((item) => ({
+    label: item.label,
+    onClick: () => gotoTheme(item.id),
+  }))
   openContextMenu(rect.left, rect.top, items)
 }
 
