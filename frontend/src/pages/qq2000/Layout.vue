@@ -12,37 +12,37 @@
           </div>
         </div>
 
-        <!-- 视图切换：小头像 / 大头像（Win98 列表·大图标风格） -->
+        <!-- 视图切换：小头像 / 大头像 -->
         <div class="qq-toolbar">
           <button
-            type="button"
-            class="qq-tool-btn"
-            :class="{ 'is-active': avatarMode === 'small' }"
-            title="小头像"
-            @click="avatarMode = 'small'"
+              type="button"
+              class="qq-tool-btn"
+              :class="{ 'is-active': avatarMode === 'small' }"
+              title="小头像"
+              @click="avatarMode = 'small'"
           >
-            <span class="qq-tool-ico qq-tool-ico-list" aria-hidden="true"></span>
+            <img class="qq-tool-ico" src="/images/qq2000/listico_small.png" alt="" draggable="false"/>
           </button>
           <button
-            type="button"
-            class="qq-tool-btn"
-            :class="{ 'is-active': avatarMode === 'large' }"
-            title="大头像"
-            @click="avatarMode = 'large'"
+              type="button"
+              class="qq-tool-btn"
+              :class="{ 'is-active': avatarMode === 'large' }"
+              title="大头像"
+              @click="avatarMode = 'large'"
           >
-            <span class="qq-tool-ico qq-tool-ico-large" aria-hidden="true"></span>
+            <img class="qq-tool-ico" src="/images/qq2000/listico_big.png" alt="" draggable="false"/>
           </button>
         </div>
 
         <!-- 好友列表：平台条绝对定位 + top 过渡，实现 QQ 式滑动 -->
         <div class="qq-list-panel" ref="listPanelRef">
           <div
-            v-for="(platform, index) in platforms"
-            :key="platform.id"
-            class="qq-platform-bar"
-            :class="{ 'is-open': openPlatformId === platform.id, 'is-anim': layoutReady }"
-            :style="{ top: platformTops[index] + 'px' }"
-            @click="togglePlatform(platform.id)"
+              v-for="(platform, index) in platforms"
+              :key="platform.id"
+              class="qq-platform-bar"
+              :class="{ 'is-open': openPlatformId === platform.id, 'is-anim': layoutReady }"
+              :style="{ top: platformTops[index] + 'px' }"
+              @click="togglePlatform(platform.id)"
           >
             {{ platform.name }}
           </div>
@@ -52,24 +52,24 @@
               <template v-if="openPlatform.categories.length">
                 <div v-for="cat in openPlatform.categories" :key="cat.id">
                   <div
-                    class="qq-category-bar"
-                    :class="{ 'is-open': openCategoryIds[cat.id] }"
-                    @click="toggleCategory(cat.id)"
+                      class="qq-category-bar"
+                      :class="{ 'is-open': openCategoryIds[cat.id] }"
+                      @click="toggleCategory(cat.id)"
                   >
                     <span class="qq-category-tri"></span>
                     <span class="qq-category-name">{{ cat.name }}</span>
                   </div>
                   <div v-show="openCategoryIds[cat.id]">
                     <div
-                      v-for="game in cat.games"
-                      :key="game.id"
-                      class="qq-game-item"
-                      :class="{
+                        v-for="game in cat.games"
+                        :key="game.id"
+                        class="qq-game-item"
+                        :class="{
                         'is-active': activeGameId === game.id,
                         'is-large': avatarMode === 'large',
                       }"
-                      @click="activeGameId = game.id"
-                      @dblclick="noop"
+                        @click="activeGameId = game.id"
+                        @dblclick="noop"
                     >
                       <img class="qq-game-thumb" :src="game.thumb" :alt="game.name"/>
                       <span class="qq-game-name">{{ game.name }}</span>
@@ -86,45 +86,29 @@
         <!-- 底部功能区（仅按下效果） -->
         <div class="qq-footer">
           <div class="qq-footer-row">
-            <button type="button" class="qq-footer-icon" @mousedown.prevent @click="noop">▶</button>
-            <button
-              type="button"
-              class="qq-footer-btn"
-              :class="{ 'is-pressed': pressedFooter === 'search' }"
-              @mousedown="pressedFooter = 'search'"
-              @mouseup="pressedFooter = ''"
-              @mouseleave="pressedFooter = ''"
-              @click="noop"
-            >
-              <span class="qq-footer-btn-ico qq-footer-btn-ico-search" aria-hidden="true"></span>
-              <span class="qq-footer-btn-label">资料</span>
+            <button type="button" class="qq-footer-icon" @mousedown.prevent @click="noop">
+              <img src="/images/qq2000/tools.png" alt="" draggable="false"/>
             </button>
-          </div>
-          <div class="qq-footer-row">
-            <button type="button" class="qq-footer-icon" @mousedown.prevent @click="noop">🔍</button>
             <button
-              type="button"
-              class="qq-footer-btn"
-              :class="{ 'is-pressed': pressedFooter === 'launch' }"
-              @mousedown="pressedFooter = 'launch'"
-              @mouseup="pressedFooter = ''"
-              @mouseleave="pressedFooter = ''"
-              @click="noop"
+                type="button"
+                class="qq-footer-btn"
+                :class="{ 'is-pressed': pressedFooter === 'search' }"
+                @mousedown="pressedFooter = 'search'"
+                @mouseup="pressedFooter = ''"
+                @mouseleave="pressedFooter = ''"
+                @click="noop"
             >
-              <span class="qq-footer-btn-ico qq-footer-btn-ico-search" aria-hidden="true"></span>
-              <span class="qq-footer-btn-label">搜索</span>
-
+              <img class="qq-footer-btn-ico" src="/images/qq2000/search.png" alt="" draggable="false"/>
+              <span class="qq-footer-btn-label">查 找</span>
             </button>
           </div>
           <div class="qq-statusbar">
-            <div class="qq-statusbar-left">
-              <span class="qq-dot"></span>
-              <span>QQ2000</span>
-            </div>
-            <div class="qq-statusbar-right">
-              <span class="qq-dot"></span>
-              <span>在线</span>
-            </div>
+            <button type="button" class="qq-statusbar-btn is-out" @click="noop">
+              <img class="qq-statusbar-logo" src="/images/qq2000/footer_logo.png" alt="" draggable="false"/>
+            </button>
+            <button type="button" class="qq-statusbar-btn is-in" @click="noop">
+              <span>5124个游戏</span>
+            </button>
           </div>
         </div>
       </div>
@@ -155,7 +139,7 @@ const BAR_H = 20
 const platforms = mockPlatforms
 const openPlatformId = ref<number | null>(platforms[0]?.id ?? null)
 const openCategoryIds = reactive<Record<number, boolean>>(
-  Object.fromEntries((platforms[0]?.categories.slice(0, 2) ?? []).map((c) => [c.id, true])),
+    Object.fromEntries((platforms[0]?.categories.slice(0, 2) ?? []).map((c) => [c.id, true])),
 )
 const activeGameId = ref<number | null>(platforms[0]?.categories[0]?.games[0]?.id ?? null)
 /** 小头像：名称在右；大头像：头像居中、昵称在下 */
@@ -168,13 +152,13 @@ const layoutReady = ref(false)
 let resizeObserver: ResizeObserver | null = null
 
 const openIndex = computed(() =>
-  openPlatformId.value == null
-    ? -1
-    : platforms.findIndex((p) => p.id === openPlatformId.value),
+    openPlatformId.value == null
+        ? -1
+        : platforms.findIndex((p) => p.id === openPlatformId.value),
 )
 
 const openPlatform = computed(() =>
-  openIndex.value >= 0 ? platforms[openIndex.value] : null,
+    openIndex.value >= 0 ? platforms[openIndex.value] : null,
 )
 
 /** 每个平台条的 top：展开项及之上贴顶，之下贴底 */
