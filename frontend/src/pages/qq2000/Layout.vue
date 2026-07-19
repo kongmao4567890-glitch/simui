@@ -12,20 +12,26 @@
           </div>
         </div>
 
-        <!-- 工具栏占位图标 -->
+        <!-- 视图切换：小头像 / 大头像（Win98 列表·大图标风格） -->
         <div class="qq-toolbar">
           <button
-            v-for="(ico, i) in toolbarIcons"
-            :key="i"
             type="button"
             class="qq-tool-btn"
-            :class="{ 'is-pressed': pressedTool === i }"
-            :title="ico.title"
-            @mousedown="pressedTool = i"
-            @mouseup="pressedTool = -1"
-            @mouseleave="pressedTool = -1"
-            @click="noop"
-          >{{ ico.glyph }}</button>
+            :class="{ 'is-active': avatarMode === 'small' }"
+            title="小头像"
+            @click="avatarMode = 'small'"
+          >
+            <span class="qq-tool-ico qq-tool-ico-list" aria-hidden="true"></span>
+          </button>
+          <button
+            type="button"
+            class="qq-tool-btn"
+            :class="{ 'is-active': avatarMode === 'large' }"
+            title="大头像"
+            @click="avatarMode = 'large'"
+          >
+            <span class="qq-tool-ico qq-tool-ico-large" aria-hidden="true"></span>
+          </button>
         </div>
 
         <!-- 好友列表：平台条绝对定位 + top 过渡，实现 QQ 式滑动 -->
@@ -58,7 +64,10 @@
                       v-for="game in cat.games"
                       :key="game.id"
                       class="qq-game-item"
-                      :class="{ 'is-active': activeGameId === game.id }"
+                      :class="{
+                        'is-active': activeGameId === game.id,
+                        'is-large': avatarMode === 'large',
+                      }"
                       @click="activeGameId = game.id"
                       @dblclick="noop"
                     >
@@ -142,7 +151,8 @@ const openCategoryIds = reactive<Record<number, boolean>>(
   Object.fromEntries((platforms[0]?.categories.slice(0, 2) ?? []).map((c) => [c.id, true])),
 )
 const activeGameId = ref<number | null>(platforms[0]?.categories[0]?.games[0]?.id ?? null)
-const pressedTool = ref(-1)
+/** 小头像：名称在右；大头像：头像居中、昵称在下 */
+const avatarMode = ref<'small' | 'large'>('small')
 const pressedFooter = ref('')
 
 const listPanelRef = ref<HTMLElement | null>(null)
@@ -190,13 +200,6 @@ const middleStyle = computed(() => {
   }
   return {top: `${top}px`, bottom: `${bottom}px`}
 })
-
-const toolbarIcons = [
-  {glyph: '⚓', title: '功能预留'},
-  {glyph: '📁', title: '功能预留'},
-  {glyph: '🌐', title: '功能预留'},
-  {glyph: '📱', title: '功能预留'},
-]
 
 function measurePanel() {
   if (!listPanelRef.value) return
