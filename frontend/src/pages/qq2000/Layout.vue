@@ -86,7 +86,7 @@
         <!-- 底部功能区（仅按下效果） -->
         <div class="qq-footer">
           <div class="qq-footer-row">
-            <button type="button" class="qq-footer-icon" @mousedown.prevent @click="noop">🔍</button>
+            <button type="button" class="qq-footer-icon" @mousedown.prevent @click="noop">▶</button>
             <button
               type="button"
               class="qq-footer-btn"
@@ -95,10 +95,13 @@
               @mouseup="pressedFooter = ''"
               @mouseleave="pressedFooter = ''"
               @click="noop"
-            >搜索</button>
+            >
+              <span class="qq-footer-btn-ico qq-footer-btn-ico-search" aria-hidden="true"></span>
+              <span class="qq-footer-btn-label">资料</span>
+            </button>
           </div>
           <div class="qq-footer-row">
-            <button type="button" class="qq-footer-icon" @mousedown.prevent @click="noop">▶</button>
+            <button type="button" class="qq-footer-icon" @mousedown.prevent @click="noop">🔍</button>
             <button
               type="button"
               class="qq-footer-btn"
@@ -107,7 +110,11 @@
               @mouseup="pressedFooter = ''"
               @mouseleave="pressedFooter = ''"
               @click="noop"
-            >启动</button>
+            >
+              <span class="qq-footer-btn-ico qq-footer-btn-ico-search" aria-hidden="true"></span>
+              <span class="qq-footer-btn-label">搜索</span>
+
+            </button>
           </div>
           <div class="qq-statusbar">
             <div class="qq-statusbar-left">
