@@ -58,6 +58,9 @@
             <q-item clickable v-close-popup @click="gotoTheme('Playnite')">
               <q-item-section>Playnite</q-item-section>
             </q-item>
+            <q-item clickable v-close-popup @click="gotoTheme('Oicq')">
+              <q-item-section>OICQ</q-item-section>
+            </q-item>
           </q-list>
         </q-menu>
       </q-btn>

@@ -52,7 +52,7 @@
               title="展示图"
               @click="openThumbType"
           >
-            <img class="qq-tool-ico" src="/images/oicq/listico_big.png" alt="" draggable="false"/>
+            <img class="qq-tool-ico" src="/images/oicq/listico_thumb.png" alt="" draggable="false"/>
           </button>
         </div>
 
@@ -101,7 +101,6 @@
                           :alt="game.name"
                           @error="onThumbError"
                       />
-                      <span v-else class="qq-game-thumb qq-game-thumb-empty"></span>
                       <span class="qq-game-name">{{ game.name }}</span>
                     </div>
                     <div v-if="!games.length && !gamesLoading" class="qq-empty-hint">（空）</div>
@@ -147,7 +146,7 @@
             >
               <img class="qq-statusbar-logo" src="/images/oicq/footer_logo.png" alt="" draggable="false"/>
             </button>
-            <button type="button" class="qq-statusbar-btn is-in" @click="noop">
+            <button type="button" class="qq-statusbar-btn is-in" @click="noop" style="cursor: default;">
               <span>{{ platformGameCount }}个游戏</span>
             </button>
           </div>
