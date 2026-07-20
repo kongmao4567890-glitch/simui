@@ -429,3 +429,74 @@
   color: #666;
   text-align: center;
 }
+
+.qq-dlg.qq-thumb-wizard .qq-dlg-body {
+  overflow: hidden;
+}
+
+.qq-thumb-table-wrap {
+  max-height: 320px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background: #fff;
+  box-shadow: var(--qq-98-border-field);
+}
+
+.qq-thumb-table-wrap::-webkit-scrollbar {
+  width: 16px;
+}
+
+.qq-thumb-table-wrap::-webkit-scrollbar-track {
+  background-color: #fff;
+  background-image: url("./icon/scrollbar-background-beige.svg");
+}
+
+.qq-thumb-table-wrap::-webkit-scrollbar-thumb {
+  background-color: var(--qq-98-surface);
+  box-shadow: var(--qq-98-border-raised-outer), var(--qq-98-border-raised-inner);
+}
+
+.qq-thumb-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  font-size: 12px;
+}
+
+.qq-thumb-table th,
+.qq-thumb-table td {
+  padding: 4px 6px;
+  border-bottom: 1px solid #dfdfdf;
+  text-align: left;
+  vertical-align: middle;
+}
+
+.qq-thumb-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: var(--qq-98-surface);
+  font-weight: bold;
+  border-bottom: 1px solid #808080;
+}
+
+.qq-thumb-table .col-name {
+  width: 55%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.qq-thumb-table .col-type {
+  width: 45%;
+}
+
+.qq-thumb-table .qq-98-select {
+  width: 100%;
+}
+
+.qq-thumb-empty {
+  padding: 16px 12px;
+  color: #666;
+  text-align: center;
+}

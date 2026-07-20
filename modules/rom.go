@@ -124,9 +124,18 @@ func GetGameList(data *request.GetGameList) (any, error) {
 
 }
 
-// Oicq 暂写死 icon，其它主题走平台 UI 配置
+// Oicq 从 config.PlatformUi.Oicq.BlockThumbType 按平台读取，默认 icon；其它主题走平台 UI 配置
 func resolveBlockThumbType(theme string, platform *db.PlatformVO) string {
 	if theme == constant.UI_OICQ {
+		if platform != nil {
+			conf := (&db.Config{}).GetConfig(false)
+			if conf != nil && conf.PlatformUi.Oicq.BlockThumbType != nil {
+				key := utils.ToString(platform.Id)
+				if t := conf.PlatformUi.Oicq.BlockThumbType[key]; t != "" {
+					return t
+				}
+			}
+		}
 		return "icon"
 	}
 	if platform == nil {

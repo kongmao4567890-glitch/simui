@@ -1,11 +1,11 @@
 <template>
-  <div class="qq-desktop" :class="{ 'is-search-open': searchOpen }" @contextmenu.prevent>
+  <div class="qq-desktop" :class="{ 'is-search-open': deskOpen }" @contextmenu.prevent>
     <div
         class="qq-window"
-        :style="searchOpen ? { width: currentW + 'px', height: currentH + 'px' } : undefined"
+        :style="deskOpen ? { width: currentW + 'px', height: currentH + 'px' } : undefined"
     >
-      <!-- 边框拖拽缩放（查找桌面打开时禁用） -->
-      <template v-if="!searchOpen">
+      <!-- 边框拖拽缩放（浮窗桌面打开时禁用） -->
+      <template v-if="!deskOpen">
         <div
             v-for="dir in resizeDirs"
             :key="dir"
@@ -49,8 +49,8 @@
           <button
               type="button"
               class="qq-tool-btn"
-              :class="{ 'is-active': avatarMode === 'large' }"
-              title="图标"
+              title="展示图"
+              @click="openThumbType"
           >
             <img class="qq-tool-ico" src="/images/oicq/listico_big.png" alt="" draggable="false"/>
           </button>
@@ -163,6 +163,14 @@
         @run-game="runMainGame"
         @game-contextmenu="showGameCtxMenu"
     />
+    <ThumbTypeWizard
+        v-if="thumbTypeOpen"
+        :platforms="platforms"
+        :thumb-type-map="blockThumbTypeMap"
+        :main-win-w="currentW"
+        @close="closeThumbType"
+        @save="onThumbTypeSave"
+    />
     <ContextMenu/>
   </div>
 </template>
@@ -201,6 +209,7 @@ import {useGlobalStore} from 'stores/globalData'
 import {storeToRefs} from 'pinia'
 import ContextMenu from './ContextMenu.vue'
 import SearchWizard from './SearchWizard.vue'
+import ThumbTypeWizard from './ThumbTypeWizard.vue'
 import {closeContextMenu, openContextMenu, updateContextMenuItems, type QqCtxMenuItem} from './contextMenu'
 import 'src/css/oicq/oicq.css'
 import 'src/css/oicq/layout.css'
@@ -210,6 +219,8 @@ const WIN_H = 480
 const MAX_WIN_W = 700
 /** 查找浮窗宽度（与 SearchWizard 一致） */
 const SEARCH_WIZARD_W = 460
+/** 展示图设置浮窗宽度（与 ThumbTypeWizard 一致） */
+const THUMB_WIZARD_W = 360
 /** 平台条高度（含边框），与 CSS --qq-bar-h 保持一致 */
 const BAR_H = 20
 const PAGE_SIZE = 100
@@ -265,6 +276,12 @@ const platformGameCount = ref(0)
 const shortCutList = ref<QqShortcut[]>([])
 /** 查找向导浮窗 */
 const searchOpen = ref(false)
+/** 展示图设置浮窗 */
+const thumbTypeOpen = ref(false)
+/** 各平台展示图类型（写入 PlatformUi.Oicq.BlockThumbType） */
+const blockThumbTypeMap = ref<Record<string, string>>({})
+/** 任一浮窗打开时进入桌面布局 */
+const deskOpen = computed(() => searchOpen.value || thumbTypeOpen.value)
 
 const listPanelRef = ref<HTMLElement | null>(null)
 const listScrollRef = ref<HTMLElement | null>(null)
@@ -406,13 +423,22 @@ function applySearchDesktopSize() {
   lockWindowSize(deskW, deskH, [0, 0, 0, 0], true)
 }
 
+function applyThumbDesktopSize() {
+  const deskW = Math.max(640, currentW.value + 24 + THUMB_WIZARD_W + 24)
+  const deskH = Math.max(480, currentH.value + 24)
+  lockWindowSize(deskW, deskH, [0, 0, 0, 0], true)
+}
+
 function openSearch() {
   if (searchOpen.value) return
   closeContextMenu()
   endResize()
   // 先记下主窗尺寸，关闭查找时必须还原（桌面放大不能写回 currentW/H）
-  searchSavedW = currentW.value
-  searchSavedH = currentH.value
+  if (!deskOpen.value) {
+    searchSavedW = currentW.value
+    searchSavedH = currentH.value
+  }
+  thumbTypeOpen.value = false
   searchOpen.value = true
   applySearchDesktopSize()
 }
@@ -420,15 +446,50 @@ function openSearch() {
 async function closeSearch() {
   if (!searchOpen.value) return
   closeContextMenu()
+  searchOpen.value = false
+  if (thumbTypeOpen.value) return
   // 先还原系统窗口尺寸，再退出查找桌面布局，避免主窗被撑成桌面宽
   currentW.value = searchSavedW
   currentH.value = searchSavedH
   await applyWindowSize(false)
+}
+
+function openThumbType() {
+  if (thumbTypeOpen.value) return
+  closeContextMenu()
+  endResize()
+  if (!deskOpen.value) {
+    searchSavedW = currentW.value
+    searchSavedH = currentH.value
+  }
   searchOpen.value = false
+  thumbTypeOpen.value = true
+  applyThumbDesktopSize()
+}
+
+async function closeThumbType() {
+  if (!thumbTypeOpen.value) return
+  closeContextMenu()
+  thumbTypeOpen.value = false
+  if (searchOpen.value) return
+  currentW.value = searchSavedW
+  currentH.value = searchSavedH
+  await applyWindowSize(false)
+}
+
+async function onThumbTypeSave(map: Record<string, string>) {
+  blockThumbTypeMap.value = {...map}
+  await saveOicqUi()
+  await closeThumbType()
+  // 刷新当前列表，让展示图立即生效
+  if (openPlatformId.value != null && openCategoryPath.value != null) {
+    clearGames()
+    await loadGames(0, true)
+  }
 }
 
 async function onResizeStart(dir: ResizeDir, e: MouseEvent) {
-  if (searchOpen.value || resizing || resizeArming) return
+  if (deskOpen.value || resizing || resizeArming) return
   resizeArming = true
   resizeDir = dir
   resizeStartSX = e.screenX
@@ -501,7 +562,7 @@ function onResizeUp() {
   endResize()
 }
 
-/** 将 Oicq 尺寸/头像模式写入 PlatformUi.Oicq */
+/** 将 Oicq 尺寸/头像模式/展示图写入 PlatformUi.Oicq */
 async function saveOicqUi() {
   const w = clamp(currentW.value, WIN_W, MAX_WIN_W)
   const h = clamp(currentH.value, WIN_H, maxWinH)
@@ -511,6 +572,7 @@ async function saveOicqUi() {
     AvatarMode: avatarMode.value,
     WindowWidth: w,
     WindowHeight: h,
+    BlockThumbType: blockThumbTypeMap.value,
   })
   await UpdatePlatformUi(0, THEME, data)
 }
@@ -545,7 +607,7 @@ function loadSharedSizeFromConfig(conf: any) {
   sharedWindowH = sh >= 600 ? sh : 600
 }
 
-/** 从 PlatformUi.Oicq 读取窗口尺寸与头像模式 */
+/** 从 PlatformUi.Oicq 读取窗口尺寸、头像模式与展示图 */
 async function loadOicqUi() {
   const ui = await callSrv('GetPlatformUi', 0, THEME)
   const ow = Number(ui?.WindowWidth) || 0
@@ -553,15 +615,18 @@ async function loadOicqUi() {
   currentW.value = ow >= WIN_W ? ow : WIN_W
   currentH.value = oh >= WIN_H ? oh : WIN_H
   avatarMode.value = ui?.AvatarMode === 'large' ? 'large' : 'small'
+  const map = ui?.BlockThumbType
+  blockThumbTypeMap.value = (map && typeof map === 'object') ? {...map} : {}
 }
 
 /** 切走主题前先落盘 Oicq 尺寸，避免 reload 打断异步写入 */
 async function leaveToTheme(themeId: string) {
   endResize()
-  if (searchOpen.value) {
+  if (deskOpen.value) {
     currentW.value = searchSavedW
     currentH.value = searchSavedH
     searchOpen.value = false
+    thumbTypeOpen.value = false
   }
   await saveOicqWindowSize()
   restoreSharedWindowSize()
@@ -908,8 +973,11 @@ onMounted(() => {
 
 onActivated(async () => {
   // keep-alive：每次切入 Oicq 都要用独立尺寸，不能沿用其它主题的 WindowWidth
-  if (searchOpen.value) {
-    await closeSearch()
+  if (deskOpen.value) {
+    currentW.value = searchSavedW
+    currentH.value = searchSavedH
+    searchOpen.value = false
+    thumbTypeOpen.value = false
   }
   await initData()
   await applyWindowSize(true)
@@ -923,11 +991,12 @@ onActivated(async () => {
 
 onDeactivated(() => {
   endResize()
-  if (searchOpen.value) {
-    // 切主题时若查找仍开着，先合上并回到主窗尺寸再保存
+  if (deskOpen.value) {
+    // 切主题时若浮窗仍开着，先合上并回到主窗尺寸再保存
     currentW.value = searchSavedW
     currentH.value = searchSavedH
     searchOpen.value = false
+    thumbTypeOpen.value = false
   }
   void saveOicqWindowSize()
   restoreSharedWindowSize()
@@ -939,10 +1008,11 @@ onBeforeUnmount(() => {
   endResize()
   resizeObserver?.disconnect()
   resizeObserver = null
-  if (searchOpen.value) {
+  if (deskOpen.value) {
     currentW.value = searchSavedW
     currentH.value = searchSavedH
     searchOpen.value = false
+    thumbTypeOpen.value = false
   }
   void saveOicqWindowSize()
   restoreSharedWindowSize()

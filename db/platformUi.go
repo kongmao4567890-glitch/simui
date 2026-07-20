@@ -212,6 +212,9 @@ func (m *Platform) SetUiDefaultOicq(data PlatformUIOicq) PlatformUIOicq {
 	if data.WindowHeight == 0 {
 		data.WindowHeight = 480
 	}
+	if data.BlockThumbType == nil {
+		data.BlockThumbType = map[string]string{}
+	}
 	return data
 }
 
