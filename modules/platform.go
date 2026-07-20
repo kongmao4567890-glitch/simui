@@ -49,6 +49,10 @@ func GetPlatformUi(id uint32, theme string) (any, error) {
 		return ui.Playnite, nil
 	case constant.UI_TINY:
 		return ui.Tiny, nil
+	case constant.UI_OICQ:
+		// Oicq 窗口/头像为全局主题配置，始终取 config.PlatformUi
+		conf := (&db.Config{}).GetConfig(false)
+		return conf.PlatformUi.Oicq, nil
 	default:
 		return nil, errors.New("Skin Not Exists")
 	}
@@ -243,8 +247,8 @@ func UpdatePlatformUi(id uint32, theme string, data string) error {
 
 	ui := db.PlatformUI{}
 
-	if id == 0 {
-		//读取全部UI
+	if id == 0 || theme == constant.UI_OICQ {
+		// Oicq 为全局主题配置，始终读写 config.PlatformUi
 		conf := (&db.Config{}).GetConfig(true)
 		ui = conf.PlatformUi
 	} else {
@@ -266,6 +270,10 @@ func UpdatePlatformUi(id uint32, theme string, data string) error {
 		ti := db.PlatformUITiny{}
 		_ = json.Unmarshal([]byte(data), &ti)
 		ui.Tiny = ti
+	} else if theme == constant.UI_OICQ {
+		oi := db.PlatformUIOicq{}
+		_ = json.Unmarshal([]byte(data), &oi)
+		ui.Oicq = oi
 	}
 
 	ui.Default.BackgroundImage = utils.WailsPathDecode(ui.Default.BackgroundImage)
@@ -280,8 +288,11 @@ func UpdatePlatformUi(id uint32, theme string, data string) error {
 
 	//更新数据
 	var err error
-	if id == 0 {
-		_ = (&db.Platform{}).ClearPlatformUi()
+	if id == 0 || theme == constant.UI_OICQ {
+		// Oicq 为全局主题配置，只写 config.PlatformUi，不清空各平台 UI
+		if theme != constant.UI_OICQ {
+			_ = (&db.Platform{}).ClearPlatformUi()
+		}
 		err = (&db.Config{}).UpdateOne("PlatformUi", string(uiJson))
 	} else {
 		err = (&db.Platform{}).UpdateOneField(id, "ui", string(uiJson))

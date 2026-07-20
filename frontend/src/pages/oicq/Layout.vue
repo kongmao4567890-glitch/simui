@@ -33,7 +33,7 @@
               class="qq-tool-btn"
               :class="{ 'is-active': avatarMode === 'small' }"
               title="小头像"
-              @click="avatarMode = 'small'"
+              @click="setAvatarMode('small')"
           >
             <img class="qq-tool-ico" src="/images/oicq/listico_small.png" alt="" draggable="false"/>
           </button>
@@ -42,7 +42,15 @@
               class="qq-tool-btn"
               :class="{ 'is-active': avatarMode === 'large' }"
               title="大头像"
-              @click="avatarMode = 'large'"
+              @click="setAvatarMode('large')"
+          >
+            <img class="qq-tool-ico" src="/images/oicq/listico_big.png" alt="" draggable="false"/>
+          </button>
+          <button
+              type="button"
+              class="qq-tool-btn"
+              :class="{ 'is-active': avatarMode === 'large' }"
+              title="图标"
           >
             <img class="qq-tool-ico" src="/images/oicq/listico_big.png" alt="" draggable="false"/>
           </button>
@@ -186,6 +194,7 @@ import {
   RunGame,
   RunProgram,
   UpdateOneConfig,
+  UpdatePlatformUi,
 } from 'app/wailsjs/go/controller/Controller'
 import {callSrv, decodeApiData, gotoTheme, notify} from 'components/utils'
 import {useGlobalStore} from 'stores/globalData'
@@ -492,16 +501,29 @@ function onResizeUp() {
   endResize()
 }
 
-/** 将 Oicq 尺寸写入独立配置，不覆盖其它主题共用的 WindowWidth/Height */
-async function saveOicqWindowSize() {
+/** 将 Oicq 尺寸/头像模式写入 PlatformUi.Oicq */
+async function saveOicqUi() {
   const w = clamp(currentW.value, WIN_W, MAX_WIN_W)
   const h = clamp(currentH.value, WIN_H, maxWinH)
   currentW.value = w
   currentH.value = h
-  await Promise.all([
-    UpdateOneConfig('OicqWindowWidth', w.toString()),
-    UpdateOneConfig('OicqWindowHeight', h.toString()),
-  ])
+  const data = JSON.stringify({
+    AvatarMode: avatarMode.value,
+    WindowWidth: w,
+    WindowHeight: h,
+  })
+  await UpdatePlatformUi(0, THEME, data)
+}
+
+/** 保存窗口尺寸（兼容原调用点） */
+async function saveOicqWindowSize() {
+  await saveOicqUi()
+}
+
+function setAvatarMode(mode: 'small' | 'large') {
+  if (avatarMode.value === mode) return
+  avatarMode.value = mode
+  void saveOicqUi()
 }
 
 /** 离开 Oicq：恢复 Default/Playnite/Tiny 共用窗口尺寸 */
@@ -515,16 +537,22 @@ function restoreSharedWindowSize() {
   WindowSetBackgroundColour(255, 255, 255, 255)
 }
 
-function loadOicqSizeFromConfig(conf: any) {
+function loadSharedSizeFromConfig(conf: any) {
   const cfg = conf?.Config || conf || {}
-  const ow = Number(cfg.OicqWindowWidth) || 0
-  const oh = Number(cfg.OicqWindowHeight) || 0
-  currentW.value = ow >= WIN_W ? ow : WIN_W
-  currentH.value = oh >= WIN_H ? oh : WIN_H
   const sw = Number(cfg.WindowWidth) || 0
   const sh = Number(cfg.WindowHeight) || 0
   sharedWindowW = sw >= 800 ? sw : 800
   sharedWindowH = sh >= 600 ? sh : 600
+}
+
+/** 从 PlatformUi.Oicq 读取窗口尺寸与头像模式 */
+async function loadOicqUi() {
+  const ui = await callSrv('GetPlatformUi', 0, THEME)
+  const ow = Number(ui?.WindowWidth) || 0
+  const oh = Number(ui?.WindowHeight) || 0
+  currentW.value = ow >= WIN_W ? ow : WIN_W
+  currentH.value = oh >= WIN_H ? oh : WIN_H
+  avatarMode.value = ui?.AvatarMode === 'large' ? 'large' : 'small'
 }
 
 /** 切走主题前先落盘 Oicq 尺寸，避免 reload 打断异步写入 */
@@ -841,7 +869,8 @@ async function initData() {
   theme.value = THEME
   const conf = await callSrv('GetConfig')
   global.initData(conf)
-  loadOicqSizeFromConfig(conf)
+  loadSharedSizeFromConfig(conf)
+  await loadOicqUi()
 
   await loadShortcuts()
 

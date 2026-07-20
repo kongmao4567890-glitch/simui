@@ -49,6 +49,13 @@ type PlatformUI struct {
 	Default  PlatformUIDefault
 	Playnite PlatformUIPlaynite
 	Tiny     PlatformUITiny
+	Oicq     PlatformUIOicq
+}
+
+type PlatformUIOicq struct {
+	AvatarMode   string // 头像模式：small 小头像；large 大头像
+	WindowWidth  int    // Oicq 主题窗口宽度
+	WindowHeight int    // Oicq 主题窗口高度
 }
 
 type PlatformUIDefault struct {

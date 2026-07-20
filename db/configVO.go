@@ -21,8 +21,6 @@ type ConfigVO struct {
 	RootPath           string           // 当前根目录
 	WindowWidth        int              // 当前窗口宽度（Default/Playnite/Tiny 共用）
 	WindowHeight       int              // 当前窗口高度（Default/Playnite/Tiny 共用）
-	OicqWindowWidth    int              // Oicq 主题窗口宽度（与其它主题独立）
-	OicqWindowHeight   int              // Oicq 主题窗口高度（与其它主题独立）
 	WindowState        int              // 当前窗口显示状态(0默认 1最大化 2最小化 3全屏)
 	WindowZoom         float64          // 窗口缩放比例
 	VersionNo          string           // 记录当前版本号或已跳过的版本号
@@ -103,6 +101,13 @@ func (c *Config) GetAllVO() (*ConfigVO, error) {
 	if m["PlatformUi"] != "" {
 		_ = json.Unmarshal([]byte(m["PlatformUi"]), &platformUi)
 	}
+	// 兼容旧版独立配置项迁入 PlatformUi.Oicq
+	if platformUi.Oicq.WindowWidth == 0 {
+		platformUi.Oicq.WindowWidth = utils.ToInt(m["OicqWindowWidth"])
+	}
+	if platformUi.Oicq.WindowHeight == 0 {
+		platformUi.Oicq.WindowHeight = utils.ToInt(m["OicqWindowHeight"])
+	}
 
 	platformUi = (&Platform{}).SetUiDefault(platformUi)
 
@@ -157,8 +162,6 @@ func (c *Config) GetAllVO() (*ConfigVO, error) {
 		RootPath:           m["RootPath"],
 		WindowWidth:        utils.ToInt(m["WindowWidth"]),
 		WindowHeight:       utils.ToInt(m["WindowHeight"]),
-		OicqWindowWidth:    utils.ToInt(m["OicqWindowWidth"]),
-		OicqWindowHeight:   utils.ToInt(m["OicqWindowHeight"]),
 		WindowState:        utils.ToInt(m["WindowState"]),
 		WindowZoom:         windowZoom,
 		Cursor:             utils.ToAbsPath(m["Cursor"], ""),

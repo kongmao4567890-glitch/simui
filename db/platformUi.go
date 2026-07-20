@@ -13,6 +13,7 @@ func (m *Platform) SetUiDefault(data PlatformUI) PlatformUI {
 	data.Default = m.SetUiDefaultDefault(data.Default)
 	data.Playnite = m.SetUiDefaultPlaynite(data.Playnite)
 	data.Tiny = m.SetUiDefaultTiny(data.Tiny)
+	data.Oicq = m.SetUiDefaultOicq(data.Oicq)
 
 	return data
 }
@@ -198,6 +199,19 @@ func (m *Platform) SetUiDefaultTiny(data PlatformUITiny) PlatformUITiny {
 		data.BlockTitleBorderSize = 2
 	}
 
+	return data
+}
+
+func (m *Platform) SetUiDefaultOicq(data PlatformUIOicq) PlatformUIOicq {
+	if data.AvatarMode == "" {
+		data.AvatarMode = "small"
+	}
+	if data.WindowWidth == 0 {
+		data.WindowWidth = 220
+	}
+	if data.WindowHeight == 0 {
+		data.WindowHeight = 480
+	}
 	return data
 }
 
