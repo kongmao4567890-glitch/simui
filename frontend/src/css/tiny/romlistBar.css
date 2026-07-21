@@ -105,6 +105,7 @@
 
 .rom-title .master-title {
     font-size: var(--base-font-size);
+    line-height: 1.25;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -112,6 +113,7 @@
 
 .rom-title .sub-title {
     font-size: calc(var(--base-font-size) - 5px);
+    line-height: 1.25;
     color: var(--color-6);
     white-space: nowrap;
     overflow: hidden;
@@ -134,7 +136,8 @@
 
 .rom-list .q-item{
     padding: 10px;
-    height: 65px;
+    min-height: 65px;
+    height: auto;
 }
 
 .empty-romlist{
