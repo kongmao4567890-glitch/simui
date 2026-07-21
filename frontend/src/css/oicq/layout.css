@@ -184,6 +184,16 @@
   overflow: hidden;
 }
 
+.qq-list-panel-scroll {
+  height: 100%;
+  width: 100%;
+}
+
+.qq-list-content {
+  position: relative;
+  width: 100%;
+}
+
 .qq-list-middle {
   position: absolute;
   left: 0;
@@ -204,7 +214,7 @@
   flex: 1;
   overflow-y: auto;
   overflow-x: hidden;
-  min-height: 0;
+  min-height: 300px;
 }
 
 .qq-list-scroll::-webkit-scrollbar {

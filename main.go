@@ -40,7 +40,7 @@ func main() {
 	}
 
 	rootpath = utils.ReplcePathSeparator(rootpath)
-	constant.VERSION_NO = "1.0.3"                                  //当前版本id
+	constant.VERSION_NO = "1.0.4"                                  //当前版本id
 	constant.BUILD_TIME = ""                                       //软件编译时间
 	constant.ROOT_PATH = rootpath + "/"                            //当前软件的绝对路径
 	constant.LANG_PATH = rootpath + "/language/"                   //语言目录

@@ -56,59 +56,63 @@
           </button>
         </div>
 
-        <!-- 好友列表：平台条绝对定位 + top 过渡，实现 QQ 式滑动 -->
+        <!-- 好友列表：平台条绝对定位 + top 过渡，实现 QQ 式滑动；平台过多时隐藏滚动条滚动 -->
         <div class="qq-list-panel" ref="listPanelRef">
-          <div
-              v-for="(platform, index) in platforms"
-              :key="platform.Id"
-              class="qq-platform-bar"
-              :class="{ 'is-open': openPlatformId === platform.Id, 'is-anim': layoutReady }"
-              :style="{ top: platformTops[index] + 'px' }"
-              @click="togglePlatform(platform.Id)"
-          >
-            {{ platform.Name }}
-          </div>
+          <q-scroll-area class="qq-list-panel-scroll" :visible="false">
+            <div class="qq-list-content" :style="{ height: contentHeight + 'px' }">
+              <div
+                  v-for="(platform, index) in platforms"
+                  :key="platform.Id"
+                  class="qq-platform-bar"
+                  :class="{ 'is-open': openPlatformId === platform.Id, 'is-anim': layoutReady }"
+                  :style="{ top: platformTops[index] + 'px' }"
+                  @click="togglePlatform(platform.Id)"
+              >
+                {{ platform.Name }}
+              </div>
 
-          <div class="qq-list-middle" :class="{ 'is-anim': layoutReady }" :style="middleStyle">
-            <div v-if="openPlatformId != null" class="qq-list-scroll" ref="listScrollRef" @scroll="onListScroll">
-              <template v-if="categories.length">
-                <div v-for="cat in categories" :key="cat.path">
-                  <div
-                      class="qq-category-bar"
-                      :class="{ 'is-open': openCategoryPath === cat.path }"
-                      @click="toggleCategory(cat)"
-                  >
-                    <span class="qq-category-tri"></span>
-                    <span class="qq-category-name">{{ cat.name }}</span>
-                  </div>
-                  <div v-show="openCategoryPath === cat.path">
-                    <div
-                        v-for="game in games"
-                        :key="game.id"
-                        class="qq-game-item"
-                        :class="{
-                        'is-active': activeGameId === game.id,
-                        'is-large': avatarMode === 'large',
-                      }"
-                        @click="activeGameId = game.id"
-                        @dblclick="runMainGame(game.id)"
-                        @contextmenu.stop.prevent="showGameCtxMenu($event, game)"
-                    >
-                      <img
-                          v-if="game.thumb"
-                          class="qq-game-thumb"
-                          :src="game.thumb"
-                          :alt="game.name"
-                          @error="onThumbError"
-                      />
-                      <span class="qq-game-name">{{ game.name }}</span>
+              <div class="qq-list-middle" :class="{ 'is-anim': layoutReady }" :style="middleStyle">
+                <div v-if="openPlatformId != null" class="qq-list-scroll" ref="listScrollRef" @scroll="onListScroll">
+                  <template v-if="categories.length">
+                    <div v-for="cat in categories" :key="cat.path">
+                      <div
+                          class="qq-category-bar"
+                          :class="{ 'is-open': openCategoryPath === cat.path }"
+                          @click="toggleCategory(cat)"
+                      >
+                        <span class="qq-category-tri"></span>
+                        <span class="qq-category-name">{{ cat.name }}</span>
+                      </div>
+                      <div v-show="openCategoryPath === cat.path">
+                        <div
+                            v-for="game in games"
+                            :key="game.id"
+                            class="qq-game-item"
+                            :class="{
+                            'is-active': activeGameId === game.id,
+                            'is-large': avatarMode === 'large',
+                          }"
+                            @click="activeGameId = game.id"
+                            @dblclick="runMainGame(game.id)"
+                            @contextmenu.stop.prevent="showGameCtxMenu($event, game)"
+                        >
+                          <img
+                              v-if="game.thumb"
+                              class="qq-game-thumb"
+                              :src="game.thumb"
+                              :alt="game.name"
+                              @error="onThumbError"
+                          />
+                          <span class="qq-game-name">{{ game.name }}</span>
+                        </div>
+                        <div v-if="!games.length && !gamesLoading" class="qq-empty-hint">（空）</div>
+                      </div>
                     </div>
-                    <div v-if="!games.length && !gamesLoading" class="qq-empty-hint">（空）</div>
-                  </div>
+                  </template>
                 </div>
-              </template>
+              </div>
             </div>
-          </div>
+          </q-scroll-area>
         </div>
 
         <!-- 底部功能区（仅按下效果） -->
@@ -222,6 +226,8 @@ const SEARCH_WIZARD_W = 460
 const THUMB_WIZARD_W = 360
 /** 平台条高度（含边框），与 CSS --qq-bar-h 保持一致 */
 const BAR_H = 20
+/** 展开平台后游戏区最小高度，避免平台过多把中间挤没 */
+const MIN_MIDDLE_H = 300
 const PAGE_SIZE = 100
 const THEME = 'Oicq'
 
@@ -320,9 +326,19 @@ const openIndex = computed(() =>
         : platforms.value.findIndex((p) => p.Id === openPlatformId.value),
 )
 
+/** 内容高度：可视区不够时拉高，交给外层隐藏滚动条滚动 */
+const contentHeight = computed(() => {
+  const h = panelHeight.value
+  const n = platforms.value.length
+  if (openIndex.value < 0) {
+    return Math.max(h, n * BAR_H)
+  }
+  return Math.max(h, n * BAR_H + MIN_MIDDLE_H)
+})
+
 /** 每个平台条的 top：展开项及之上贴顶，之下贴底 */
 const platformTops = computed(() => {
-  const h = panelHeight.value
+  const h = contentHeight.value
   const open = openIndex.value
   const n = platforms.value.length
   return platforms.value.map((_, i) => {
@@ -335,7 +351,7 @@ const platformTops = computed(() => {
 const middleStyle = computed(() => {
   const open = openIndex.value
   const n = platforms.value.length
-  const h = panelHeight.value
+  const h = contentHeight.value
   if (open < 0) {
     return {
       top: `${n * BAR_H}px`,
