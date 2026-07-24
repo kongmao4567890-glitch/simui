@@ -1,11 +1,9 @@
 <template>
 
-  <!-- 平台栏 -->
-  <q-scroll-area class="platform-wrapper wrap">
-
-    <q-select standout square :options="tagList" v-model="activeTag" emit-value map-options :label="lang.label"
-              dense="dense"
-              style="font-size:12px">
+  <!-- 平台栏：select 在滚动区外，列表滚动时吸顶 -->
+  <div class="platform-wrapper wrap">
+    <q-select standout square class="platform-tag-select" :options="tagList" v-model="activeTag"
+              emit-value map-options :label="lang.label" dense="dense" style="font-size:12px">
       <template v-slot:no-option>
         <q-item>
           <q-item-section class="select-no-option">
@@ -15,27 +13,28 @@
       </template>
     </q-select>
 
-    <q-list>
-      <q-item clickable v-ripple class="platform-item" active-class="btn-primary platform-active"
-              id="platformEle0"
-              :active="activePlatform === 0" v-if="activeTag==''" @click="changePlatform(0,0)">
-        <q-item-section>
-          <q-item-label>{{ lang.all }}</q-item-label>
-        </q-item-section>
-      </q-item>
-      <q-item clickable v-ripple active-class="btn-primary platform-active" class="platform-item"
-              v-for="(item,index) in platformList"
-              v-show="activeTag == '' || activeTag == item.Tag"
-              :id="'platformEle' + (index+1)"
-              :active="activePlatform === item.Id" @click="changePlatform(item.Id,index+1)">
-        <q-item-section>
-          <q-img fit="contain" v-if="item.Icon !== ''" :src="item.Icon" style="width: 100%"/>
-          <q-item-label v-if="!item.HideName">{{ item.Name }}</q-item-label>
-        </q-item-section>
-      </q-item>
-    </q-list>
-
-  </q-scroll-area>
+    <q-scroll-area class="platform-scroll">
+      <q-list>
+        <q-item clickable v-ripple class="platform-item" active-class="btn-primary platform-active"
+                id="platformEle0"
+                :active="activePlatform === 0" v-if="activeTag==''" @click="changePlatform(0,0)">
+          <q-item-section>
+            <q-item-label>{{ lang.all }}</q-item-label>
+          </q-item-section>
+        </q-item>
+        <q-item clickable v-ripple active-class="btn-primary platform-active" class="platform-item"
+                v-for="(item,index) in platformList"
+                v-show="activeTag == '' || activeTag == item.Tag"
+                :id="'platformEle' + (index+1)"
+                :active="activePlatform === item.Id" @click="changePlatform(item.Id,index+1)">
+          <q-item-section>
+            <q-img fit="contain" v-if="item.Icon !== ''" :src="item.Icon" style="width: 100%"/>
+            <q-item-label v-if="!item.HideName">{{ item.Name }}</q-item-label>
+          </q-item-section>
+        </q-item>
+      </q-list>
+    </q-scroll-area>
+  </div>
 
 </template>
 

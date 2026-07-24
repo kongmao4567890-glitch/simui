@@ -1,13 +1,15 @@
 <template>
-  <!-- 菜单栏 -->
-  <q-scroll-area class="menu-wrapper wrap">
-    <q-item class="menu-title">
+
+  <q-item class="menu-title">
       <q-item-section>{{ lang.gameNum }}</q-item-section>
       <q-item-section side>
         <q-badge :label="romCount"/>
       </q-item-section>
-    </q-item>
+  </q-item>
 
+  <!-- 菜单栏 -->
+  <q-scroll-area class="menu-wrapper wrap">
+   
     <q-list>
       <div v-if="menuList.length > 0" v-for="item in menuList">
 

@@ -1,9 +1,21 @@
 
 /* 平台栏 */
 .platform-wrapper {
+    display: flex;
+    flex-direction: column;
     box-shadow: inset -5px 0 10px var(--color-1);
     height: calc(100vh - 64px) !important;
     background: var(--color-2);
+}
+
+.platform-tag-select {
+    flex-shrink: 0;
+    z-index: 1;
+}
+
+.platform-scroll {
+    flex: 1;
+    min-height: 0;
 }
 
 .platform-item {
