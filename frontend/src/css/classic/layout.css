@@ -4,6 +4,15 @@ body{
 
 }
 
+.border-out{
+    height: 100vh;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
 .border-in{
     font-size: var(--base-font-size);
+    height: 100%;
+    overflow: hidden;
+    box-sizing: border-box;
 }
