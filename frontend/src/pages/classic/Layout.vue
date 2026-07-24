@@ -1,5 +1,5 @@
 <template>
-  <div class="border-out" @resize="windowResize">
+  <div class="border-out" @resize="windowResize" v-if="loadConfig">
     <div class="border-in" :style="{ fontFamily: currentFont }">
 
       <div class="row">
@@ -63,7 +63,7 @@ import axios from 'axios';
 
 const global = useGlobalStore();
 const {lang, config, theme, platformUi, simulatorMap} = storeToRefs(global);
-
+const loadConfig = ref(false) //配置加载是否完成
 theme.value = "Default"
 const currentFont = ref("Arial")
 onActivated(async () => {
@@ -77,6 +77,8 @@ onActivated(async () => {
 
   //初始化配置
   global.initData(conf);
+
+  loadConfig.value = true
 
   //初始化字体
   initFont()

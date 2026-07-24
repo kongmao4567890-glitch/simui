@@ -247,7 +247,7 @@ watch([romState], async(newValue, oldValue) => {
   pageNum = 0;
   //滚动条回到最顶端
 
-  scrollAreaRef.value.setScrollPosition("vertical", 0)
+  scrollAreaRef.value?.setScrollPosition("vertical", 0)
   var req = {
     "theme": theme.value,
     "platform": activePlatform.value,
