@@ -3,12 +3,14 @@
     <div class="q-gutter-y-md">
       <div v-if="activeRom && detail">
         <q-card flat class="tab-card">
-          <q-tabs v-model="panel" dense class="tabs" active-color="primary" indicator-color="primary" align="justify">
-            <q-tab name="detail" :label="lang.info"/>
-            <q-tab name="thumbs" :label="lang.thumbs"/>
-            <q-tab name="strategy" :label="lang.strategy"/>
-          </q-tabs>
-          <q-separator/>
+          <div class="tabs-sticky">
+            <q-tabs v-model="panel" dense class="tabs" active-color="primary" indicator-color="primary" align="justify">
+              <q-tab name="detail" :label="lang.info"/>
+              <q-tab name="thumbs" :label="lang.thumbs"/>
+              <q-tab name="strategy" :label="lang.strategy"/>
+            </q-tabs>
+            <q-separator/>
+          </div>
 
           <q-tab-panels v-model="panel" keep-alive animated class="panels">
             <q-tab-panel name="detail" class="detail-panel">

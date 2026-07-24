@@ -29,6 +29,14 @@
     padding-bottom: 20px;
 }
 
+/* 右边栏滚动时 tab 栏吸顶 */
+.tabs-sticky {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: var(--color-3);
+}
+
 .tab-card, .tab-card .q-tab-panel {
     padding: 0
 }
