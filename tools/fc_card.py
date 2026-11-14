@@ -13,27 +13,42 @@
     │ 游戏名            汉化版本    │  底栏
     └──────────────────────────┘
 
-两种用法
-1) 直接用模拟器截图（需要汉化工具包 hanhua_kit，里面有 hhkit/ 和 emus/）：
-   python3 fc_card.py 游戏.nes --kit /path/hanhua_kit --name 赤色要塞 --sub 雷精灵汉化版 \
-       --title-at 90 --keys "start,w200,start*8,w60" --play "up+b:300"
+三种用法
+1) 全自动（任何游戏都可以先这样试）：只给 ROM 和名字
+   python3 fc_card.py 游戏.nes --kit /path/hanhua_kit --name 赤色要塞 --sub 雷精灵汉化版
+   · 标题：从开机起持续观察，挑“停留最久、颜色丰富、纯色背景上有标志”的静止画面；
+           厂商 Logo、剧情文字颜色少会被排除；开场太长会自动按一次开始键跳过。
+   · 游戏画面：先观察不按键时的自动演示，再轮流用“开始 / 右+开始 / 下+开始 / A”进入游戏，
+           模拟“方向 + 攻击”，挑“画面在动、颜色丰富、和标题不同”的帧。
+   · 同时输出 <名字>_candidates.png：标题候选、游戏画面候选各一排，带编号。
 
-2) 已经有截图，只做卡片（不需要工具包）：
+2) 自动选得不满意：看候选总览，用编号换一张（模拟器每次运行结果相同，编号固定）
+   python3 fc_card.py 游戏.nes --kit ... --name ... --title-pick 3 --play-pick 2
+
+3) 流程特殊的游戏（要选人、要读存档等）：手动写按键脚本，可与自动找标题混用
+   python3 fc_card.py 游戏.nes --kit ... --name ... --title-pick 3 \
+       --state 存档.fcs --keys "h6:right,w40,h6:start,w240" --play "right+b:120"
+
+   已经有截图，只做卡片（不需要工具包）：
    python3 fc_card.py --title-img title.png --play-img play.png --name 赤色要塞 --sub 雷精灵汉化版
 
 参数
-  --title-at N     开机后第 N 帧截标题画面（默认 120；60 帧 = 1 秒）
+  （以下截图参数都可省略，省略即自动）
+  --title-pick N   自动模式下改用第 N 个标题候选；--play-pick N 同理（游戏画面）
+  --scan 秒        自动找标题时最多观察多少秒（默认 40）
+  --title-at N     开机后第 N 帧截标题画面（60 帧 = 1 秒）
   --title-keys S   标题需要按键才出现时，用按键脚本代替 --title-at，如 "w300,h10:start,w200"
   --keys S         截完标题后进入游戏的按键脚本（hhkit 语法）：
                    w60 等 60 帧；start 按一下；a*3 连按 3 次；a+b 同时按；h30:right 按住 30 帧
-  --play K:N       进游戏后按住 K 再跑 N 帧截游戏画面，如 "right+b:240"（默认 "right:180"）
+  --play K:N       进游戏后按住 K 再跑 N 帧截游戏画面，如 "right+b:240"
   --state F        截完标题后读入存档，直接跳到想截的游戏场景（支持 FCEUX 的 .fcs，自动转换）
   --logo x0,y0,x1,y1   手动指定标志区域（默认自动识别）
   --accent #rrggbb     强调色（默认从标志里自动取）
-  --label 文字      顶栏左侧文字（默认“FC · 汉化收藏”）
+  --label 文字      顶栏文字，默认按扩展名：FC / SFC / MD / GBA / GB … · 汉化收藏
   -o 输出.png       默认 <name>_card.png；同时保存 <name>_title.png、<name>_play.png 原始截图
+                   和 <name>_candidates.png 候选总览
 
-实测例子（K 为 hanhua_kit 目录）
+手写按键的实测例子（K 为 hanhua_kit 目录；赤色要塞、古巴战士、救火英雄用全自动即可）
   # 标题在开机 1.5 秒时出现；进游戏后开车向上射击
   python3 fc_card.py 赤色要塞.nes --kit $K --name 赤色要塞 --sub 雷精灵汉化版 \
       --title-at 90 --keys "start,w200,start*8,w60,h240:up+b" --play "up+b:200"
@@ -47,7 +62,8 @@
   python3 fc_card.py 救火英雄.nes --kit $K --name 救火英雄 --sub "Cslrxyz 汉化 hack 版" \
       --title-at 100 --keys "h10:start,w200,h10:start,w200,h300:right+a" --play "a:60"
 
-  不知道开场要多久、按什么键时，先把 --keys 留空，看生成的 *_play.png 是哪个画面，再逐步加按键。
+  建议先全自动跑一次，看 *_candidates.png；候选里有合适的就用 --title-pick / --play-pick，
+  都不合适再写 --keys。
   菜单不认短按时，用 h6:start（按住 6 帧）代替 start。
 
 依赖：Python 3.9+、Pillow（pip install pillow）。
@@ -71,35 +87,63 @@ FONTS = [
 
 # ------------------------------------------------------------------ 截图
 
-def capture(rom, kit, title_at, keys, play, state=None, title_keys=None):
-    """用工具包的模拟器运行 ROM，返回 (标题画面, 游戏画面) 两张 PIL 图（原始分辨率 256×240）。"""
+def open_core(rom, kit):
     kit = kit or os.environ.get('HHKIT_DIR')
     if not kit or not os.path.isdir(os.path.join(kit, 'hhkit')):
         sys.exit('需要汉化工具包：用 --kit 指定 hanhua_kit 目录（或设环境变量 HHKIT_DIR）')
     sys.path.insert(0, os.path.abspath(kit))
     from hhkit import emu
+    return emu.open(rom)
 
-    c = emu.open(rom)
-    # 1) 标题画面：开机后等 title_at 帧，或按 title_keys 脚本操作到标题出现
+
+def load_state_file(c, path):
+    raw = open(path, 'rb').read()
+    if raw[:4] == b'FCSX':                       # FCEUX 存档 → 内核存档
+        raw = fceux_to_core(raw, c.save_state())
+    c.load_state(raw)
+    c.run(2)
+
+
+def capture(rom, kit, title_at=None, keys=None, play=None, state=None, title_keys=None, scan=40, verbose=True,
+            title_pick=1, play_pick=1, sheet=None):
+    """运行 ROM，返回 (标题画面, 游戏画面)。
+    没有给 title_at / title_keys 时自动找标题；没有给 keys / play 时自动找游戏画面。"""
+    c = open_core(rom, kit)
+    log = print if verbose else (lambda *a: None)
+
+    # 1) 标题画面
+    t_cands = None
     if title_keys:
-        c.script(title_keys)
+        c.script(title_keys); title = c.image().convert('RGB')
+    elif title_at is not None:
+        c.run(title_at); title = c.image().convert('RGB')
     else:
-        c.run(title_at)
-    title = c.image().convert('RGB')
+        t_cands = auto_title(c, scan)
+        k = min(max(title_pick, 1), len(t_cands)) - 1
+        title, f, st = t_cands[k]
+        c.load_state(st)
+        log('标题画面：第 %d 帧（候选 %d/%d）' % (f, k + 1, len(t_cands)))
 
-    # 2) 进入游戏：可先读存档跳到指定场景，再执行按键脚本
+    # 2) 游戏画面
+    p_cands = None
     if state:
-        raw = open(state, 'rb').read()
-        if raw[:4] == b'FCSX':                       # FCEUX 存档 → 内核存档
-            raw = fceux_to_core(raw, c.save_state())
-        c.load_state(raw)
-        c.run(2)
-    if keys:
-        c.script(keys)
-    btn, frames = (play.split(':') + ['180'])[:2] if play else ('', '0')
-    c.run(int(frames), [b for b in btn.split('+') if b])
-    c.run(4)
-    return title, c.image().convert('RGB')
+        load_state_file(c, state)
+    if keys or play:
+        if keys:
+            c.script(keys)
+        btn, frames = (play.split(':') + ['180'])[:2] if play else ('', '60')
+        c.run(int(frames), [b for b in btn.split('+') if b])
+        c.run(4)
+        shot = c.image().convert('RGB')
+    else:
+        p_cands = auto_play(c, title)
+        k = min(max(play_pick, 1), len(p_cands)) - 1
+        shot, f, how = p_cands[k]
+        log('游戏画面：第 %d 帧，%s（候选 %d/%d）' % (f, how, k + 1, len(p_cands)))
+    if sheet and (t_cands or p_cands):
+        candidates_sheet(t_cands or [(title, 0)], p_cands or [(shot, 0)], sheet)
+        log('候选总览：%s（不满意可加 --title-pick N / --play-pick N 换一张）' % sheet)
+    return title, shot
 
 
 def fceux_to_core(fcs, template):
@@ -129,6 +173,141 @@ def fceux_to_core(fcs, template):
         body += bytes([t]) + struct.pack('<I', len(blk)) + blk
     out = template[:4] + struct.pack('<I', len(body)) + template[8:16] + body
     return out + b'\0' * max(0, len(template) - len(out))
+
+
+# ------------------------------------------------------------------ 自动识别
+
+def _small(im):
+    return im.convert('RGB').resize((64, 60), Image.NEAREST)
+
+
+def frame_info(im):
+    """画面特征：颜色数、非背景比例（背景 = 最常见颜色）。"""
+    sm = _small(im)
+    px = list(sm.get_flattened_data()) if hasattr(sm, 'get_flattened_data') else list(sm.getdata())
+    top = Counter(px).most_common(1)[0][1]
+    return len(set(px)), 1 - top / len(px)
+
+
+def frame_diff(a, b):
+    """两帧的平均灰度差（0~255）。"""
+    fl = lambda im: list(im.get_flattened_data()) if hasattr(im, 'get_flattened_data') else list(im.getdata())
+    A, B = fl(_small(a).convert('L')), fl(_small(b).convert('L'))
+    return sum(abs(x - y) for x, y in zip(A, B)) / len(A)
+
+
+def auto_title(c, scan=40, step=10, stable_need=3, top=6):
+    """从开机开始每 step 帧采样，把“静止画面”分段记录，按下面的分数排序：
+         颜色数 × 前景比例 × 停留时长（标题会一直等玩家按键，停得最久）× 早出现加成
+    厂商 Logo、剧情文字颜色少或停得短，分数低。20 秒内若没有像样的画面，按一次开始键跳过开场。
+    返回按分数排序的候选 [(图, 帧号, 存档), ...]，模拟器停在第 1 名的时刻。"""
+    segs = []                                 # 每段：[图, 帧号, 存档, 停留帧数, 颜色, 前景]
+    cur, prev, stable, pressed = None, None, 0, False
+    for i in range(scan * 60 // step):
+        c.run(step)
+        im = c.image().convert('RGB')
+        if prev is not None and frame_diff(prev, im) < 2.5:   # 允许标志闪烁、调色板动画等小变化
+            stable += 1
+        else:
+            stable, cur = 0, None
+        prev = im
+        if stable == stable_need:
+            colors, content = frame_info(im)
+            cur = [im, c.frames, c.save_state(), 0, colors, content]
+            segs.append(cur)
+        if cur is not None:
+            cur[3] += step
+            if cur[3] >= 900 and cur[4] >= 6:     # 停了 15 秒还没动：基本就是等待按键的标题
+                break
+        best_now = max((x[4] * min(x[5], 0.6) for x in segs), default=0)
+        if not pressed and c.frames > 1200 and best_now < 8:
+            c.press('start', 6, 30); pressed = True
+    if not segs:
+        return [(c.image().convert('RGB'), c.frames, c.save_state())]
+
+    def score(x):
+        early = 1.4 if x[1] < 1500 else 1.0
+        plain_bg = 1.0 if x[5] <= 0.65 else 0.45        # 标题多是“纯色背景 + 标志”，满屏场景（演示画面）降分
+        return x[4] * min(x[5], 0.6) * (min(x[3], 600) / 600) ** 0.5 * early * plain_bg
+
+    segs.sort(key=score, reverse=True)
+    picked = []
+    for x in segs:                            # 去掉几乎相同的画面
+        if all(frame_diff(x[0], y[0]) > 6 for y in picked):
+            picked.append(x)
+        if len(picked) >= top:
+            break
+    return [(x[0], x[1], x[2]) for x in picked]
+
+
+def auto_play(c, title, rounds=12, top=6):
+    """从标题想办法进入游戏，挑有代表性的游戏画面：
+    - 先不按键观察 15 秒（很多游戏会播放自动演示）；
+    - 再每轮按开始 / A 进入，并模拟“方向 + 攻击”操作；画面持续变化说明已进入游戏，之后不再按开始；
+    - 分数 = 颜色数 × 前景比例 × 活动度，和标题太像、或者静止的菜单分数低。
+    返回按分数排序的候选 [(图, 帧号, 说明), ...]。"""
+    moves = [['right', 'b'], ['up', 'b'], ['left', 'a'], ['right'], ['b'], ['up', 'a'], ['down', 'b'], ['a']]
+    cands = []
+    prev = [c.image().convert('RGB')]
+
+    def consider(im, tag):
+        colors, content = frame_info(im)
+        act = frame_diff(prev[0], im)
+        prev[0] = im
+        if frame_diff(title, im) < 4 or content < 0.25:
+            return 0, act
+        sc = colors * content * (0.3 + min(act, 20) / 20)
+        cands.append((sc, im, c.frames, tag))
+        return sc, act
+
+    st = c.save_state()
+    for _ in range(90):                       # 不按键：很多游戏会播放自动演示
+        c.run(10); consider(c.image().convert('RGB'), '自动演示')
+    c.load_state(st)
+    prev[0] = c.image().convert('RGB')
+    playing = False
+    for r in range(rounds):
+        if not playing:
+            # 菜单/选人界面常要先移动光标再确认：依次试 “开始”“右+开始”“下+开始”“A”
+            nav = [None, 'right', 'down', None][r % 4]
+            if nav:
+                c.press(nav, 6, 30)
+            c.press('a' if r % 4 == 3 else 'start', 6, 40)
+        acts = []
+        for m in moves:
+            c.run(20, m)
+            _, act = consider(c.image().convert('RGB'), '实际游玩')
+            acts.append(act)
+        if not playing and sorted(acts)[len(acts) // 2] > 6:
+            playing = True                    # 画面在持续大幅变化：已经进入游戏，不再按开始（避免暂停）
+    if not cands:
+        return [(c.image().convert('RGB'), c.frames, '最后一帧')]
+    cands.sort(key=lambda x: x[0], reverse=True)
+    picked = []
+    for x in cands:
+        if all(frame_diff(x[1], y[1]) > 8 for y in picked):
+            picked.append(x)
+        if len(picked) >= top:
+            break
+    return [(x[1], x[2], x[3]) for x in picked]
+
+
+def candidates_sheet(titles, plays, out, font=None):
+    """把标题候选、游戏画面候选各一行拼在一起，带编号，方便用 --title-pick / --play-pick 换一张。"""
+    font = font or next((f for f in FONTS if os.path.exists(f)), None)
+    F = ImageFont.truetype(font, 16) if font else ImageFont.load_default()
+    w, h = 256, 240
+    cols = max(len(titles), len(plays))
+    sh = Image.new('RGB', (cols * (w + 10) + 130, 2 * (h + 34) + 10), (24, 24, 24))
+    d = ImageDraw.Draw(sh)
+    for row, (label, items) in enumerate((('标题候选', titles), ('游戏画面候选', plays))):
+        y = 10 + row * (h + 34)
+        d.text((10, y + h // 2), label, font=F, fill=(230, 210, 150))
+        for i, it in enumerate(items):
+            x = 120 + i * (w + 10)
+            sh.paste(it[0].resize((w, h)), (x, y + 24))
+            d.text((x, y), '%d  第 %d 帧' % (i + 1, it[1]), font=F, fill=(255, 255, 255) if i else (255, 200, 80))
+    sh.save(out)
 
 
 # ------------------------------------------------------------------ 卡片
@@ -176,12 +355,16 @@ def auto_logo_box(im, gap=6, join=10, pad=6):
 def auto_accent(im):
     """标志里出现最多的“鲜艳颜色”做强调色。"""
     best, score = (220, 160, 60), -1
-    for (r, g, b), n in Counter(im.getdata()).most_common(64):
+    for (r, g, b), n in Counter(list(im.convert('RGB').getdata()) if not hasattr(im, 'get_flattened_data') else im.get_flattened_data()).most_common(64):
         mx, mn = max(r, g, b), min(r, g, b)
         sat = (mx - mn) / mx if mx else 0
         if mx >= 90 and sat >= 0.35 and n * sat > score:
             best, score = (r, g, b), n * sat
     return best
+
+
+PLATFORM_BY_EXT = {'.nes': 'FC', '.fds': 'FC', '.unf': 'FC', '.sfc': 'SFC', '.smc': 'SFC', '.md': 'MD', '.gen': 'MD',
+                   '.smd': 'MD', '.gba': 'GBA', '.gb': 'GB', '.gbc': 'GBC'}
 
 
 def make_card(title, play, name, sub='', label='FC · 汉化收藏', logo_box=None, accent=None, font=None):
@@ -230,11 +413,14 @@ def main():
     ap.add_argument('--kit', help='hanhua_kit 目录')
     ap.add_argument('--name', required=True, help='游戏名（显示在底栏）')
     ap.add_argument('--sub', default='', help='底栏右侧小字，如“雷精灵汉化版”')
-    ap.add_argument('--label', default='FC · 汉化收藏')
-    ap.add_argument('--title-at', type=int, default=120)
+    ap.add_argument('--label', help='顶栏文字，默认按扩展名：FC · 汉化收藏 / SFC · 汉化收藏 …')
+    ap.add_argument('--title-at', type=int, help='不填则自动找标题')
     ap.add_argument('--title-keys')
-    ap.add_argument('--keys', default='start,w200,start*6,w60')
-    ap.add_argument('--play', default='right:180')
+    ap.add_argument('--keys', help='不填则自动进入游戏')
+    ap.add_argument('--play')
+    ap.add_argument('--scan', type=int, default=40, help='自动找标题时最多观察多少秒（默认 40）')
+    ap.add_argument('--title-pick', type=int, default=1, help='自动模式下改用第 N 个标题候选')
+    ap.add_argument('--play-pick', type=int, default=1, help='自动模式下改用第 N 个游戏画面候选')
     ap.add_argument('--state')
     ap.add_argument('--title-img'); ap.add_argument('--play-img')
     ap.add_argument('--logo', help='x0,y0,x1,y1')
@@ -246,16 +432,18 @@ def main():
     if a.title_img and a.play_img:
         title, play = Image.open(a.title_img).convert('RGB'), Image.open(a.play_img).convert('RGB')
     elif a.rom:
-        title, play = capture(a.rom, a.kit, a.title_at, a.keys, a.play, a.state, a.title_keys)
         base = os.path.splitext(a.out or a.name + '_card.png')[0].removesuffix('_card')
+        title, play = capture(a.rom, a.kit, a.title_at, a.keys, a.play, a.state, a.title_keys, a.scan,
+                              title_pick=a.title_pick, play_pick=a.play_pick, sheet=base + '_candidates.png')
         title.save(base + '_title.png'); play.save(base + '_play.png')
     else:
         ap.error('需要 ROM，或者同时给 --title-img 和 --play-img')
 
     box = tuple(int(v) for v in a.logo.split(',')) if a.logo else None
     acc = tuple(int(a.accent.lstrip('#')[i:i + 2], 16) for i in (0, 2, 4)) if a.accent else None
+    label = a.label or '%s · 汉化收藏' % PLATFORM_BY_EXT.get(os.path.splitext(a.rom or '')[1].lower(), 'FC')
     out = a.out or a.name + '_card.png'
-    make_card(title, play, a.name, a.sub, a.label, box, acc, a.font).save(out)
+    make_card(title, play, a.name, a.sub, label, box, acc, a.font).save(out)
     print('收藏卡：', out)
 
 
