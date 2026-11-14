@@ -245,6 +245,9 @@ export function gotoTheme(theme: string) {
                 case "Oicq":
                 global.goto("/oicq")
                 break
+            case "Book":
+                global.goto("/book")
+                break
         }
     })
 }

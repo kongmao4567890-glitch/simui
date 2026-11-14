@@ -1,0 +1,700 @@
+/* ================= 游戏年鉴（Book）主题 ================= */
+
+.book-root {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  background: #2b2621;
+  color: #3b3127;
+  --color-text: #3b3127;
+}
+
+.book-desk {
+  position: absolute;
+  inset: 0;
+  background: #2b2621 center center / cover no-repeat;
+  filter: blur(2px);
+  transform: scale(1.02);
+}
+
+.book-desk-shade {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, rgba(20, 15, 10, 0.55) 0%, rgba(12, 9, 6, 0.88) 100%);
+}
+
+/* ---------- 工具栏 ---------- */
+.book-toolbar {
+  position: relative;
+  z-index: 2;
+  min-height: 40px;
+  height: 40px;
+  padding: 0 0 0 12px;
+  color: #efe6d2;
+  --color-text: #efe6d2;
+  gap: 4px;
+}
+
+.book-logo {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: bold;
+  font-size: 14px;
+  margin-right: 10px;
+  white-space: nowrap;
+}
+
+.book-logo-sub {
+  font-weight: normal;
+  font-size: 12px;
+  color: #bfb196;
+  --color-text: #bfb196;
+  border-left: 1px solid rgba(239, 230, 210, 0.3);
+  padding-left: 8px;
+}
+
+.book-tool-btn {
+  color: #efe6d2;
+  --color-text: #efe6d2;
+  font-size: 12px;
+}
+
+.book-pageno {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  max-width: 40vw;
+  font-size: 12px;
+  color: #bfb196;
+  --color-text: #bfb196;
+  white-space: nowrap;
+}
+
+.book-pageno-name {
+  font-size: 14px;
+  color: #fff3da;
+  --color-text: #fff3da;
+  letter-spacing: 1px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.book-window-ctl {
+  display: flex;
+  margin-left: 6px;
+  align-self: stretch;
+}
+
+.book-window-ctl .q-btn {
+  color: #efe6d2;
+  --color-text: #efe6d2;
+  width: 34px;
+  border-radius: 0;
+}
+
+.book-window-ctl .book-close:hover {
+  background: #c42b1c;
+}
+
+/* ---------- 跨页 ---------- */
+.book-stage {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  min-height: 0;
+  padding: 4px 22px 18px 22px;
+  display: flex;
+}
+
+.book-spread {
+  flex: 1;
+  display: flex;
+  min-height: 0;
+  box-shadow: 0 12px 34px rgba(0, 0, 0, 0.6);
+  border-radius: 6px;
+}
+
+.book-page {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 16px 24px 10px 24px;
+  font-size: 13px;
+  overflow: hidden;
+  color: #3b3127;
+  --color-text: #3b3127;
+}
+
+.book-left {
+  border-radius: 6px 0 0 6px;
+  background: linear-gradient(to right, #efe6cf, #f6efdd 6%, #f6efdd 92%, #e2d6b8);
+}
+
+.book-right {
+  border-radius: 0 6px 6px 0;
+  background: linear-gradient(to right, #e2d6b8, #f6efdd 8%, #f6efdd 94%, #efe6cf);
+}
+
+.book-gutter {
+  width: 10px;
+  background: linear-gradient(to right, #cbbd9c, #8f8062 50%, #cbbd9c);
+}
+
+.book-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  height: 22px;
+  line-height: 22px;
+  border-bottom: 1px solid #b9a57f;
+  color: #8a7553;
+  --color-text: #8a7553;
+  font-size: 12px;
+  letter-spacing: 1px;
+  margin-bottom: 10px;
+  white-space: nowrap;
+}
+
+.book-head span:first-child {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.book-titlebox {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.book-name {
+  flex: 1;
+  min-width: 0;
+  padding-left: 14px;
+}
+
+.book-name h1 {
+  font-family: "SimSun", "NSimSun", "Songti SC", "Noto Serif CJK SC", serif;
+  font-size: 28px;
+  font-weight: bold;
+  line-height: 1.2em;
+  margin: 0 0 4px 0;
+  color: #2a2018;
+  --color-text: #2a2018;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.book-name p {
+  margin: 0;
+  color: #8a7553;
+  --color-text: #8a7553;
+  font-size: 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.book-row {
+  display: flex;
+  gap: 10px;
+  min-height: 0;
+}
+
+.book-col {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-height: 0;
+}
+
+.book-col > .bslot {
+  flex: 1;
+}
+
+.book-cover {
+  flex: 1;
+  min-height: 180px;
+}
+
+.slot-packing {
+  width: 46%;
+}
+
+.book-section {
+  font-family: "SimSun", "NSimSun", "Songti SC", "Noto Serif CJK SC", serif;
+  font-weight: bold;
+  font-size: 14px;
+  color: #6b3a1f;
+  --color-text: #6b3a1f;
+  border-left: 3px solid #a4522a;
+  padding-left: 8px;
+  margin: 12px 0 6px 0;
+  line-height: 1.2em;
+}
+
+.book-section-top {
+  margin-top: 0;
+}
+
+.book-profile {
+  flex: none;
+}
+
+.book-table {
+  flex: 1;
+  min-width: 0;
+  border-collapse: collapse;
+  font-size: 12px;
+  table-layout: fixed;
+}
+
+.book-table th {
+  text-align: left;
+  font-weight: normal;
+  color: #8a7553;
+  --color-text: #8a7553;
+  width: 84px;
+  padding: 3px 8px 3px 0;
+  border-bottom: 1px dotted #cdbf9f;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.book-table td {
+  color: #2f261d;
+  --color-text: #2f261d;
+  padding: 3px 0;
+  border-bottom: 1px dotted #cdbf9f;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.slot-thumb {
+  width: 36%;
+  min-height: 170px;
+}
+
+.book-na {
+  color: #b3a281;
+  --color-text: #b3a281;
+}
+
+.book-folio {
+  margin-top: auto;
+  padding-top: 6px;
+  height: 22px;
+  color: #9a8762;
+  --color-text: #9a8762;
+  font-size: 11px;
+}
+
+.book-folio-r {
+  text-align: right;
+}
+
+.book-screens {
+  flex: 1.25;
+  min-height: 160px;
+}
+
+.slot-snap {
+  flex: 1;
+}
+
+.slot-side {
+  flex: none;
+  width: 36%;
+}
+
+.book-text {
+  flex: 1;
+  min-height: 120px;
+  margin-top: 10px;
+}
+
+.slot-poster {
+  width: 26%;
+}
+
+.book-doc-body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  line-height: 1.75em;
+  word-break: break-word;
+}
+
+.book-doc-body p {
+  margin: 0 0 6px 0;
+}
+
+.book-doc-body img {
+  max-width: 100%;
+}
+
+.book-strategy {
+  flex: 0.7;
+  min-height: 60px;
+  overflow-y: auto;
+  line-height: 1.75em;
+  word-break: break-word;
+}
+
+.book-strategy .strategy-block-title {
+  font-weight: bold;
+  color: #6b3a1f;
+  --color-text: #6b3a1f;
+  margin-top: 4px;
+}
+
+.book-strategy .strategy-block-divider {
+  border-top: 1px dashed #cdbf9f;
+  margin: 6px 0;
+}
+
+.book-files {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+
+.book-file {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0 10px;
+  height: 24px;
+  border: 1px solid #cdbf9f;
+  border-radius: 12px;
+  background: #efe5cd;
+  color: #4a3c2c;
+  --color-text: #4a3c2c;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.book-file:hover {
+  background: #e6d8b6;
+}
+
+.book-play {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid #cdbf9f;
+}
+
+.book-sim {
+  width: 170px;
+  background: #fffaf0;
+}
+
+.book-sim-one {
+  font-size: 12px;
+  color: #6b5a40;
+  --color-text: #6b5a40;
+  padding: 0 6px;
+}
+
+.book-run {
+  background: #a4522a;
+  color: #fff7ea;
+  --color-text: #fff7ea;
+  border-radius: 3px;
+}
+
+.book-run:hover {
+  background: #bf6534;
+}
+
+.book-run-sub {
+  background: #7d6a4c;
+}
+
+.book-stat {
+  display: flex;
+  gap: 10px;
+  color: #a4522a;
+  --color-text: #a4522a;
+  font-size: 12px;
+}
+
+.book-blank {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  color: #9a8762;
+  --color-text: #9a8762;
+  font-size: 16px;
+}
+
+/* ---------- 素材版位 ---------- */
+.bslot {
+  position: relative;
+  min-width: 0;
+  min-height: 0;
+  border: 1px solid #d3c4a2;
+  background: #fbf7ec;
+  overflow: hidden;
+}
+
+.bslot-media {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  right: 6px;
+  bottom: 22px;
+  width: calc(100% - 12px);
+  height: calc(100% - 28px);
+  object-fit: contain;
+  cursor: zoom-in;
+}
+
+.bslot-img {
+  background: center center / contain no-repeat;
+}
+
+.bslot-cap {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 20px;
+  line-height: 20px;
+  text-align: center;
+  font-size: 11px;
+  color: #8a7553;
+  --color-text: #8a7553;
+}
+
+.bslot-empty {
+  position: absolute;
+  inset: 6px;
+  border: 1px dashed #c2ae86;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: #ab9671;
+  --color-text: #ab9671;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.bslot-empty:hover {
+  background: #f3e3c4;
+  border-color: #a4522a;
+}
+
+.bslot-empty-in {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  font-size: 12px;
+  line-height: 1.4em;
+}
+
+.bslot-empty-in b {
+  color: #8a7553;
+  --color-text: #8a7553;
+}
+
+.bslot-hint {
+  font-size: 11px;
+  color: #c0ad88;
+  --color-text: #c0ad88;
+}
+
+.slot-icon {
+  width: 68px;
+  height: 68px;
+  flex: none;
+}
+
+.bslot-compact .bslot-media {
+  top: 4px;
+  left: 4px;
+  width: calc(100% - 8px);
+  height: calc(100% - 8px);
+}
+
+.bslot-compact .bslot-empty {
+  inset: 3px;
+}
+
+.bslot-compact .bslot-empty-in {
+  font-size: 10px;
+}
+
+/* ---------- 目录 ---------- */
+.book-toc {
+  position: absolute;
+  inset: 40px 0 0 0;
+  z-index: 5;
+  background: rgba(0, 0, 0, 0.35);
+}
+
+.book-toc-panel {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 320px;
+  max-width: 85vw;
+  display: flex;
+  flex-direction: column;
+  background: #f6efdd;
+  color: #3b3127;
+  --color-text: #3b3127;
+  box-shadow: 6px 0 24px rgba(0, 0, 0, 0.5);
+}
+
+.book-toc-head {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 12px;
+  font-family: "SimSun", "NSimSun", "Songti SC", serif;
+  font-weight: bold;
+  font-size: 15px;
+  color: #6b3a1f;
+  --color-text: #6b3a1f;
+  border-bottom: 1px solid #cdbf9f;
+}
+
+.book-toc-search {
+  margin: 8px 12px;
+  background: #fffaf0;
+}
+
+.book-toc-list {
+  flex: 1;
+}
+
+.book-toc-item {
+  display: flex;
+  gap: 10px;
+  padding: 7px 14px;
+  border-bottom: 1px dotted #d8cbad;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.book-toc-item:hover {
+  background: #efe5cd;
+}
+
+.book-toc-item.active {
+  background: #a4522a;
+  color: #fff7ea;
+  --color-text: #fff7ea;
+}
+
+.book-toc-no {
+  width: 36px;
+  text-align: right;
+  color: #9a8762;
+  --color-text: #9a8762;
+  flex: none;
+}
+
+.book-toc-item.active .book-toc-no {
+  color: #f3dcc5;
+  --color-text: #f3dcc5;
+}
+
+.book-toc-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.book-toc-more {
+  text-align: center;
+  padding: 10px;
+  color: #a4522a;
+  --color-text: #a4522a;
+  cursor: pointer;
+}
+
+/* ---------- 动画 ---------- */
+.book-next-enter-active,
+.book-next-leave-active,
+.book-prev-enter-active,
+.book-prev-leave-active {
+  transition: opacity 0.18s ease, transform 0.18s ease;
+}
+
+.book-next-enter-from {
+  opacity: 0;
+  transform: translateX(24px);
+}
+
+.book-next-leave-to {
+  opacity: 0;
+  transform: translateX(-24px);
+}
+
+.book-prev-enter-from {
+  opacity: 0;
+  transform: translateX(-24px);
+}
+
+.book-prev-leave-to {
+  opacity: 0;
+  transform: translateX(24px);
+}
+
+.book-toc-enter-active,
+.book-toc-leave-active {
+  transition: opacity 0.15s ease;
+}
+
+.book-toc-enter-from,
+.book-toc-leave-to {
+  opacity: 0;
+}
+
+/* 页面内的图片（攻略中的按键图标等）不要过大 */
+.book-strategy img,
+.book-doc-body img.ctl {
+  height: 1.4em;
+  width: auto;
+  vertical-align: middle;
+}
+
+.book-sim .q-field__native,
+.book-sim .q-field__append,
+.book-sim .q-icon {
+  --color-text: #3b3127;
+  color: #3b3127;
+}
+
+.book-toc-search,
+.book-toc-search input,
+.book-toc-search .q-icon {
+  --color-text: #3b3127;
+  color: #3b3127;
+}
+
+.book-toc-search input::placeholder {
+  color: #a8987a;
+}

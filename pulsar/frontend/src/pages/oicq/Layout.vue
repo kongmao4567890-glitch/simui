@@ -261,6 +261,7 @@ const themeList = [
   {id: 'Default', label: 'Default'},
   {id: 'Playnite', label: 'Playnite'},
   {id: 'Tiny', label: 'Tiny'},
+  {id: 'Book', label: 'Book · 年鉴'},
 ]
 
 const global = useGlobalStore()

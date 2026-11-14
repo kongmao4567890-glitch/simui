@@ -1,0 +1,87 @@
+name: Build SimUI Pulsar (Windows x64)
+
+on:
+  push:
+    branches: ["**"]
+    paths:
+      - "pulsar/**"
+      - ".github/workflows/build-pulsar.yml"
+    tags: ["pulsar-v*"]
+  pull_request:
+    paths:
+      - "pulsar/**"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-2022
+    defaults:
+      run:
+        shell: bash
+        working-directory: pulsar
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.24"
+          cache-dependency-path: pulsar/go.sum
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: pulsar/frontend/package-lock.json
+
+      - name: Check C compiler (go-sqlite3 needs cgo)
+        run: gcc --version
+
+      - name: Install Wails CLI
+        run: go install github.com/wailsapp/wails/v2/cmd/wails@v2.12.0
+
+      # 程序启动时需要语言文件和数据库；生成前端绑定时也会运行一次程序，
+      # 所以先准备好运行目录，并用 .env 指向它（与官方开发方式一致）。
+      - name: Prepare runtime folder (database, language, resources)
+        run: |
+          RT="$RUNNER_TEMP/simui-rt"
+          mkdir -p "$RT"
+          cp data.dll "$RT/data.db"
+          go run ./tools/dbschema -db "$RT/data.db" -clean -theme Book -lang zh-CN
+          cp -r language resources "$RT/"
+          printf '%s' "$(cygpath -m "$RT")" > .env
+          mkdir -p frontend/dist && touch frontend/dist/.keep
+
+      - name: Build simui-pulsar.exe
+        run: |
+          wails build -platform windows/amd64 -clean -o simui-pulsar.exe -ldflags "-w -s"
+          rm -f .env
+
+      - name: Assemble package
+        run: |
+          RT="$RUNNER_TEMP/simui-rt"
+          OUT=../dist/SimUI-Pulsar
+          mkdir -p "$OUT"
+          cp build/bin/simui-pulsar.exe "$OUT/"
+          cp "$RT/data.db" "$OUT/data.db"
+          cp -r language resources "$OUT/"
+          cp LICENSE "$OUT/"
+          ls -la "$OUT"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: SimUI-Pulsar-win64
+          path: dist/SimUI-Pulsar
+
+      - name: Zip for release
+        if: startsWith(github.ref, 'refs/tags/pulsar-v')
+        working-directory: dist
+        run: 7z a SimUI-Pulsar-win64.zip SimUI-Pulsar
+
+      - name: Publish release (tags only)
+        if: startsWith(github.ref, 'refs/tags/pulsar-v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/SimUI-Pulsar-win64.zip

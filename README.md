@@ -1,3 +1,7 @@
+> **本仓库包含两个版本：**
+> - 根目录：SimUI 2.x（Go + Sciter），已加入“游戏年鉴”单游戏页面
+> - [`pulsar/`](pulsar/)：SimUI Pulsar 重构版（Go + Wails + Vue3），新增 Book · 年鉴主题，并补齐了语言文件与运行资源，详见 [pulsar/README.md](pulsar/README.md)
+
 
 
 ![](readme/logo.png)
