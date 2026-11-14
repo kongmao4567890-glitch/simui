@@ -61,6 +61,9 @@
             <q-item clickable v-close-popup @click="gotoTheme('Book')">
               <q-item-section>Book · 年鉴</q-item-section>
             </q-item>
+            <q-item clickable v-close-popup @click="gotoTheme('Gallery')">
+              <q-item-section>Gallery · 展馆</q-item-section>
+            </q-item>
             <q-item clickable v-close-popup @click="gotoTheme('Oicq')">
               <q-item-section>OICQ</q-item-section>
             </q-item>

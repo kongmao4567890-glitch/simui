@@ -51,7 +51,8 @@ var UI_DEFAULT = "Default"
 var UI_PLAYNITE = "Playnite"
 var UI_TINY = "Tiny"
 var UI_OICQ = "Oicq"
-var UI_BOOK = "Book" // 游戏年鉴主题，界面参数复用 Default
+var UI_BOOK = "Book"       // 游戏年鉴主题，界面参数复用 Default
+var UI_GALLERY = "Gallery" // 游戏展馆主题，界面参数复用 Default
 
 // 平台资源文件夹定义
 var RES_DIR = map[string]string{

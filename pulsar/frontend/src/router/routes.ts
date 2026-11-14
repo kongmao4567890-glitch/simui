@@ -30,6 +30,13 @@ const routes: RouteRecordRaw[] = [
         }
     },
     {
+        path: '/gallery',
+        component: () => import('pages/gallery/Layout.vue'),
+        meta: {
+            refreshPage: true
+        }
+    },
+    {
         path: '/book',
         component: () => import('pages/book/Layout.vue'),
         meta: {

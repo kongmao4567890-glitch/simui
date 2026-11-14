@@ -43,7 +43,7 @@ func GetPlatformUi(id uint32, theme string) (any, error) {
 	}
 
 	switch theme {
-	case constant.UI_DEFAULT, constant.UI_BOOK:
+	case constant.UI_DEFAULT, constant.UI_BOOK, constant.UI_GALLERY:
 		return ui.Default, nil
 	case constant.UI_PLAYNITE:
 		return ui.Playnite, nil
@@ -257,7 +257,7 @@ func UpdatePlatformUi(id uint32, theme string, data string) error {
 		ui = pfConf.Ui
 	}
 
-	if theme == constant.UI_DEFAULT || theme == constant.UI_BOOK {
+	if theme == constant.UI_DEFAULT || theme == constant.UI_BOOK || theme == constant.UI_GALLERY {
 		defUi := db.PlatformUIDefault{}
 		_ = json.Unmarshal([]byte(data), &defUi)
 		ui.Default = defUi
