@@ -37,6 +37,8 @@
 ![](readme/3.jpg)
 
 &nbsp;
+![](readme/themes_poster.png)
+
 ## 游戏年鉴主题（Book）
 
 本仓库新增了 **Book · 年鉴** 主题，安装包默认使用。打开软件后直接显示单个游戏的跨页，像翻开一本游戏年鉴：
