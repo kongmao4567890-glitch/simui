@@ -1,0 +1,502 @@
+/* 从 98.css 抽离的 Win98 组件样式（不可直接引用整库） */
+
+.qq-desktop {
+  --qq-98-surface: #c0c0c0;
+  --qq-98-button-highlight: #ffffff;
+  --qq-98-button-face: #dfdfdf;
+  --qq-98-button-shadow: #808080;
+  --qq-98-window-frame: #0a0a0a;
+  --qq-98-border-raised-outer: inset -1px -1px var(--qq-98-window-frame),
+    inset 1px 1px var(--qq-98-button-highlight);
+  --qq-98-border-raised-inner: inset -2px -2px var(--qq-98-button-shadow),
+    inset 2px 2px var(--qq-98-button-face);
+  --qq-98-border-sunken-outer: inset -1px -1px var(--qq-98-button-highlight),
+    inset 1px 1px var(--qq-98-window-frame);
+  --qq-98-border-sunken-inner: inset -2px -2px var(--qq-98-button-face),
+    inset 2px 2px var(--qq-98-button-shadow);
+}
+
+/* —— 标题栏系统按钮（title-bar-controls） —— */
+.qq-titlebar-btns {
+  display: flex;
+  gap: 0;
+  margin-left: 4px;
+}
+
+.qq-sys-btn {
+  box-sizing: border-box;
+  display: block;
+  padding: 0;
+  margin: 0;
+  min-width: 16px;
+  min-height: 14px;
+  width: 16px;
+  height: 14px;
+  border: none;
+  border-radius: 0;
+  background: var(--qq-98-surface);
+  background-repeat: no-repeat;
+  box-shadow: var(--qq-98-border-raised-outer), var(--qq-98-border-raised-inner);
+  font-size: 0;
+  line-height: 0;
+  color: transparent;
+  cursor: pointer;
+  --wails-draggable: no-drag;
+}
+
+.qq-sys-btn:focus {
+  outline: none;
+}
+
+.qq-sys-btn:active {
+  padding: 0;
+  box-shadow: var(--qq-98-border-sunken-outer), var(--qq-98-border-sunken-inner);
+}
+
+.qq-sys-btn.minimize {
+  background-image: url("./icon/minimize.svg");
+  background-position: bottom 3px left 4px;
+}
+
+.qq-sys-btn.close {
+  margin-left: 2px;
+  background-image: url("./icon/close.svg");
+  background-position: top 3px left 4px;
+}
+
+/* —— 右键菜单（98.css 无 menu 组件，边框复用上方抽离变量） —— */
+.qq-ctx-menu {
+  --qq-98-surface: #c0c0c0;
+  --qq-98-button-highlight: #ffffff;
+  --qq-98-button-face: #dfdfdf;
+  --qq-98-button-shadow: #808080;
+  --qq-98-window-frame: #0a0a0a;
+  --qq-98-border-raised-outer: inset -1px -1px var(--qq-98-window-frame),
+    inset 1px 1px var(--qq-98-button-highlight);
+  --qq-98-border-raised-inner: inset -2px -2px var(--qq-98-button-shadow),
+    inset 2px 2px var(--qq-98-button-face);
+
+  position: fixed;
+  z-index: 10000;
+  min-width: 120px;
+  max-width: min(280px, calc(100vw - 8px));
+  padding: 2px;
+  margin: 0;
+  background: var(--qq-98-surface);
+  border: none;
+  border-radius: 0;
+  box-shadow: var(--qq-98-border-raised-outer), var(--qq-98-border-raised-inner);
+  box-sizing: border-box;
+  font-family: "宋体", "SimSun", "MS Sans Serif", Tahoma, sans-serif;
+  font-size: 12px;
+  color: #000;
+  user-select: none;
+}
+
+.qq-ctx-item {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: 18px;
+  margin: 0;
+  padding: 2px 16px 2px 18px;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  font: inherit;
+  color: #000;
+  text-align: left;
+  cursor: default;
+  box-sizing: border-box;
+}
+
+.qq-ctx-item:hover:not(:disabled):not(.is-disabled),
+.qq-ctx-item:focus-visible:not(:disabled):not(.is-disabled) {
+  background: #000080;
+  color: #fff;
+  outline: none;
+}
+
+.qq-ctx-item:hover:not(:disabled):not(.is-disabled) .qq-ctx-item-label,
+.qq-ctx-item:focus-visible:not(:disabled):not(.is-disabled) .qq-ctx-item-label {
+  color: #fff;
+}
+
+.qq-ctx-item.is-disabled,
+.qq-ctx-item:disabled {
+  color: var(--qq-98-button-shadow);
+  text-shadow: 1px 1px 0 var(--qq-98-button-highlight);
+  cursor: default;
+}
+
+.qq-ctx-item.is-disabled .qq-ctx-item-label,
+.qq-ctx-item:disabled .qq-ctx-item-label {
+  color: var(--qq-98-button-shadow);
+}
+
+.qq-ctx-item.has-divider {
+  margin-bottom: 3px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid var(--qq-98-button-shadow);
+  box-shadow: 0 1px 0 var(--qq-98-button-highlight);
+}
+
+.qq-ctx-item-label {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  line-height: 1.2;
+  color: #000;
+}
+
+/* —— 查找向导：窗口 / 按钮 / 表单（从 98.css 抽离） —— */
+.qq-desktop {
+  --qq-98-dialog-blue: #000080;
+  --qq-98-dialog-blue-light: #1084d0;
+  --qq-98-border-window-outer: inset -1px -1px var(--qq-98-window-frame),
+    inset 1px 1px var(--qq-98-button-face);
+  --qq-98-border-window-inner: inset -2px -2px var(--qq-98-button-shadow),
+    inset 2px 2px var(--qq-98-button-highlight);
+  --qq-98-border-field: inset -1px -1px var(--qq-98-button-highlight),
+    inset 1px 1px var(--qq-98-button-shadow),
+    inset -2px -2px var(--qq-98-button-face),
+    inset 2px 2px var(--qq-98-window-frame);
+}
+
+.qq-dlg {
+  position: absolute;
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  max-height: calc(100vh - 24px);
+  padding: 3px;
+  background: var(--qq-98-surface);
+  box-shadow: var(--qq-98-border-window-outer), var(--qq-98-border-window-inner);
+  font-family: "宋体", "SimSun", "MS Sans Serif", Tahoma, sans-serif;
+  font-size: 12px;
+  color: #000;
+  user-select: none;
+}
+
+.qq-dlg.qq-search-wizard .qq-dlg-body {
+  overflow-y: auto;
+}
+
+.qq-dlg-titlebar {
+  display: flex;
+  align-items: center;
+  height: 20px;
+  padding: 0 2px 0 3px;
+  margin-bottom: 2px;
+  background: linear-gradient(90deg, var(--qq-98-dialog-blue), var(--qq-98-dialog-blue-light));
+  flex-shrink: 0;
+  cursor: default;
+}
+
+.qq-dlg-titlebar-icon {
+  width: 14px;
+  height: 14px;
+  margin-right: 4px;
+  flex-shrink: 0;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+
+.qq-dlg-titlebar-text {
+  flex: 1;
+  min-width: 0;
+  font-weight: bold;
+  font-size: 12px;
+  line-height: 18px;
+  color: #fff !important;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.qq-dlg-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  margin: 6px 8px 4px;
+}
+
+.qq-dlg-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 6px;
+  padding: 8px 8px 6px;
+  flex-shrink: 0;
+}
+
+.qq-98-btn {
+  box-sizing: border-box;
+  min-width: 75px;
+  min-height: 23px;
+  padding: 0 12px;
+  border: none;
+  border-radius: 0;
+  background: var(--qq-98-surface);
+  box-shadow: var(--qq-98-border-raised-outer), var(--qq-98-border-raised-inner);
+  font-family: inherit;
+  font-size: 12px;
+  color: #000;
+  cursor: pointer;
+}
+
+.qq-98-btn:not(:disabled):active {
+  box-shadow: var(--qq-98-border-sunken-outer), var(--qq-98-border-sunken-inner);
+  padding: 2px 11px 0 13px;
+}
+
+.qq-98-btn:focus {
+  outline: 1px dotted #000;
+  outline-offset: -4px;
+}
+
+.qq-98-btn:disabled {
+  color: var(--qq-98-button-shadow);
+  text-shadow: 1px 1px 0 var(--qq-98-button-highlight);
+  cursor: default;
+}
+
+.qq-98-btn.is-default {
+  box-shadow: inset -1px -1px var(--qq-98-window-frame),
+    inset 1px 1px var(--qq-98-window-frame),
+    inset -2px -2px var(--qq-98-button-shadow),
+    inset 2px 2px var(--qq-98-button-face);
+}
+
+.qq-fieldset {
+  margin: 0;
+  padding: 10px 10px 8px;
+  border: 2px solid;
+  border-image: url("./icon/groupbox-border.svg") 2;
+  min-width: 0;
+}
+
+.qq-fieldset > legend {
+  padding: 0 4px;
+  background: var(--qq-98-surface);
+  font-size: 12px;
+}
+
+.qq-field-grid {
+  display: grid;
+  grid-template-columns: 56px 1fr 56px 1fr;
+  gap: 6px 8px;
+  align-items: center;
+}
+
+.qq-field-grid .qq-field-label {
+  text-align: right;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.qq-field-grid .qq-field-span2 {
+  grid-column: 2 / -1;
+}
+
+.qq-98-input,
+.qq-98-select {
+  box-sizing: border-box;
+  width: 100%;
+  height: 21px;
+  padding: 2px 4px;
+  border: none;
+  border-radius: 0;
+  background-color: #fff;
+  box-shadow: var(--qq-98-border-field);
+  font-family: inherit;
+  font-size: 12px;
+  color: #000;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.qq-98-select {
+  padding-right: 24px;
+  background-image: url("./icon/button-down.svg");
+  background-position: top 2px right 2px;
+  background-repeat: no-repeat;
+  cursor: pointer;
+}
+
+.qq-98-input:focus,
+.qq-98-select:focus {
+  outline: none;
+}
+
+.qq-search-result-list {
+  flex: 1;
+  min-height: 180px;
+  max-height: 280px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background: #fff;
+  box-shadow: var(--qq-98-border-field);
+}
+
+.qq-search-result-list::-webkit-scrollbar {
+  width: 16px;
+}
+
+.qq-search-result-list::-webkit-scrollbar-track {
+  background-color: #fff;
+  background-image: url("./icon/scrollbar-background-beige.svg");
+}
+
+.qq-search-result-list::-webkit-scrollbar-thumb {
+  background-color: var(--qq-98-surface);
+  box-shadow: var(--qq-98-border-raised-outer), var(--qq-98-border-raised-inner);
+}
+
+.qq-search-result-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 6px;
+  min-height: 24px;
+  cursor: pointer;
+}
+
+.qq-search-result-item:hover,
+.qq-search-result-item.is-active {
+  background: #000080;
+  color: #fff;
+}
+
+.qq-search-result-item:hover .qq-search-result-name,
+.qq-search-result-item.is-active .qq-search-result-name {
+  color: #fff;
+}
+
+.qq-search-result-thumb {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  object-fit: contain;
+}
+
+.qq-search-result-thumb-empty {
+  display: inline-block;
+  box-sizing: border-box;
+  background: #c0c0c0;
+}
+
+.qq-search-result-name {
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  line-height: 1.2;
+  color: #000;
+}
+
+.qq-search-result-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 6px;
+  flex-shrink: 0;
+}
+
+.qq-search-result-status {
+  flex: 1;
+  min-width: 0;
+  padding: 2px 4px;
+  box-shadow: inset -1px -1px #dfdfdf, inset 1px 1px #808080;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.qq-search-page-btns {
+  display: flex;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.qq-search-empty {
+  padding: 16px 12px;
+  color: #666;
+  text-align: center;
+}
+
+.qq-dlg.qq-thumb-wizard .qq-dlg-body {
+  overflow: hidden;
+}
+
+.qq-thumb-table-wrap {
+  max-height: 320px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background: #fff;
+  box-shadow: var(--qq-98-border-field);
+}
+
+.qq-thumb-table-wrap::-webkit-scrollbar {
+  width: 16px;
+}
+
+.qq-thumb-table-wrap::-webkit-scrollbar-track {
+  background-color: #fff;
+  background-image: url("./icon/scrollbar-background-beige.svg");
+}
+
+.qq-thumb-table-wrap::-webkit-scrollbar-thumb {
+  background-color: var(--qq-98-surface);
+  box-shadow: var(--qq-98-border-raised-outer), var(--qq-98-border-raised-inner);
+}
+
+.qq-thumb-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  font-size: 12px;
+}
+
+.qq-thumb-table th,
+.qq-thumb-table td {
+  padding: 4px 6px;
+  border-bottom: 1px solid #dfdfdf;
+  text-align: left;
+  vertical-align: middle;
+}
+
+.qq-thumb-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: var(--qq-98-surface);
+  font-weight: bold;
+  border-bottom: 1px solid #808080;
+}
+
+.qq-thumb-table .col-name {
+  width: 55%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.qq-thumb-table .col-type {
+  width: 45%;
+}
+
+.qq-thumb-table .qq-98-select {
+  width: 100%;
+}
+
+.qq-thumb-empty {
+  padding: 16px 12px;
+  color: #666;
+  text-align: center;
+}

@@ -1,0 +1,545 @@
+/* OICQ / Win98 怀旧皮肤 —— 默认 220×480，边框可拖拽缩放（最大宽 700） */
+
+.qq-desktop {
+  /* Win98 3D 边框：凸起 / 凹陷 */
+  --qq-border-outset: #f7fbfe #808080 #808080 #f7fbfe;
+  --qq-border-inset: #000 #f7fbfe #f7fbfe #808080;
+
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background: #d4d0c7;
+  font-family: "宋体","SimSun",  "MS Sans Serif", Tahoma, sans-serif;
+  font-size: 12px;
+  user-select: none;
+}
+
+/* 查找打开时：系统窗口变成桌面，主窗与查找窗并列 */
+.qq-desktop.is-search-open {
+  background: #008080;
+}
+
+.qq-desktop,
+.qq-desktop * {
+  color: #000;
+}
+
+.qq-window {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+.qq-desktop.is-search-open .qq-window {
+  position: absolute;
+  left: 12px;
+  top: 12px;
+  /* 宽高由 Layout 按 currentW/H 内联设置 */
+  z-index: 10;
+}
+
+/* 边框拖拽缩放热区（覆盖 Win98 立体边框） */
+.qq-resize-handle {
+  position: absolute;
+  z-index: 50;
+  background: transparent;
+}
+
+.qq-resize-handle.is-n,
+.qq-resize-handle.is-s {
+  left: 6px;
+  right: 6px;
+  height: 5px;
+}
+
+.qq-resize-handle.is-e,
+.qq-resize-handle.is-w {
+  top: 6px;
+  bottom: 6px;
+  width: 5px;
+}
+
+.qq-resize-handle.is-n { top: 0; cursor: ns-resize; }
+.qq-resize-handle.is-s { bottom: 0; cursor: ns-resize; }
+.qq-resize-handle.is-e { right: 0; cursor: ew-resize; }
+.qq-resize-handle.is-w { left: 0; cursor: ew-resize; }
+
+.qq-resize-handle.is-nw,
+.qq-resize-handle.is-ne,
+.qq-resize-handle.is-sw,
+.qq-resize-handle.is-se {
+  width: 8px;
+  height: 8px;
+}
+
+.qq-resize-handle.is-nw { top: 0; left: 0; cursor: nwse-resize; }
+.qq-resize-handle.is-ne { top: 0; right: 0; cursor: nesw-resize; }
+.qq-resize-handle.is-sw { bottom: 0; left: 0; cursor: nesw-resize; }
+.qq-resize-handle.is-se { bottom: 0; right: 0; cursor: nwse-resize; }
+
+.qq-window-inner {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  margin: 2px;
+  min-height: 0;
+  border: 1px solid;
+  border-color: var(--qq-border-outset);
+  background: #d4d0c7;
+  box-sizing: border-box;
+
+}
+
+/* —— 标题栏 —— */
+.qq-titlebar {
+  display: flex;
+  align-items: center;
+  height: 20px;
+  padding: 0 2px 0 4px;
+  background: linear-gradient(90deg, #000080, #1084d0);
+  cursor: default;
+  flex-shrink: 0;
+}
+
+.qq-titlebar-icon {
+  width: 14px;
+  height: 14px;
+  margin-right: 4px;
+  flex-shrink: 0;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+
+.qq-titlebar-text {
+  flex: 1;
+  font-weight: bold;
+  font-size: 12px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  line-height: 18px;
+  color:#FFF;
+}
+
+/* —— 工具栏：小头像 / 大头像（Win98 列表·大图标） —— */
+.qq-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 3px 4px;
+  flex-shrink: 0;
+  background: #d4d0c7;
+  border-bottom: 1px solid #808080;
+}
+
+.qq-tool-btn {
+  width: 18px;
+  height: 18px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #d4d0c7;
+  border: 1px solid;
+  border-color: var(--qq-border-outset);
+  cursor: pointer;
+  line-height: 1;
+}
+
+.qq-tool-btn:active,
+.qq-tool-btn.is-active {
+  border-color: var(--qq-border-inset);
+  background: #c0c0c0;
+  padding-top: 1px;
+  padding-left: 1px;
+}
+
+.qq-tool-ico {
+  display: block;
+  width: 12px;
+  height: 12px;
+  object-fit: contain;
+  image-rendering: pixelated;
+  pointer-events: none;
+}
+
+/* —— 列表区（平台条绝对定位，top 过渡实现滑动） —— */
+.qq-list-panel {
+  --qq-bar-h: 20px;
+
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  display: block;
+  background: #817fc0;
+  border-top: 1px solid;
+  border-left: 1px solid;
+  border-top-color: #444;
+  border-left-color: #444;
+  margin: 2px;
+  overflow: hidden;
+}
+
+.qq-list-panel-scroll {
+  height: 100%;
+  width: 100%;
+}
+
+.qq-list-content {
+  position: relative;
+  width: 100%;
+}
+
+.qq-list-middle {
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+  transition: none;
+}
+
+.qq-list-middle.is-anim {
+  transition: top 0.28s ease, bottom 0.28s ease;
+}
+
+.qq-list-scroll {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  min-height: 300px;
+}
+
+.qq-list-scroll::-webkit-scrollbar {
+  width: 16px;
+}
+
+.qq-list-scroll::-webkit-scrollbar-track {
+  background-color: #d4d0c7;
+  background-image: url("./icon/scrollbar-background-beige.svg");
+}
+
+.qq-list-scroll::-webkit-scrollbar-thumb {
+  background-color: #d4d0c7;
+  border: none;
+  border-radius: 0;
+  box-shadow:
+    inset -1px -1px #0a0a0a,
+    inset 1px 1px #f7fbfe,
+    inset -2px -2px #808080,
+    inset 2px 2px #dfdfdf;
+}
+
+.qq-list-scroll::-webkit-scrollbar-thumb:hover,
+.qq-list-scroll::-webkit-scrollbar-thumb:active {
+  background-color: #d4d0c7;
+  background-clip: border-box;
+}
+
+/* 仅显示上/下箭头按钮（米色版，对齐窗口背景 #d4d0c7；灰色原版 button-up/down.svg 留给弹窗） */
+.qq-list-scroll::-webkit-scrollbar-button:vertical:start:decrement,
+.qq-list-scroll::-webkit-scrollbar-button:vertical:end:increment {
+  display: block;
+}
+
+.qq-list-scroll::-webkit-scrollbar-button:vertical:start {
+  height: 17px;
+  background-image: url("./icon/button-up-beige.svg");
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.qq-list-scroll::-webkit-scrollbar-button:vertical:end {
+  height: 17px;
+  background-image: url("./icon/button-down-beige.svg");
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+/* 平台分组条 —— Win98 凸起 3D + 滑动 */
+.qq-platform-bar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: 2;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: var(--qq-bar-h);
+  padding: 0 4px;
+  background: #d4d0c7;
+  border-width: 1px;
+  border-bottom-width: 2px;
+  border-style: solid;
+  border-color: var(--qq-border-outset);
+  cursor: pointer;
+  font-weight: normal;
+  text-align: center;
+  transition: none;
+}
+
+.qq-platform-bar.is-anim {
+  transition: top 0.28s ease;
+}
+
+.qq-platform-bar:active,
+.qq-platform-bar.is-open:active {
+  border-color: var(--qq-border-inset);
+  box-shadow: none;
+  padding-top: 1px;
+  padding-left: 5px;
+}
+
+.qq-platform-bar.is-open {
+  background: #d4d0c7;
+}
+
+.qq-platform-body {
+  background: transparent;
+}
+
+/* 分类折叠：无背景，叠在紫色列表上 */
+.qq-category-bar {
+  display: flex;
+  align-items: center;
+  height: 20px;
+  padding: 0 4px 0 8px;
+  cursor: pointer;
+  background: transparent;
+  font-size: 12px;
+}
+
+.qq-category-bar:hover {
+  background: rgba(0, 0, 128, 0.08);
+}
+
+.qq-category-tri {
+  width: 0;
+  height: 0;
+  margin-right: 5px;
+  border-style: solid;
+  border-width: 4px 0 4px 6px;
+  border-color: transparent transparent transparent #000;
+  flex-shrink: 0;
+  transition: transform 0.1s;
+}
+
+.qq-category-bar.is-open .qq-category-tri {
+  transform: rotate(90deg);
+}
+
+.qq-category-name {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* 游戏项 —— 小头像：名称在右 */
+.qq-game-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 4px 3px 18px;
+  cursor: pointer;
+  min-height: 28px;
+}
+
+.qq-game-item:hover {
+  background: rgba(0, 0, 128, 0.08);
+}
+
+.qq-game-item.is-active {
+}
+
+.qq-game-thumb {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  object-fit: contain;
+}
+
+.qq-game-thumb-empty {
+  display: inline-block;
+  box-sizing: border-box;
+}
+
+.qq-game-name {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  line-height: 1.2;
+  min-width: 0;
+}
+
+/* 大头像：头像居中占一行，昵称在下 */
+.qq-game-item.is-large {
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 8px 6px;
+  min-height: 0;
+}
+
+.qq-game-item.is-large .qq-game-thumb {
+  width: 48px;
+  height: 48px;
+}
+
+.qq-game-item.is-large .qq-game-name {
+  width: 100%;
+  text-align: center;
+  white-space: normal;
+  word-break: break-all;
+  line-height: 1.25;
+  font-size: 12px;
+}
+
+.qq-empty-hint {
+  padding: 8px 12px;
+  color: #666;
+  font-size: 11px;
+}
+
+/* —— 底部功能区 —— */
+.qq-footer {
+  flex-shrink: 0;
+  padding: 3px;
+  background: #d4d0c7;
+  border-top: 1px solid #fff;
+}
+
+.qq-footer-row {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  margin-bottom: 3px;
+}
+
+.qq-footer-icon {
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #d4d0c7;
+  border: 1px solid;
+  border-color: var(--qq-border-inset);
+  cursor: pointer;
+  padding: 0;
+}
+
+.qq-footer-icon img {
+  width: 14px;
+  height: 14px;
+  object-fit: contain;
+  image-rendering: pixelated;
+  pointer-events: none;
+}
+
+.qq-footer-icon:active:not(:disabled) {
+  background: #c0c0c0;
+}
+
+.qq-footer-icon:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.qq-footer-btn {
+  position: relative;
+  flex: 1;
+  height: 24px;
+  padding: 0 6px;
+  background: #d4d0c7;
+  border: 1px solid;
+  border-color: var(--qq-border-inset);
+  font-family: inherit;
+  font-size: 12px;
+  cursor: pointer;
+  text-align: center;
+}
+
+.qq-footer-btn-ico {
+  position: absolute;
+  left: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 14px;
+  height: 14px;
+  object-fit: contain;
+  image-rendering: pixelated;
+  pointer-events: none;
+}
+
+.qq-footer-btn-label {
+  display: block;
+  width: 100%;
+  text-align: center;
+  line-height: 22px;
+}
+
+.qq-footer-btn:active,
+.qq-footer-btn.is-pressed {
+  background: #c0c0c0;
+}
+
+.qq-statusbar {
+  display: flex;
+  align-items: stretch;
+  gap: 2px;
+  margin-top: 2px;
+}
+
+/* 原版：左凸右凹；宽度 4:6 */
+.qq-statusbar-btn {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+  gap: 4px;
+  height: 20px;
+  padding: 0 4px;
+  background: #d4d0c7;
+  border: 1px solid;
+  font-family: inherit;
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.qq-statusbar-btn.is-out {
+  flex: 3;
+  justify-content: center;
+  border-color: var(--qq-border-outset);
+}
+
+.qq-statusbar-btn.is-out:active {
+  border-color: var(--qq-border-inset);
+}
+
+.qq-statusbar-btn.is-out:active .qq-statusbar-logo {
+  transform: translate(1px, 1px);
+}
+
+.qq-statusbar-btn.is-in {
+  flex: 7;
+  border-color: var(--qq-border-inset);
+}
+
+.qq-statusbar-logo {
+  height: 14px;
+  width: auto;
+  object-fit: contain;
+  image-rendering: pixelated;
+  pointer-events: none;
+}
+
