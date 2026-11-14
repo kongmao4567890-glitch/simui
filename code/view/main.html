@@ -346,6 +346,83 @@ solid-with-shadow
     .widthMode .related > li:hover{opacity:0.7}
     .widthMode .related > li img{width:48dip;height:48dip;border-radius:48dip;margin:0 auto}
     .widthMode .related > li > p{margin-bottom:0;display:block;font-size:10dip}
+    /* ================= 游戏年鉴（单游戏页面） ================= */
+    #titlebar button#book_toggle.active{background:color(platform-active-background-color);}
+    #book{display:none;position:absolute;top:37dip;left:1dip;right:1dip;bottom:1dip;z-index:20;background-color:#2b2621;background-position:center center;background-repeat:no-repeat;background-size:cover;flow:vertical;}
+    #book_shade{position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(18,14,10,0.78);}
+    #book_bar{position:relative;flow:horizontal;height:40dip;line-height:40dip;padding:0 18dip;color:#e9dfc8;font-size:12dip;}
+    #book_bar button{height:26dip;line-height:26dip;margin:7dip 4dip 0 0;padding:0 12dip;border:1dip solid rgba(233,223,200,0.35);border-radius:13dip;background:rgba(255,255,255,0.06);color:#efe6d2;font-size:12dip;}
+    #book_bar button:hover{background:rgba(255,255,255,0.18);}
+    #book_bar button:disabled{opacity:0.3;}
+    #book_bar .bar-mid{display:block;width:*;height:40dip;line-height:40dip;text-align:center;white-space:nowrap;overflow:hidden;}
+    #book_bar #book_title{font-size:14dip;color:#fff3da;letter-spacing:1dip;}
+    #book_bar #book_pageno{margin-left:10dip;color:#bfb196;}
+    #book_spread{position:relative;flow:horizontal;width:*;height:*;margin:0 22dip 18dip 22dip;min-height:520dip;box-shadow:0 10dip 30dip rgba(0,0,0,0.6);}
+    .book-page{width:*;height:*;flow:vertical;background:#f5eedc;color:#3b3127;padding:16dip 22dip 10dip 22dip;overflow:hidden;font-size:12dip;}
+    .book-left{border-radius:6dip 0 0 6dip;background-image:linear-gradient(left, #efe6cf, #f6efdd 8%, #f6efdd 92%, #e2d6b8);}
+    .book-right{border-radius:0 6dip 6dip 0;background-image:linear-gradient(left, #e2d6b8, #f6efdd 8%, #f6efdd 92%, #efe6cf);}
+    .book-gutter{width:10dip;height:*;background-image:linear-gradient(left, #cbbd9c, #8f8062 50%, #cbbd9c);}
+    .book-head{flow:horizontal;height:22dip;line-height:22dip;border-bottom:1dip solid #b9a57f;color:#8a7553;font-size:11dip;letter-spacing:1dip;margin-bottom:10dip;}
+    .book-head-l{display:block;width:*;white-space:nowrap;overflow-x:hidden;}
+    .book-head-r{display:block;width:max-content;text-align:right;padding-left:10dip;}
+    .book-titlebox{flow:horizontal;height:max-content;margin-bottom:10dip;}
+    .book-name{width:*;padding-left:12dip;vertical-align:middle;}
+    .book-name h1{font-family:"SimSun","NSimSun","Songti SC",serif;font-size:26dip;font-weight:bold;color:#2a2018;margin:0 0 4dip 0;line-height:1.2em;}
+    .book-name p{margin:0;color:#8a7553;font-size:11dip;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .book-row{flow:horizontal;width:*;}
+    .book-col{flow:vertical;width:*;height:*;}
+    .book-cover{height:*;min-height:180dip;}
+    .book-cover .bslot-packing{width:46%;height:*;margin-right:10dip;}
+    .book-cover .book-col .bslot{height:*;}
+    .book-cover .book-col .bslot:first-child{margin-bottom:10dip;}
+    .book-section{font-family:"SimSun","NSimSun","Songti SC",serif;font-weight:bold;font-size:13dip;color:#6b3a1f;border-left:3dip solid #a4522a;padding-left:7dip;margin:10dip 0 6dip 0;height:max-content;}
+    .book-profile{height:max-content;}
+    .book-table{width:*;border-collapse:collapse;font-size:11dip;}
+    .book-table th{text-align:left;font-weight:normal;color:#8a7553;width:70dip;padding:3dip 6dip 3dip 0;border-bottom:1dip dotted #cdbf9f;white-space:nowrap;}
+    .book-table td{color:#2f261d;padding:3dip 0;border-bottom:1dip dotted #cdbf9f;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .book-profile .bslot-thumb{width:36%;height:170dip;margin-left:12dip;}
+    .book-na{color:#b3a281;}
+    .book-folio{height:18dip;line-height:18dip;text-align:left;color:#9a8762;font-size:10dip;margin-top:6dip;}
+    .book-folio-r{text-align:right;}
+    .book-screens{height:1.25*;min-height:160dip;}
+    .book-screens .bslot-snap{width:*;height:*;margin-right:10dip;}
+    .book-screens .book-col{width:36%;}
+    .book-screens .book-col .bslot{height:*;}
+    .book-screens .book-col .bslot:first-child{margin-bottom:10dip;}
+    .book-text{height:1*;min-height:120dip;margin-top:10dip;}
+    .book-text .bslot-poster{width:26%;height:*;margin-right:12dip;}
+    .book-doc .book-section{margin-top:0;}
+    .book-doc-body{height:*;overflow-y:auto;line-height:1.7em;color:#3b3127;white-space:pre-wrap;word-wrap:break-word;}
+    .book-doc-body p{margin:0 0 6dip 0;}
+    .book-strategy{height:0.7*;min-height:60dip;overflow-y:auto;line-height:1.7em;color:#3b3127;white-space:pre-wrap;word-wrap:break-word;}
+    .book-strategy img.ctl{width:16dip;height:16dip;margin:0 1dip;vertical-align:middle;display:inline-block;}
+    .book-files{flow:horizontal-flow;margin:0 0 6dip 0;padding:0;}
+    .book-files li{display:block;list-style:none;height:24dip;line-height:24dip;padding:0 8dip 0 26dip;margin:0 6dip 4dip 0;border:1dip solid #cdbf9f;background:#efe5cd no-repeat 5dip center;background-size:16dip;color:#4a3c2c;}
+    .book-files li:hover{background-color:#e6d8b6;}
+    .book-blank{height:*;text-align:center;vertical-align:middle;color:#9a8762;font-size:16dip;}
+    .book-play{flow:horizontal;height:max-content;margin-top:8dip;padding-top:8dip;border-top:1dip solid #cdbf9f;}
+    .book-play select{width:150dip;height:28dip;margin-right:8dip;background:#fffaf0;color:#3b3127;border:1dip solid #b9a57f;}
+    .book-play button.book-run{height:28dip;line-height:28dip;padding:0 16dip;margin-right:6dip;border:0;border-radius:3dip;background:#a4522a;color:#fff7ea;font-size:12dip;}
+    .book-play button.book-run:hover{background:#bf6534;}
+    .book-play button.book-run-sub{background:#7d6a4c;}
+    /* 素材版位 */
+    .bslot{prototype:BookSlot;position:relative;display:block;border:1dip solid #d3c4a2;background:#fbf7ec;overflow:hidden;}
+    .bslot-img{position:absolute;top:6dip;left:6dip;right:6dip;bottom:22dip;foreground-repeat:no-repeat;foreground-position:50% 50%;foreground-size:contain;display:none;}
+    .bslot-img video{size:*;foreground-repeat:no-repeat;foreground-position:center center;foreground-size:contain;}
+    .bslot.has .bslot-img{display:block;}
+    .bslot-empty{position:absolute;top:6dip;left:6dip;right:6dip;bottom:6dip;border:1dip dashed #c2ae86;color:#ab9671;text-align:center;font-size:11dip;line-height:1.6em;flow:vertical;}
+    .bslot-empty-in{display:block;margin:* 4dip;}
+    .bslot-empty b{color:#8a7553;font-size:12dip;}
+    .bslot-empty small{font-size:9dip;color:#c0ad88;}
+    .bslot.has .bslot-empty{display:none;}
+    .bslot-cap{position:absolute;left:0;right:0;bottom:0;height:20dip;line-height:20dip;text-align:center;font-size:10dip;color:#8a7553;display:none;}
+    .bslot.has .bslot-cap{display:block;}
+    .bslot.active-target{border-color:#a4522a;background:#f3e3c4;}
+    .bslot-icon{width:64dip;height:64dip;}
+    .bslot-icon .bslot-img{top:4dip;left:4dip;right:4dip;bottom:4dip;}
+    .bslot-icon .bslot-cap{display:none!important;}
+    .bslot-icon .bslot-empty{top:3dip;left:3dip;right:3dip;bottom:3dip;font-size:9dip;line-height:1.3em;}
+    .bslot-icon .bslot-hint{display:none;}
 </style>
 
 </head>
@@ -381,7 +458,7 @@ solid-with-shadow
             <li id="config_show_name_type">{{ShowNameType}}<menu><li opt="0">{{Alias}}</li><li opt="1">{{FileName}}</li></menu></li>
         </menu></button>
 
-        <button id="istop" value="" title="{{GoTop}}"><i.top.minsize></i></button>
+        <button id="istop" value="" title="{{GoTop}}"><i.top.minsize></i></button><button id="book_toggle" value="" title="{{BookMode}}"><i.book.minsize></i></button>
     </div>
 
     <div id="tb_right">
@@ -512,6 +589,21 @@ solid-with-shadow
     </section>
     
 </frameset>
+<div id="book">
+    <div id="book_shade"></div>
+    <div id="book_bar">
+        <button id="book_back"></button>
+        <button id="book_prev"></button>
+        <button id="book_next"></button>
+        <div class="bar-mid"><span id="book_title"></span>&nbsp;&nbsp;<span id="book_pageno"></span></div>
+        <button id="book_edit_baseinfo" class="book_edit" opt="baseinfo"></button>
+        <button id="book_edit_doc" class="book_edit" opt="doc"></button>
+        <button id="book_edit_strategy" class="book_edit" opt="strategy"></button>
+        <button id="book_edit_files" class="book_edit" opt="files"></button>
+    </div>
+    <div id="book_spread"></div>
+    <div id="book_edit_proxy" style="display:none"></div>
+</div>
 </body>
 
 <script type="text/tiscript">
@@ -539,6 +631,7 @@ solid-with-shadow
     include ROOTPATH + "tis/romcontext.tis";
     include ROOTPATH + "tis/menucontext.tis";
     include ROOTPATH + "tis/keycode.tis";
+    include ROOTPATH + "tis/book.tis";
     include ROOTPATH + "tis/event.tis";
 </script>
 </html>

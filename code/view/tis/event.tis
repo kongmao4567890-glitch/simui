@@ -198,6 +198,61 @@ view.root.on("ready", function(){
     
 
    /**
+    * 游戏年鉴（单游戏页面）
+    **/
+
+    //打开/关闭年鉴
+    self.on("click", "#book_toggle", function(evt) {
+        bookToggle();
+    });
+
+    //返回目录
+    self.on("click", "#book_back", function(evt) {
+        bookClose();
+    });
+
+    //上一页
+    self.on("click", "#book_prev", function(evt) {
+        bookFlip(-1);
+    });
+
+    //下一页
+    self.on("click", "#book_next", function(evt) {
+        bookFlip(1);
+    });
+
+    //年鉴编辑按钮
+    self.on("click", "#book_bar .book_edit", function(evt) {
+        bookEdit(this.attributes["opt"]);
+    });
+
+    //年鉴开始游戏
+    self.on("click", "#book_spread .book-run", function(evt) {
+        bookRunGame(this);
+    });
+
+    //年鉴切换模拟器
+    self.on("change", "#book_sim", function(evt) {
+        bookSwitchSim(this);
+    });
+
+    //年鉴打开攻略文件
+    self.on("click", "#book_spread .book-files li", function(evt) {
+        view.OpenStrategyFiles(this.attributes["path"]);
+    });
+
+    //右键菜单打开年鉴页
+    self.on("click", "#romcontext .bookpage", function(evt) {
+        bookOpen(this.attributes["rid"]);
+    });
+
+    //年鉴中鼠标滚轮翻页
+    self.on("mousewheel", "#book_bar", function(evt) {
+        bookFlip(evt.wheelDelta > 0 ? -1 : 1);
+        return true;
+    });
+
+   /**
     * 游戏列表
     **/
 
@@ -467,6 +522,15 @@ view.root.on("ready", function(){
 
     //键盘按下
     self.on("keyup", function(evt) {
+        //年鉴打开时，由年鉴接管键盘
+        if(bookIsOpen()){
+            //输入框、下拉框中的按键不处理
+            if(evt.target != undefined && (evt.target.tag == "input" || evt.target.tag == "textarea" || evt.target.tag == "select")){
+                return;
+            }
+            bookKeyup(evt.keyCode);
+            return true;
+        }
         var switch_romlist = $(#switch_romlist).attributes["value"];
         
         if(evt.keyCode == Event.VK_UP){

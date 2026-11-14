@@ -189,6 +189,10 @@ function romContextMenu(obj){
 
     btndata += "<hr />";
 
+    //年鉴页
+    btndata += "<li class='bookpage' rid='"+ detailObj.Info.Id +"'>"+ bookLang("BookOpen","打开年鉴页") +"</li>";
+    btndata += "<hr />";
+
     if( detailObj.Info.Star == 1){
         btndata += "<li class='fav fav0' value='0' rid='"+ detailObj.Info.Id +"'>"+ CONF.Lang.CancelFavorite +"</li>";
     }else{

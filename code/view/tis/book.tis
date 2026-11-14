@@ -1,0 +1,581 @@
+/**
+ * 游戏年鉴（单游戏页面）
+ *
+ * 把一个游戏展示成“年鉴图书”打开后的一个跨页：
+ *   左页：书眉 / 图标 + 游戏名 / 封面(包装盒) + 标题画面 + 卡带 / 资料卡 + 缩略图 / 页码
+ *   右页：书眉 / 游戏画面 + 动态画面 + 视频 / 海报 + 游戏简介 / 攻略要点 + 攻略文件 / 开始游戏 / 页码
+ *   桌面背景：背景图（没有则用壁纸）
+ *
+ * 每一个素材位都是固定的“版位”，没有素材时显示虚线占位框，
+ * 直接把图片/视频拖进版位即可为该游戏设置对应素材。
+ */
+
+var BOOK_ROM_ID = 0;        //年鉴当前展示的rom id
+var BOOK_OPEN = false;      //年鉴是否打开
+var BOOK_PIC_EXTS = "*.gif;*.png;*.jpg;*.jpeg;*.ico;*.bmp";
+var BOOK_VIDEO_EXTS = "*.wmv;*.mp4;*.avi;*.flv";
+
+//读取语言，没有则使用默认文字
+function bookLang(key, def){
+    if(CONF != undefined && CONF.Lang != undefined && CONF.Lang[key] != undefined && CONF.Lang[key] != ""){
+        return CONF.Lang[key];
+    }
+    return def;
+}
+
+//年鉴是否打开
+function bookIsOpen(){
+    return BOOK_OPEN;
+}
+
+//当前列表中所有游戏节点
+function _bookItems(){
+    return $$(#romlist li.romitem);
+}
+
+//在列表中查找游戏节点的位置
+function _bookIndexOf(rid){
+    var items = _bookItems();
+    for(var i = 0; i < items.length; i++){
+        if(items[i].attributes["rid"] == rid.toString()){
+            return i;
+        }
+    }
+    return -1;
+}
+
+//启动时打开年鉴：优先当前选中的游戏，否则第一个游戏
+function bookStartup(){
+    bookOpenCurrent();
+}
+
+//打开当前选中游戏的年鉴页
+function bookOpenCurrent(){
+    var current = $(#romlist li.romitem:current);
+    if(current == undefined){
+        current = $(#romlist li.romitem);
+    }
+    if(current == undefined){
+        bookOpen(0);
+    }else{
+        bookOpen(current.attributes["rid"]);
+    }
+}
+
+//年鉴工具栏文字
+function _bookInitBar(){
+    $(#book_back).html = "◀ " + bookLang("BookBack", "返回目录");
+    $(#book_prev).html = "‹ " + bookLang("BookPrev", "上一页");
+    $(#book_next).html = bookLang("BookNext", "下一页") + " ›";
+    $(#book_edit_baseinfo).html = bookLang("EditBaseInfo", "编辑资料");
+    $(#book_edit_doc).html = bookLang("EditDoc", "编辑简介");
+    $(#book_edit_strategy).html = bookLang("EditStrategy", "编辑攻略");
+    $(#book_edit_files).html = bookLang("EditFiles", "攻略文件");
+}
+
+//打开年鉴
+function bookOpen(rid){
+    videoPause(); //暂停侧边栏视频
+    _bookInitBar();
+    BOOK_OPEN = true;
+    $(#book).style["display"] = "block";
+    $(#book_toggle).attributes.addClass("active");
+    bookRender(rid);
+    $(#book).state.focus = true;
+}
+
+//关闭年鉴，回到游戏目录
+function bookClose(){
+    _bookStopVideo();
+    BOOK_OPEN = false;
+    $(#book).style["display"] = "none";
+    $(#book_toggle).attributes.removeClass("active");
+
+    //目录中选中当前游戏，并同步侧边栏
+    if(BOOK_ROM_ID != 0){
+        var dom = $(#romlist).select("li.romitem[rid=" + BOOK_ROM_ID + "]");
+        if(dom != undefined){
+            openSidebar(dom);
+            dom.scrollToView();
+        }
+    }
+    $(body).state.focus = true;
+}
+
+//切换年鉴
+function bookToggle(){
+    if(BOOK_OPEN){
+        bookClose();
+    }else{
+        bookOpenCurrent();
+    }
+}
+
+//翻页 step = -1 上一页，1 下一页
+function bookFlip(step){
+    var items = _bookItems();
+    if(items.length == 0){
+        return;
+    }
+    var index = _bookIndexOf(BOOK_ROM_ID);
+    var next = index + step;
+
+    //翻到已加载列表末尾时，继续加载下一页游戏
+    if(next >= items.length && step > 0){
+        _bookLoadMore();
+        items = _bookItems();
+    }
+    if(next < 0 || next >= items.length){
+        return;
+    }
+    var dom = items[next];
+    dom.state.current = true;
+    _bookAnimate(step);
+    bookRender(dom.attributes["rid"]);
+}
+
+//翻页动画（轻微位移淡入）
+function _bookAnimate(step){
+    var spread = $(#book_spread);
+    if(spread == undefined){
+        return;
+    }
+    spread.attributes.removeClass("flip-next");
+    spread.attributes.removeClass("flip-prev");
+    spread.update();
+    spread.attributes.addClass(step > 0 ? "flip-next" : "flip-prev");
+}
+
+//列表追加加载一页rom
+function _bookLoadMore(){
+    var menu = "";
+    var menuDom = $(#menulist).select("dd:current");
+    if(menuDom != undefined){
+        menu = menuDom.attributes["opt"];
+    }
+    var num = "";
+    var numDom = $(#num_search).select("li:current");
+    if(numDom != undefined && numDom.html != "ALL"){
+        num = numDom.html;
+    }
+    var json = view.GetGameList(0, ACTIVE_PLATFORM, menu, $(#search_input).value, num, SCROLL_PAGE,
+        $(#filter_type).value, $(#filter_publisher).value, $(#filter_year).value,
+        $(#filter_country).value, $(#filter_translate).value, $(#filter_version).value);
+    if(json != "[]" && json != ""){
+        ROMJSON = json;
+        createRomList(0);
+    }
+}
+
+//生成一个素材版位
+function _bookSlot(opt, caption, cls){
+    var accept = opt == "video" ? BOOK_VIDEO_EXTS : BOOK_PIC_EXTS;
+    var exts = opt == "video" ? "mp4 / flv / wmv / avi" : "png / jpg / gif / bmp / ico";
+    var html = "";
+    html += "<div class='bslot " + cls + "' opt='" + opt + "' accept-drop='" + accept + "'>";
+    html += "<div class='bslot-img'></div>";
+    html += "<div class='bslot-empty'><div class='bslot-empty-in'><b>" + caption + "</b><br/><span class='bslot-hint'>" + bookLang("BookDropHere", "拖入素材到此处") + "<br/><small>" + exts + "</small></span></div></div>";
+    html += "<div class='bslot-cap'>" + caption + "</div>";
+    html += "</div>";
+    return html;
+}
+
+//资料卡一行
+function _bookRow(label, value){
+    if(value == undefined || value.toString() == "" || value.toString() == "0"){
+        value = "<span class='book-na'>—</span>";
+    }else{
+        value = value.toString().toHtmlString();
+    }
+    return "<tr><th>" + label + "</th><td>" + value + "</td></tr>";
+}
+
+//攻略中的手柄按键替换为图标
+function _bookCtlIcons(str){
+    var keys = ["+","1","2","3","4","5","6","7","8","9","A","B","C","D","E","F","N","S","P","K"];
+    for(var k in keys){
+        var img = "<img class='ctl' src='this://app/images/ctl_" + k + ".png' />";
+        str = str.replace("_" + k, img);
+        str = str.replace("_" + k.toLowerCase(), img);
+    }
+    return str;
+}
+
+//空页面（当前目录没有游戏）
+function _bookRenderEmpty(){
+    BOOK_ROM_ID = 0;
+    var html = "";
+    html += "<div class='book-page book-left'><div class='book-head'><div class='book-head-l'>" + bookLang("BookTitle", "游戏年鉴") + "</div></div>";
+    html += "<div class='book-blank'>" + bookLang("BookNoGame", "当前目录下没有游戏") + "</div></div>";
+    html += "<div class='book-gutter'></div>";
+    html += "<div class='book-page book-right'><div class='book-head'><div class='book-head-l'></div></div>";
+    html += "<div class='book-blank'>" + bookLang("BookNoGameTip", "请先在平台设置中添加游戏目录并生成缓存") + "</div></div>";
+    $(#book_spread).html = html;
+    $(#book_pageno).html = "0 / 0";
+    $(#book).style["background-image"] = "none";
+    $(#book_title).html = "";
+    $(#book_prev).state.disabled = true;
+    $(#book_next).state.disabled = true;
+}
+
+//渲染年鉴跨页
+function bookRender(rid){
+
+    _bookStopVideo();
+
+    if(rid == undefined || rid == 0 || rid == ""){
+        _bookRenderEmpty();
+        return;
+    }
+
+    var detailObj = JSON.parse(view.GetGameDetail(rid));
+    if(detailObj == undefined || detailObj.Info == undefined){
+        _bookRenderEmpty();
+        return;
+    }
+    var info = detailObj.Info;
+    BOOK_ROM_ID = info.Id;
+
+    var pf = info.Platform;
+    var pfObj = CONF.Platform[pf.toString()];
+    var pfName = pfObj != undefined ? pfObj.Name : "";
+    var romName = getRomName(info.RomPath);
+    var name = info.Name.toHtmlString();
+
+    //页码
+    var index = _bookIndexOf(info.Id);
+    var total = $(#rom_count_num).html.toInteger();
+    if(total == undefined || total < _bookItems().length){
+        total = _bookItems().length;
+    }
+    var pageNo = index >= 0 ? (index + 1) : 1;
+    var leftFolio = pageNo * 2 - 1;
+    var rightFolio = pageNo * 2;
+
+    var html = "";
+
+    /********** 左页 **********/
+    html += "<div class='book-page book-left'>";
+
+    //书眉
+    html += "<div class='book-head'><div class='book-head-l'>" + bookLang("BookTitle", "游戏年鉴") + " · " + pfName.toHtmlString() + "</div>";
+    html += "<div class='book-head-r'>" + (info.BaseYear != "" && info.BaseYear != "0" ? info.BaseYear.toString().toHtmlString() : "") + "</div></div>";
+
+    //标题区：图标 + 游戏名
+    html += "<div class='book-titlebox'>";
+    html += _bookSlot("icon", bookLang("Icon", "图标"), "bslot-icon");
+    html += "<div class='book-name'><h1>" + name + "</h1>";
+    html += "<p>" + romName.toHtmlString();
+    if(info.BaseType != ""){ html += " · " + info.BaseType.toHtmlString(); }
+    if(info.BasePublisher != ""){ html += " · " + info.BasePublisher.toHtmlString(); }
+    html += "</p></div>";
+    html += "</div>";
+
+    //封面区：包装盒 | 标题画面 + 卡带
+    html += "<div class='book-row book-cover'>";
+    html += _bookSlot("packing", bookLang("BookCover", "封面 · 包装盒"), "bslot-packing");
+    html += "<div class='book-col'>";
+    html += _bookSlot("title", bookLang("TitlePic", "标题画面"), "bslot-title");
+    html += _bookSlot("cassette", bookLang("CassettePic", "卡带"), "bslot-cassette");
+    html += "</div>";
+    html += "</div>";
+
+    //资料卡
+    html += "<div class='book-section'>" + bookLang("BookProfile", "资料卡") + "</div>";
+    html += "<div class='book-row book-profile'>";
+    html += "<table class='book-table'>";
+    html += _bookRow(bookLang("BaseName", "游戏名称"), info.Name);
+    html += _bookRow(bookLang("BookPlatform", "平台"), pfName);
+    html += _bookRow(bookLang("BaseType", "类型"), info.BaseType);
+    html += _bookRow(bookLang("BaseYear", "年份"), info.BaseYear);
+    html += _bookRow(bookLang("BasePublisher", "发行商"), info.BasePublisher);
+    html += _bookRow(bookLang("BaseCountry", "地区"), info.BaseCountry);
+    html += _bookRow(bookLang("BaseTranslate", "汉化组"), info.BaseTranslate);
+    html += _bookRow(bookLang("BaseVersion", "版本"), info.BaseVersion);
+    html += _bookRow(bookLang("FileSize", "文件大小"), detailObj.RomFileSize);
+    html += "</table>";
+    html += _bookSlot("thumb", bookLang("Thumb", "缩略图"), "bslot-thumb");
+    html += "</div>";
+
+    html += "<div class='book-folio'>— " + leftFolio + " —</div>";
+    html += "</div>";
+
+    /********** 书脊 **********/
+    html += "<div class='book-gutter'></div>";
+
+    /********** 右页 **********/
+    html += "<div class='book-page book-right'>";
+
+    //书眉
+    html += "<div class='book-head'><div class='book-head-l'>" + name + "</div>";
+    html += "<div class='book-head-r'>" + bookLang("BookPage", "第") + " " + pageNo + " / " + total + "</div></div>";
+
+    //画面区：游戏画面 | 动态画面 + 视频
+    html += "<div class='book-row book-screens'>";
+    html += _bookSlot("snap", bookLang("Snap", "游戏画面"), "bslot-snap");
+    html += "<div class='book-col'>";
+    html += _bookSlot("gif", bookLang("GifPic", "动态画面"), "bslot-gif");
+    html += _bookSlot("video", bookLang("Video", "视频"), "bslot-video");
+    html += "</div>";
+    html += "</div>";
+
+    //文字区：海报 | 游戏简介
+    html += "<div class='book-row book-text'>";
+    html += _bookSlot("poster", bookLang("Poster", "海报"), "bslot-poster");
+    html += "<div class='book-col book-doc'>";
+    html += "<div class='book-section'>" + bookLang("BookIntro", "游戏简介") + "</div>";
+    var doc = detailObj.DocContent;
+    if(doc == undefined || doc == ""){
+        doc = "<span class='book-na'>" + bookLang("BookNoDoc", "暂无简介，可点击上方“编辑简介”补充。") + "</span>";
+    }
+    html += "<div class='book-doc-body'>" + doc + "</div>";
+    html += "</div>";
+    html += "</div>";
+
+    //攻略要点 + 攻略文件
+    var strategy = view.GetGameDoc("strategy", info.Id);
+    var strategyFiles = JSON.parse(view.GetStrategyFile(info.Id));
+    html += "<div class='book-section'>" + bookLang("BookStrategy", "攻略要点") + "</div>";
+    html += "<div class='book-strategy'>";
+    if(strategyFiles != undefined && strategyFiles.length > 0){
+        html += "<ul class='book-files'>";
+        for(var f in strategyFiles) {
+            var ico = "this://app/images/filetype/" + getFileExt(f.path) + ".png";
+            html += "<li path='" + f.path.toHtmlString() + "' style='background-image:url(" + ico + ")'>" + f.name.toHtmlString() + "</li>";
+        }
+        html += "</ul>";
+    }
+    if(strategy != undefined && strategy != ""){
+        html += _bookCtlIcons(strategy);
+    }else{
+        html += "<span class='book-na'>" + bookLang("StrategyEmpty", "暂无攻略") + "</span>";
+    }
+    html += "</div>";
+
+    //开始游戏
+    html += "<div class='book-play'>";
+    html += "<select id='book_sim'>";
+    var simlist = detailObj.Simlist;
+    var useSim = info.SimId;
+    if((useSim == 0 || useSim == undefined) && pfObj != undefined && pfObj.UseSim != undefined){
+        useSim = pfObj.UseSim["Id"];
+    }
+    if(simlist != undefined && simlist.length > 0){
+        for(var s in simlist){
+            var sel = s.Id == useSim ? " selected" : "";
+            html += "<option value='" + s.Id + "'" + sel + ">" + s.Name.toHtmlString() + "</option>";
+        }
+    }else{
+        html += "<option value=''>" + bookLang("BookNoSim", "未配置模拟器") + "</option>";
+    }
+    html += "</select>";
+    html += "<button class='book-run' rid='" + info.Id + "'>▶ " + bookLang("BookPlay", "开始游戏") + "</button>";
+    for(var sub in detailObj.Sublist) {
+        html += "<button class='book-run book-run-sub' rid='" + sub.Id + "'>" + sub.Name.toHtmlString() + "</button>";
+    }
+    html += "</div>";
+
+    html += "<div class='book-folio book-folio-r'>— " + rightFolio + " —</div>";
+    html += "</div>";
+
+    $(#book_spread).html = html;
+    $(#book_pageno).html = pageNo + " / " + total;
+    $(#book_title).html = name;
+
+    //填充素材
+    var types = ["icon","packing","title","cassette","thumb","snap","gif","poster","video"];
+    for(var t in types){
+        _bookFillSlot(t, getRomPicPath(t, pf, romName));
+    }
+
+    //桌面背景：背景图 > 壁纸 > 全局背景
+    var desk = getRomPicPath("background", pf, romName);
+    if(desk == ""){ desk = getRomPicPath("wallpaper", pf, romName); }
+    if(desk == "" && CONF.Default.BackgroundImage != ""){ desk = URL.fromPath(CONF.Default.BackgroundImage); }
+    if(desk != ""){
+        $(#book).style["background-image"] = [url:desk];
+    }else{
+        $(#book).style["background-image"] = "none";
+    }
+
+    //翻页按钮状态
+    $(#book_prev).state.disabled = index <= 0;
+    $(#book_next).state.disabled = index < 0 || (index + 1 >= total);
+}
+
+//填充一个版位
+function _bookFillSlot(opt, url){
+    var slot = $(#book_spread).select(".bslot[opt=" + opt + "]");
+    if(slot == undefined){
+        return;
+    }
+    var img = slot.select(".bslot-img");
+    if(url == ""){
+        slot.attributes.removeClass("has");
+        img.html = "";
+        img.style["foreground-image"] = "none";
+        return;
+    }
+    slot.attributes.addClass("has");
+    if(opt == "video"){
+        img.html = "<video class='book-video' src='" + url + "' />";
+        var v = img.select("video");
+        try{
+            v.videoLoad(url);
+            v.audioVolume(0);
+            v.videoPlay();
+        }catch(e){}
+        v.onControlEvent = function(evt) {
+            if(evt.type == Event.VIDEO_STOPPED && BOOK_OPEN){
+                try{
+                    if(this.videoDuration() - this.videoPosition() < 1){ this.videoPlay(0.0); }
+                }catch(e){}
+            }
+        }
+    }else{
+        img.html = "";
+        img.style["foreground-image"] = [url:url];
+    }
+}
+
+//停止年鉴中的视频
+function _bookStopVideo(){
+    var v = $(#book_spread).select("video");
+    if(v != undefined){
+        try{
+            v.videoStop();
+            v.videoUnload();
+        }catch(e){}
+    }
+}
+
+//年鉴开始游戏
+function bookRunGame(btn){
+    _bookStopVideo();
+    var sim = $(#book_sim) != undefined ? $(#book_sim).value : "";
+    if(sim == undefined){ sim = ""; }
+    view.RunGame(btn.attributes["rid"], sim.toString());
+}
+
+//年鉴切换模拟器（记住该游戏使用的模拟器）
+function bookSwitchSim(sel){
+    if(BOOK_ROM_ID == 0 || sel.value == undefined || sel.value == ""){
+        return;
+    }
+    view.SetRomSimulator(BOOK_ROM_ID, sel.value);
+}
+
+//年鉴工具栏编辑功能（复用目录中的编辑弹窗，编辑后刷新本页）
+function bookEdit(type){
+    if(BOOK_ROM_ID == 0){
+        return;
+    }
+    var proxy = $(#book_edit_proxy);
+    proxy.attributes["rid"] = BOOK_ROM_ID;
+    if(type == "baseinfo"){
+        baseinfo(proxy);
+    }else if(type == "doc"){
+        editDoc(proxy);
+    }else if(type == "strategy"){
+        editStrategy(proxy);
+    }else if(type == "files"){
+        editFiles(proxy);
+    }else if(type == "rename"){
+        rename(proxy);
+    }
+    bookRender(BOOK_ROM_ID);
+}
+
+//年鉴键盘操作，返回 true 表示已处理
+function bookKeyup(keyCode){
+    if(keyCode == Event.VK_LEFT || keyCode == Event.VK_PRIOR || keyCode == Event.VK_UP){
+        bookFlip(-1);
+    }else if(keyCode == Event.VK_RIGHT || keyCode == Event.VK_NEXT || keyCode == Event.VK_DOWN){
+        bookFlip(1);
+    }else if(keyCode == Event.VK_RETURN){
+        var btn = $(#book_spread).select(".book-run");
+        if(btn != undefined){ bookRunGame(btn); }
+    }else if(keyCode == Event.VK_ESCAPE || keyCode == Event.VK_BACK){
+        bookClose();
+    }
+    return true;
+}
+
+//年鉴手柄方向
+function bookJoystickDirection(dir){
+    if(dir == 1 || dir == 3){
+        bookFlip(-1);
+    }else if(dir == 2 || dir == 4){
+        bookFlip(1);
+    }
+}
+
+/**
+ * 版位拖放：把图片/视频拖进版位，设置为该游戏对应的素材
+ */
+class BookSlot : Element
+{
+    this var filter;
+    this var files = [];
+
+    function attached() {
+        this.filter = (this.attributes["accept-drop"] || "*").split(";");
+    }
+
+    function checkFiles(list) {
+        if(typeof list != #array)
+            list = [list];
+        const patterns = this.filter;
+        function flt(fn) {
+            for(var x in patterns)
+                if(fn.toLowerCase() like x) return true;
+            return false;
+        }
+        this.files = list.filter(flt);
+        return this.files.length > 0;
+    }
+
+    event dragaccept (evt) {
+        if(evt.draggingDataType == #file && this.checkFiles(evt.dragging))
+            return true;
+        return false;
+    }
+
+    event dragenter (evt) {
+        this.attributes.addClass("active-target");
+        return true;
+    }
+
+    event dragleave (evt) {
+        this.attributes.removeClass("active-target");
+        return true;
+    }
+
+    event drop (evt) {
+        this.attributes.removeClass("active-target");
+        if(BOOK_ROM_ID == 0){
+            return false;
+        }
+        if(ACTIVE_PLATFORM == 0){
+            alert(CONF.Lang.NotAllPlatformEdit);
+            return false;
+        }
+        var opt = this.attributes["opt"];
+        if(opt == "video"){
+            _bookStopVideo();
+        }
+        var uri = URL.toPath(this.files[0].toString());
+        var newName = mainView.EditRomThumbs(opt, BOOK_ROM_ID, uri);
+
+        //同步目录中的缩略图
+        if(opt == CONF.Default.Thumb){
+            var listImg = $(#romlist).select("li[rid=" + BOOK_ROM_ID + "] img");
+            if(listImg != undefined){
+                var detailObj = JSON.parse(view.GetGameDetail(BOOK_ROM_ID));
+                listImg.attributes["src"] = getRomPicPath(CONF.Default.Thumb, detailObj.Info.Platform, getRomName(newName));
+            }
+        }
+        bookRender(BOOK_ROM_ID);
+        return true;
+    }
+}

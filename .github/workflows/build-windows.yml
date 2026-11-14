@@ -1,0 +1,89 @@
+name: Build SimUI (Windows x64)
+
+on:
+  push:
+    branches: ["**"]
+    tags: ["v*"]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+env:
+  # Sciter 4.4.8.23（TIScript 版本，与 code/utils/go-sciter 的 API 版本 9 对应）
+  SCITER_SDK_COMMIT: f33df075d9eb2f8d252cb88f1b2c8096e56197ed
+  SCITER_DLL_SHA256: 4d97528e157c55ef1fabe9e37a9697116ab66660d7da6163f90a3a7abf80dd56
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.24"
+          cache-dependency-path: code/go.sum
+
+      - name: Install MinGW-w64 and SQLite
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gcc-mingw-w64-x86-64 binutils-mingw-w64-x86-64 sqlite3 zip
+
+      - name: Pack view resources (res.go)
+        working-directory: build/linux
+        run: |
+          chmod +x packfolder
+          ./packfolder ../../code/view ../../code/res.go -v "res" -go > /dev/null
+
+      - name: Build icon / manifest resource (res.syso)
+        working-directory: build
+        run: x86_64-w64-mingw32-windres -o ../code/res.syso main.rc
+
+      - name: Build simUI-64.exe
+        working-directory: code
+        env:
+          CGO_ENABLED: "1"
+          GOOS: windows
+          GOARCH: amd64
+          CC: x86_64-w64-mingw32-gcc
+        run: go build -trimpath -ldflags="-H windowsgui -w -s" -o ../dist/SimUI/simUI-64.exe .
+
+      - name: Download Sciter runtime
+        run: |
+          curl -fsSL -o dist/SimUI/sciter-64.dll \
+            "https://raw.githubusercontent.com/c-smile/sciter-sdk/${SCITER_SDK_COMMIT}/bin.win/x64/sciter.dll"
+          echo "${SCITER_DLL_SHA256}  dist/SimUI/sciter-64.dll" | sha256sum -c -
+
+      - name: Assemble package
+        run: |
+          cp -r app/lang app/theme app/icons dist/SimUI/
+          cp app/demo.lua "app/资料文件模板.csv" dist/SimUI/ || true
+          cp app/data.dll dist/SimUI/data.dll
+          # 清空开发者本地数据，关闭自动升级（避免被上游版本覆盖年鉴功能）
+          sqlite3 dist/SimUI/data.dll <<'SQL'
+          DELETE FROM rom;
+          DELETE FROM platform;
+          DELETE FROM simulator;
+          DELETE FROM menu;
+          DELETE FROM shortcut;
+          DELETE FROM filter;
+          DELETE FROM rombase_enum;
+          UPDATE config SET platform = 0, menu = '', root_path = '', enable_upgrade = 0,
+                            window_width = 1280, window_height = 800, window_state = 0;
+          VACUUM;
+          SQL
+          cp LICENSE dist/SimUI/
+          cd dist && zip -qr SimUI-win64.zip SimUI && ls -la
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: SimUI-win64
+          path: dist/SimUI
+
+      - name: Publish release (tags only)
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/SimUI-win64.zip

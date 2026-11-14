@@ -4,6 +4,12 @@
 
 function joystickDirection(dir){
 
+   //年鉴打开时，方向键翻页
+   if(bookIsOpen()){
+      bookJoystickDirection(dir);
+      return;
+   }
+
    var switch_romlist = $(#switch_romlist).attributes["value"];
         
    if(dir == 1){ //上

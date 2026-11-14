@@ -50,6 +50,9 @@ i.joystick {
 i.list {
   background-image: url(svg/list.svg);
 }
+i.book {
+  background-image: url(svg/book.svg);
+}
 i.maximize {
   background-image: url(svg/maximize.svg);
 }

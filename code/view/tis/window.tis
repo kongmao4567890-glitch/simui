@@ -44,6 +44,9 @@ function Init(){
     var romCount = view.GetGameCount(0,pf,CONF.Default.Menu,"","","","","","","");
     $(#rom_count_num).html = romCount; //初始化在线人数
 
+    //启动后直接打开游戏年鉴（单游戏页面）
+    bookStartup();
+
     //初始化音量控制
     VIDEO_VALUME = CONF.Default.VideoVolume;
 

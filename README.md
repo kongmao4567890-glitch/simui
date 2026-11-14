@@ -23,6 +23,51 @@
 ![](readme/thumb.jpg)
 
 &nbsp;
+## 游戏年鉴（单游戏页面）
+
+软件启动后直接打开“游戏年鉴”：每个游戏占一个跨页，像翻开一本年鉴图书。
+
+![](readme/book_page.png)
+
+素材的摆放位置如下。没有素材的位置会显示虚线占位框，把图片或视频拖进去，就会保存为该游戏对应的素材：
+
+| 位置 | 素材类型（平台目录） |
+| --- | --- |
+| 左页 · 标题旁 | 图标 `icon` |
+| 左页 · 大图 | 封面 / 包装盒 `packing` |
+| 左页 · 右上 | 标题画面 `title` |
+| 左页 · 右下 | 卡带 `cassette` |
+| 左页 · 资料卡 | 类型、年份、发行商、地区、汉化组、版本、文件大小 + 展示图 `thumb` |
+| 右页 · 大图 | 游戏画面 / 插画 `snap` |
+| 右页 · 右侧 | 动态画面 `gif`、游戏视频 `video`（静音循环） |
+| 右页 · 中部 | 海报 `poster` + 游戏简介 `docs` |
+| 右页 · 下部 | 攻略要点 `strategies` + 攻略文件 `files`、模拟器选择、开始游戏 |
+| 页面背景 | 背景图 `background`，没有则使用壁纸 `wallpaper` |
+
+![](readme/book_slots.png)
+
+操作方式：
+
+- 翻页：工具栏“上一页 / 下一页”、键盘方向键或 PageUp / PageDown、手柄方向键、在工具栏上滚动鼠标滚轮
+- 开始游戏：Enter 键，或点击“开始游戏”
+- 返回游戏目录：Esc 键，或点击“返回目录”
+- 从目录打开：点击标题栏的年鉴按钮，或在游戏上点右键选择“打开年鉴页”
+
+相关代码：`code/view/tis/book.tis`，样式和结构在 `code/view/main.html`。
+
+## GitHub 自动编译
+
+`.github/workflows/build-windows.yml` 在每次 push 时，用 Ubuntu 和 MinGW-w64 交叉编译 Windows 64 位版本：
+
+1. 用 `build/linux/packfolder` 重新打包 `code/view`，生成 `code/res.go`
+2. 用 `x86_64-w64-mingw32-windres` 生成 `code/res.syso`（图标和 manifest）
+3. `go build` 生成 `simUI-64.exe`
+4. 下载 Sciter 4.4.8.23 运行库 `sciter-64.dll`（固定提交并校验 SHA256）
+5. 加入 `lang`、`theme`、`icons` 和清空过的 `data.dll`，打包为 `SimUI-win64`
+
+编译结果在 Actions 页面对应运行的 Artifacts 中下载。推送 `v*` 标签时，会自动发布到 Releases。
+
+&nbsp;
 ## 软件地址
 
 [www.simui.net/](http://www.simui.net/)
