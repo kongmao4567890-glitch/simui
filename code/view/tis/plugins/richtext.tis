@@ -242,7 +242,7 @@ class Richtext: Behavior {
       const initialPath = "";
       const filter = "Images Files (*.gif;*.png;*.jpg;*.jpeg;*.ico;*.bmp)|*.gif;*.png;*.jpg;*.jpeg;*.ico;*.bmp|All Files (*.*)|*.*";
       const caption = CONF.Lang.SelectPicFile;
-      var url = view.selectFile("", filter, defaultExt, initialPath, caption );
+      var url = view.selectFile(#open, filter, defaultExt, initialPath, caption );
       if(url){
           url = URL.toPath(url);
           url = url.split("\/").join(CONF.Separator.toString());

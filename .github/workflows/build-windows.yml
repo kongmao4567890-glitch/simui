@@ -59,8 +59,12 @@ jobs:
       - name: Assemble package
         run: |
           cp -r app/lang app/theme app/icons dist/SimUI/
-          cp app/demo.lua "app/资料文件模板.csv" dist/SimUI/ || true
+          cp app/demo.lua "app/资料文件模板.csv" dist/SimUI/ 2>/dev/null || true
           cp app/data.dll dist/SimUI/data.dll
+          # 预先执行 2.7 → 2.8 数据库升级（新增资料字段、音频目录等），已存在的列会报错并被忽略
+          while IFS= read -r line; do
+            [ -n "$line" ] && sqlite3 dist/SimUI/data.dll "$line" 2>/dev/null || true
+          done < "app/_upgrade_2.7-2.8.sql"
           # 清空开发者本地数据，关闭自动升级（避免被上游版本覆盖年鉴功能）
           sqlite3 dist/SimUI/data.dll <<'SQL'
           DELETE FROM rom;

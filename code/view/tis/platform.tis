@@ -40,9 +40,9 @@ function changePlatform(obj){
     //重置滚动翻页数据
     resetScroll();
     //生成游戏列表
-    ROMJSON = view.GetGameList(0,ACTIVE_PLATFORM,"","","",SCROLL_PAGE,"","","","","","");
+    ROMJSON = view.GetGameList(0,ACTIVE_PLATFORM,"","","",SCROLL_PAGE,"","","","","","","");
     createRomList(1);
-    var romCount = view.GetGameCount(0,ACTIVE_PLATFORM,"","","","","","","",""); //必须在获取rom的方法下面
+    var romCount = view.GetGameCount(0,ACTIVE_PLATFORM,"","","","","","","","",""); //必须在获取rom的方法下面
     $(#rom_count_num).html = romCount; //初始化在线人数
     
     //激活按钮改变样式
@@ -70,15 +70,24 @@ function initPlatform(){
 
     //如果有多个平台，才显示“全部平台”按钮
     if(CONF.Platform.length > 1){
-        dd += "<li platform='0'>"+CONF.Lang.AllPlatform +"</li>";
+        dd += "<li platform='0'><div class='leftdiv'><p>"+CONF.Lang.AllPlatform +"</p></div></li>";
     }
     //遍历数据，生成dom
     for(var pf in CONF.PlatformList) {
         img = "";
         if(pf.Icon != ""){
-            img = "<div class='imgdiv'><img src='"+  URL.fromPath(pf.Icon) +"' /></div>";
+            img = "<img src=\""+  URL.fromPath(pf.Icon) +"\" />";
         }
-        dd += "<li platform='"+ pf.Id +"'>" + img + "<p>" + pf.Name + "</p></li>";
+
+
+        var btn = "";
+        /*
+        var btn = "<button type='menu'><i.down_arrow></i><menu>";
+        btn += "<li>1</li>";
+        btn += "<li>2</li>";
+        btn += "</menu></button>";
+        */
+        dd += "<li platform='"+ pf.Id +"'><div class='leftdiv'>" + img + "<p>" + pf.Name + "</p></div>"+ btn +"</li>";
     }
     self.$(#platform_ul).html = dd; //生成dom
 

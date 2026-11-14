@@ -2,8 +2,12 @@
 view.root.on("ready", function(){
 
     //数据初始化
+    try{
     Init();
- 
+ }catch(e){
+view.msgbox(#alert,e);
+
+ }
     /**
     * 窗口
     **/
@@ -21,12 +25,14 @@ view.root.on("ready", function(){
     //调整平台栏宽度
     self.on("mouseup", "#platform_splitter", function(evt) {
         var width = $(#left_platform).box(#width);
+        width = Math.round(width * 0.8).toInteger();
         view.UpdateConfig("panel_platform_width",width);
     });
     
     //调整菜单栏宽度
     self.on("mouseup", "#menu_splitter", function(evt) {
         var width = $(#left_menu).box(#width);
+        width = Math.round(width * 0.8).toInteger();
         view.UpdateConfig("panel_menu_width",width);
     });
     //调整侧边栏宽度
@@ -62,7 +68,7 @@ view.root.on("ready", function(){
 
    //回到顶端
     self.on("click", "#istop", function(evt) {
-        $(#center).scrollTo(0,0, false);
+        $(#center_content).scrollTo(0,0, false);
     });
     
     //打开快捷工具
@@ -82,7 +88,7 @@ view.root.on("ready", function(){
 
     //弹出平台配置窗口
     self.on("click", "#platform_config", function(evt) {
-        openPlatformConfig(this);
+        openPlatformConfig();
     });
     //弹出设置窗口
     self.on("click", "#config", function(evt) {
@@ -165,7 +171,9 @@ view.root.on("ready", function(){
     self.on("change", "#filter_type", function(evt) {
         search();
     });
-
+    self.on("change", "#filter_producer", function(evt) {
+        search();
+    });
     self.on("change", "#filter_publisher", function(evt) {
         search();
     });
@@ -195,6 +203,12 @@ view.root.on("ready", function(){
     self.on("click", "#add_menu", function(evt) {
         addMenu(this);
     });
+
+    //显示隐藏的游戏
+    self.on("click", "#romlist_hide", function(evt) {
+        changeHideMenu(this);
+    });
+    
     
 
    /**
@@ -241,6 +255,11 @@ view.root.on("ready", function(){
         view.OpenStrategyFiles(this.attributes["path"]);
     });
 
+    //年鉴播放游戏原声
+    self.on("click", "#book_spread .book-audio-item", function(evt) {
+        bookPlayAudio(this);
+    });
+
     //右键菜单打开年鉴页
     self.on("click", "#romcontext .bookpage", function(evt) {
         bookOpen(this.attributes["rid"]);
@@ -267,7 +286,7 @@ view.root.on("ready", function(){
     });
 
     //rom分页
-    $(#center).onScroll = function(evt) {
+    $(#center_content).onScroll = function(evt) {
         scrollLoadRom(evt.scrollPos);
     };
 
@@ -326,6 +345,21 @@ view.root.on("ready", function(){
         thumbSlider(this);
     });
 
+    //缩略图点击显示大图
+    self.on("click", "#stack img", function(evt) {
+       openBigSlider(this);
+    });
+    
+    //图集点击显示大图
+    self.on("click", "#second_thumbs img", function(evt) {
+       openBigSlider(this);
+    });
+
+    //缩略图点击隐藏大图
+    self.on("click", "#big_thumb_content", function(evt) {
+        $(#big_thumb_wrapper).style["display"] = "none";
+    });
+
     //控制视频播放
     self.on("click", "#video_play", function(evt) {
         videoPlay(this);
@@ -339,11 +373,6 @@ view.root.on("ready", function(){
     //编辑资料
     self.on("click", "#right_base_info", function(evt) {
         baseinfo(this);
-    });
-   
-    //编辑游戏简介
-    self.on("click", "#right_edit_doc", function(evt) {
-        editDoc(this);
     });
 
     //编辑游戏简介
@@ -361,9 +390,9 @@ view.root.on("ready", function(){
         editStrategy(this);
     });
 
-    //编辑游戏攻略文件
-    self.on("click", "#right_edit_files", function(evt) {
-        editFiles(this);
+    //编辑游戏音频
+    self.on("click", "#right_edit_audio", function(evt) {
+        editAudio(this);
     });
 
     //打开资料文件
@@ -371,6 +400,19 @@ view.root.on("ready", function(){
         view.OpenStrategyFiles(this.attributes["path"]);
     });
 
+    //播放音频
+    self.on("click", "#audio li", function(evt) {
+        playAudio(this.attributes["path"]);
+    });
+   
+    //播放全部音频
+    self.on("click", "#play_audio_all", function(evt) {
+        playAudio("");
+    });
+    
+
+
+    
 
     /**
     * 菜单右键菜单
@@ -422,9 +464,10 @@ view.root.on("ready", function(){
         baseinfo(this);
     });
 
-   //编辑游戏简介
-    self.on("click", "#romcontext .doc", function(evt) {
-        editDoc(this);
+
+    //编辑子游戏
+    self.on("click", "#romcontext .subgame", function(evt) {
+        editSubGame(this);
     });
 
     //编辑游戏攻略
@@ -432,9 +475,9 @@ view.root.on("ready", function(){
         editStrategy(this);
     });
 
-    //编辑游戏攻略文件
-    self.on("click", "#romcontext .files", function(evt) {
-        editFiles(this);
+    //编辑游戏音频
+    self.on("click", "#romcontext .audio", function(evt) {
+        editAudio(this);
     });
 
     //右键菜单设置喜爱
@@ -465,6 +508,11 @@ view.root.on("ready", function(){
     //侧边栏缩略图编辑功能 - 选择缩略图文件
     self.on("click", ".filedropzone_widget .openfile", function(evt) {
         openThumbFile(this);
+    });
+
+    //侧边栏缩略图编辑功能 - 定位文件目录
+    self.on("click", ".filedropzone_widget .openfolder", function(evt) {
+        openFolderBySideSecond(this);
     });
 
     self.on("click", ".filedropzone_widget .thumb_down", function(evt) {

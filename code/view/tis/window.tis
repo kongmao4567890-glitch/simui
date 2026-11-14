@@ -37,11 +37,11 @@ function Init(){
     //初始化rom
     var pf = CONF.Default.Platform;
     var menu =  $(#menulist).select("dd:current").attributes["opt"];
-    ROMJSON = view.GetGameList(0,pf,menu,"","",SCROLL_PAGE,"","","","","","");
+    ROMJSON = view.GetGameList(0,pf,menu,"","",SCROLL_PAGE,"","","","","","","");
 
     createRomList(1); //生成rom列表
     //生成rom数量
-    var romCount = view.GetGameCount(0,pf,CONF.Default.Menu,"","","","","","","");
+    var romCount = view.GetGameCount(0,pf,CONF.Default.Menu,"","","","","","","","");
     $(#rom_count_num).html = romCount; //初始化在线人数
 
     //启动后直接打开游戏年鉴（单游戏页面）
@@ -51,6 +51,11 @@ function Init(){
     VIDEO_VALUME = CONF.Default.VideoVolume;
 
     $(body).state.focus = true;
+
+    //如果没有平台，则自动打开平台设置窗口
+    if(CONF.PlatformList.length == 0){
+         openPlatformConfig();
+    }
 
 }
 
@@ -77,13 +82,13 @@ function initConfig(isfresh){
     if (isfresh == "0"){
         createLang();
     }
+    
     initTheme(); //创建主题
     initInterface(); //创建界面设置（背景、透明度）
     initPlatform(); //生成平台列表
     initShortcutList(); //初始化快捷工具列表
     initRomListStyle(); //初始化游戏列表样式
     initBaseFilter(CONF.Default.Platform); //初始化基本信息过滤器
-
     //生成菜单
     var menujson = view.GetMenuList(CONF.Default.Platform,0);
     createMenuList(menujson);
@@ -117,6 +122,7 @@ function heartbeat(str){
 
 //创建界面设置
 function initInterface(){
+
     //初始化选项
     $(#config_romlist_direction).select("li[opt="+ CONF.Default.RomlistDirection +"]").attributes.addClass("active");
     $(#config_thumb).select("li[opt="+ CONF.Default.Thumb +"]").attributes.addClass("active");
@@ -129,7 +135,24 @@ function initInterface(){
     $(body).style["cursor"] = [url:URL.fromPath(CONF.Default.Cursor)];
 
     //更新背景图
-    $(#center).style["background-image"] = [url:URL.fromPath(CONF.Default.BackgroundImage)];
+    if(CONF.Default.BackgroundImage != ""){
+        var ext = getFileExt(CONF.Default.BackgroundImage);
+        if(ext == "mp4" || ext == "wmv" || ext == "flv" || ext == "avi"){
+            //如果是视频背景
+           centerVideoBg(CONF.Default.BackgroundImage);
+        }else{
+            //如果是图片背景
+            $(#center).style["background-image"] = [url:URL.fromPath(CONF.Default.BackgroundImage)];
+        }
+
+        if(CONF.Default.BackgroundFuzzy == 1){
+            $(#center_fuzzy).style["display"] = "block";
+        }
+        //背景遮罩
+        if(CONF.Default.BackgroundMask != ""){
+            $(#center_mask).style["background-image"] = [url:URL.fromPath(CONF.Default.BackgroundMask)];;
+        }
+    }
 
     //更新背景循环方式
     var repeat = CONF.Default.BackgroundRepeat;
@@ -139,6 +162,22 @@ function initInterface(){
     }else{
         $(#center).style["background-repeat"] = repeat;
         $(#center).style["background-size"] = "contain";
+    }
+
+}
+
+
+//视频背景
+function centerVideoBg(p){
+    $(#center_video).style["display"] = "block";
+    $(#center_video).html = "<video src=\"" + p + "\" />";
+    $(#center_video video).audioVolume(0);
+    $(#center_video video).onControlEvent = function(evt) {
+        if(evt.type == Event.VIDEO_STOPPED){
+            if ( this.videoDuration() - this.videoPosition()  < 1){
+                this.videoPlay(0.0);
+            }
+        }
     }
 
 }

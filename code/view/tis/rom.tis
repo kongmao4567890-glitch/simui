@@ -84,6 +84,7 @@ function _createRomListList(romobj,cls){
         if(column[0] == 1){data += "<div>"+CONF.Lang["FilterMenu"]+"</div>";}
         if(column[1] == 1){data += "<div>"+CONF.Lang["BaseType"]+"</div>";}
         if(column[2] == 1){data += "<div>"+CONF.Lang["BaseYear"]+"</div>";}
+        if(column[7] == 1){data += "<div>"+CONF.Lang["BaseProducer"]+"</div>";}
         if(column[3] == 1){data += "<div>"+CONF.Lang["BasePublisher"]+"</div>";}
         if(column[4] == 1){data += "<div>"+CONF.Lang["BaseCountry"]+"</div>";}
         if(column[5] == 1){data += "<div>"+CONF.Lang["BaseTranslate"]+"</div>";}
@@ -104,9 +105,10 @@ function _createRomListList(romobj,cls){
         var romName = getRomName(obj.RomPath);
         //现读图标
         var thumb = getRomPicPath("icon",obj.Platform,romName);
-
+        var noradius = "noradius";
         //没有找到图标，找缩略图，读取默认缩略图
         if (thumb == ""){
+            noradius = "";
             thumb = getRomPicPath(CONF.Default.Thumb,obj.Platform,romName);
             if(thumb == "" && CONF.Theme[CONF.Default.Theme].Params["default-thumb-image"] != undefined){
                 thumb = URL.fromPath(CONF.RootPath + "theme/" + CONF.Theme[CONF.Default.Theme].Params["default-thumb-image"]);
@@ -115,7 +117,7 @@ function _createRomListList(romobj,cls){
         
         data += "<li class='romitem' rid='"+ obj.Id +"' title='"+ title +"'>";
         if(obj.Star == 1){
-            data += "<div.star><img src='"+ thumb +"' /></div>";
+            data += "<div.star><img src='"+ thumb +"' class='"+ noradius +"' /></div>";
         }else{
             data += "<div><img src='"+ thumb +"' /></div>";
         }
@@ -131,6 +133,7 @@ function _createRomListList(romobj,cls){
         if(column[0] == 1){data += "<div>"+ obj.Menu.toHtmlString() +"</div>";}
         if(column[1] == 1){data += "<div>"+ obj.BaseType +"</div>";}
         if(column[2] == 1){data += "<div>"+ obj.BaseYear +"</div>";}
+        if(column[7] == 1){data += "<div>"+ obj.BaseProducer +"</div>";}
         if(column[3] == 1){data += "<div>"+ obj.BasePublisher +"</div>";}
         if(column[4] == 1){data += "<div>"+ obj.BaseCountry +"</div>";}
         if(column[5] == 1){data += "<div>"+ obj.BaseTranslate +"</div>";}
@@ -146,7 +149,7 @@ function _createRomListList(romobj,cls){
 //rom分页
 function scrollLoadRom(evtPos){
 
-    var scrollPos = evtPos.toInteger() + $(#center).box(#height);
+    var scrollPos = evtPos.toInteger() + $(#center_content).box(#height);
     var boxHeight = $(#romwrapper).box(#height);
 
     if(SCROLL_POS == 0){
@@ -183,7 +186,8 @@ function loadPageRom(){
     var filter_country = $(#filter_country).value;
     var filter_translate = $(#filter_translate).value;
     var filter_version = $(#filter_version).value;
-    ROMJSON = view.GetGameList(0,ACTIVE_PLATFORM,menu,val,num,SCROLL_PAGE,filter_type,filter_publisher,filter_year,filter_country,filter_translate,filter_version);
+    var filter_producer = $(#filter_producer).value;
+    ROMJSON = view.GetGameList(0,ACTIVE_PLATFORM,menu,val,num,SCROLL_PAGE,filter_type,filter_publisher,filter_year,filter_country,filter_translate,filter_version,filter_producer);
 
     if(ROMJSON != "[]"){
         createRomList(0);
@@ -223,8 +227,9 @@ function numSearch(evt){
     $(#filter_publisher).value = "";
     $(#filter_year).value = "";
     $(#filter_country).value = "";
+    $(#filter_producer).value = "";
 
-    ROMJSON = view.GetGameList(0,ACTIVE_PLATFORM,menu,"",num,SCROLL_PAGE,"","","","","","");
+    ROMJSON = view.GetGameList(0,ACTIVE_PLATFORM,menu,"",num,SCROLL_PAGE,"","","","","","","");
     createRomList(1);
 
     //激活当前，改变样式
@@ -278,7 +283,7 @@ function getRomPicPath(type,platform,name){
     if (type == "video"){
          exts = ["mp4","flv","wmv","avi"]; //支持的视频类型
     }else{
-         exts = ["png","jpg","gif","ico","jpeg","bmp"]; //支持的图片类型
+         exts = ["png","jpg","gif","ico","jpeg","mp4","flv","wmv","avi"]; //支持的图片类型
     }
     
 
@@ -286,7 +291,6 @@ function getRomPicPath(type,platform,name){
     var pic = ""; //图片地址
     for(var ext in exts) {
         pic = path +"."+ext;
-
         if(System.scanFiles(pic)){ //检查图片是否存在
             isset = true;
             break;

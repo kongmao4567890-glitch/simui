@@ -45,7 +45,11 @@ function _bookIndexOf(rid){
 }
 
 //启动时打开年鉴：优先当前选中的游戏，否则第一个游戏
+//没有任何游戏时（例如首次使用、还没有添加平台）保持在目录界面
 function bookStartup(){
+    if(_bookItems().length == 0){
+        return;
+    }
     bookOpenCurrent();
 }
 
@@ -68,9 +72,9 @@ function _bookInitBar(){
     $(#book_prev).html = "‹ " + bookLang("BookPrev", "上一页");
     $(#book_next).html = bookLang("BookNext", "下一页") + " ›";
     $(#book_edit_baseinfo).html = bookLang("EditBaseInfo", "编辑资料");
-    $(#book_edit_doc).html = bookLang("EditDoc", "编辑简介");
-    $(#book_edit_strategy).html = bookLang("EditStrategy", "编辑攻略");
-    $(#book_edit_files).html = bookLang("EditFiles", "攻略文件");
+    $(#book_edit_strategy).html = bookLang("BookEditDoc", "编辑简介与攻略");
+    $(#book_edit_subgame).html = bookLang("EditSubGame", "编辑子游戏");
+    $(#book_edit_audio).html = bookLang("EditAudio", "编辑游戏原声");
 }
 
 //打开年鉴
@@ -287,12 +291,23 @@ function bookRender(rid){
     html += _bookRow(bookLang("BaseName", "游戏名称"), info.Name);
     html += _bookRow(bookLang("BookPlatform", "平台"), pfName);
     html += _bookRow(bookLang("BaseType", "类型"), info.BaseType);
-    html += _bookRow(bookLang("BaseYear", "年份"), info.BaseYear);
+    html += _bookRow(bookLang("BaseYear", "发行日期"), info.BaseYear);
+    html += _bookRow(bookLang("BaseProducer", "制作商"), info.BaseProducer);
     html += _bookRow(bookLang("BasePublisher", "发行商"), info.BasePublisher);
     html += _bookRow(bookLang("BaseCountry", "地区"), info.BaseCountry);
     html += _bookRow(bookLang("BaseTranslate", "汉化组"), info.BaseTranslate);
     html += _bookRow(bookLang("BaseVersion", "版本"), info.BaseVersion);
     html += _bookRow(bookLang("FileSize", "文件大小"), detailObj.RomFileSize);
+    if(info.BaseNameEn != undefined && info.BaseNameEn != ""){ html += _bookRow(bookLang("BookNameEn", "英文名"), info.BaseNameEn); }
+    if(info.BaseNameJp != undefined && info.BaseNameJp != ""){ html += _bookRow(bookLang("BookNameJp", "日文名"), info.BaseNameJp); }
+    var others = [info.BaseOtherA, info.BaseOtherB, info.BaseOtherC, info.BaseOtherD];
+    for(var o in others){
+        if(o != undefined && o != ""){ html += _bookRow(bookLang("BaseOther", "其他信息"), o); }
+    }
+    if(info.RunNum != undefined && info.RunNum.toInteger() > 0){
+        html += _bookRow(bookLang("BookRunNum", "游玩次数"), info.RunNum);
+        html += _bookRow(bookLang("GameRunLasttime", "最后运行时间"), timestampToYmdhi(info.RunLasttime));
+    }
     html += "</table>";
     html += _bookSlot("thumb", bookLang("Thumb", "缩略图"), "bslot-thumb");
     html += "</div>";
@@ -326,7 +341,7 @@ function bookRender(rid){
     html += "<div class='book-section'>" + bookLang("BookIntro", "游戏简介") + "</div>";
     var doc = detailObj.DocContent;
     if(doc == undefined || doc == ""){
-        doc = "<span class='book-na'>" + bookLang("BookNoDoc", "暂无简介，可点击上方“编辑简介”补充。") + "</span>";
+        doc = "<span class='book-na'>" + bookLang("BookNoDoc", "暂无简介，可点击上方“编辑简介与攻略”补充。") + "</span>";
     }
     html += "<div class='book-doc-body'>" + doc + "</div>";
     html += "</div>";
@@ -334,7 +349,7 @@ function bookRender(rid){
 
     //攻略要点 + 攻略文件
     var strategy = view.GetGameDoc("strategy", info.Id);
-    var strategyFiles = JSON.parse(view.GetStrategyFile(info.Id));
+    var strategyFiles = detailObj.StrategyFiles;
     html += "<div class='book-section'>" + bookLang("BookStrategy", "攻略要点") + "</div>";
     html += "<div class='book-strategy'>";
     if(strategyFiles != undefined && strategyFiles.length > 0){
@@ -351,6 +366,16 @@ function bookRender(rid){
         html += "<span class='book-na'>" + bookLang("StrategyEmpty", "暂无攻略") + "</span>";
     }
     html += "</div>";
+
+    //游戏原声
+    var audioList = detailObj.AudioList;
+    if(audioList != undefined && audioList.length > 0){
+        html += "<div class='book-audio'><span class='book-audio-t'>♪ " + bookLang("Audio", "游戏原声") + "</span>";
+        for(var a in audioList){
+            html += "<button class='book-audio-item' path=\"" + a.path.toHtmlString() + "\">" + a.name.toHtmlString() + "</button>";
+        }
+        html += "</div>";
+    }
 
     //开始游戏
     html += "<div class='book-play'>";
@@ -390,8 +415,10 @@ function bookRender(rid){
 
     //桌面背景：背景图 > 壁纸 > 全局背景
     var desk = getRomPicPath("background", pf, romName);
+    if(_bookIsVideo(desk)){ desk = ""; }
     if(desk == ""){ desk = getRomPicPath("wallpaper", pf, romName); }
-    if(desk == "" && CONF.Default.BackgroundImage != ""){ desk = URL.fromPath(CONF.Default.BackgroundImage); }
+    if(_bookIsVideo(desk)){ desk = ""; }
+    if(desk == "" && CONF.Default.BackgroundImage != "" && !_bookIsVideo(CONF.Default.BackgroundImage)){ desk = URL.fromPath(CONF.Default.BackgroundImage); }
     if(desk != ""){
         $(#book).style["background-image"] = [url:desk];
     }else{
@@ -417,7 +444,7 @@ function _bookFillSlot(opt, url){
         return;
     }
     slot.attributes.addClass("has");
-    if(opt == "video"){
+    if(opt == "video" || _bookIsVideo(url)){
         img.html = "<video class='book-video' src='" + url + "' />";
         var v = img.select("video");
         try{
@@ -438,15 +465,42 @@ function _bookFillSlot(opt, url){
     }
 }
 
+//是否为视频文件
+function _bookIsVideo(url){
+    if(url == undefined || url == ""){
+        return false;
+    }
+    var ext = getFileExt(url.toString()).toLowerCase();
+    return ext == "mp4" || ext == "flv" || ext == "wmv" || ext == "avi";
+}
+
 //停止年鉴中的视频
 function _bookStopVideo(){
-    var v = $(#book_spread).select("video");
-    if(v != undefined){
+    if($(#book_spread) == undefined){
+        return;
+    }
+    var vs = $(#book_spread).selectAll("video");
+    for(var v in vs){
         try{
             v.videoStop();
             v.videoUnload();
         }catch(e){}
     }
+}
+
+//年鉴播放游戏原声（path为空时播放全部）
+function bookPlayAudio(btn){
+    var data = [];
+    if(btn != undefined){
+        data[0] = btn.attributes["path"];
+    }else{
+        var i = 0;
+        for(var a in $(#book_spread).selectAll(".book-audio-item")){
+            data[i] = a.attributes["path"];
+            i++;
+        }
+    }
+    view.PlayAudio(JSON.stringify(data));
 }
 
 //年鉴开始游戏
@@ -472,14 +526,16 @@ function bookEdit(type){
     }
     var proxy = $(#book_edit_proxy);
     proxy.attributes["rid"] = BOOK_ROM_ID;
+    var detailObj = JSON.parse(view.GetGameDetail(BOOK_ROM_ID));
+    proxy.attributes["platform"] = detailObj.Info.Platform;
     if(type == "baseinfo"){
         baseinfo(proxy);
-    }else if(type == "doc"){
-        editDoc(proxy);
     }else if(type == "strategy"){
         editStrategy(proxy);
-    }else if(type == "files"){
-        editFiles(proxy);
+    }else if(type == "subgame"){
+        editSubGame(proxy);
+    }else if(type == "audio"){
+        editAudio(proxy);
     }else if(type == "rename"){
         rename(proxy);
     }

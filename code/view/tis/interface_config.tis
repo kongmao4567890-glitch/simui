@@ -38,7 +38,9 @@ function setThumbType(obj){
 
     $(#config_thumb).select("li[opt="+ obj.attributes["opt"] +"]").attributes.addClass("active");
     view.UpdateConfig("thumb",obj.attributes["opt"]);
-    alert(CONF.Lang.ConfigThumbType);
+    initConfig("1");
+    createRomList(1);
+
 }
 
 //是否显示rom的标题背景
@@ -59,7 +61,6 @@ function setFontBackgrond(obj){
     if(obj.attributes["opt"] == 0){
         romlist.attributes.addClass("textShadow");
     }
-
 
     $(#config_font_background).select("li[opt="+ obj.attributes["opt"] +"]").attributes.addClass("active");
 
@@ -91,7 +92,7 @@ function setRomlistSize(obj){
     var romlist = $(#romlist);
 
     //先清除所有缩放样式
-    for(var i=1;i<=9;i++){
+    for(var i=1;i<=10;i++){
         $(#config_romlist_size).select("li[opt="+ i +"]").attributes.removeClass("active");
         if(romlist.attributes.hasClass("zoom" + i)){
             romlist.attributes.removeClass("zoom" + i);

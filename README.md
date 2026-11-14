@@ -37,11 +37,11 @@
 | 左页 · 大图 | 封面 / 包装盒 `packing` |
 | 左页 · 右上 | 标题画面 `title` |
 | 左页 · 右下 | 卡带 `cassette` |
-| 左页 · 资料卡 | 类型、年份、发行商、地区、汉化组、版本、文件大小 + 展示图 `thumb` |
+| 左页 · 资料卡 | 类型、发行日期、制作商、发行商、地区、汉化组、版本、文件大小、英文名/日文名、其他信息、游玩次数 + 展示图 `thumb` |
 | 右页 · 大图 | 游戏画面 / 插画 `snap` |
 | 右页 · 右侧 | 动态画面 `gif`、游戏视频 `video`（静音循环） |
 | 右页 · 中部 | 海报 `poster` + 游戏简介 `docs` |
-| 右页 · 下部 | 攻略要点 `strategies` + 攻略文件 `files`、模拟器选择、开始游戏 |
+| 右页 · 下部 | 攻略要点 `strategies` + 图文杂志 `files`、游戏原声 `audio`、模拟器选择、开始游戏 |
 | 页面背景 | 背景图 `background`，没有则使用壁纸 `wallpaper` |
 
 ![](readme/book_slots.png)
@@ -52,6 +52,10 @@
 - 开始游戏：Enter 键，或点击“开始游戏”
 - 返回游戏目录：Esc 键，或点击“返回目录”
 - 从目录打开：点击标题栏的年鉴按钮，或在游戏上点右键选择“打开年鉴页”
+- 工具栏可编辑资料、简介与攻略、子游戏、游戏原声，编辑后当前页自动刷新
+- 还没有任何游戏时（首次使用）停留在目录界面，先完成平台设置
+
+> 本仓库已合并上游 `dev` 分支（2.8 开发版：新资料字段、游戏原声、子游戏编辑、视频背景、玩的最多等）。游戏原声通过 `tools/CHKenPlayer/CHKenPlayer.exe` 播放，该播放器不在仓库中，需要自行放入软件目录。
 
 相关代码：`code/view/tis/book.tis`，样式和结构在 `code/view/main.html`。
 
@@ -63,7 +67,7 @@
 2. 用 `x86_64-w64-mingw32-windres` 生成 `code/res.syso`（图标和 manifest）
 3. `go build` 生成 `simUI-64.exe`
 4. 下载 Sciter 4.4.8.23 运行库 `sciter-64.dll`（固定提交并校验 SHA256）
-5. 加入 `lang`、`theme`、`icons` 和清空过的 `data.dll`，打包为 `SimUI-win64`
+5. 加入 `lang`、`theme`、`icons` 和清空过的 `data.dll`（已预先执行 `_upgrade_2.7-2.8.sql`），打包为 `SimUI-win64`
 
 编译结果在 Actions 页面对应运行的 Artifacts 中下载。推送 `v*` 标签时，会自动发布到 Releases。
 
