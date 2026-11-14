@@ -119,10 +119,8 @@ def capture(rom, kit, title_at=None, keys=None, play=None, state=None, title_key
         c.run(title_at); title = c.image().convert('RGB')
     else:
         t_cands = auto_title(c, scan)
-        k = min(max(title_pick, 1), len(t_cands)) - 1
-        title, f, st = t_cands[k]
+        title, f, st, _ = t_cands[0]
         c.load_state(st)
-        log('标题画面：第 %d 帧（候选 %d/%d）' % (f, k + 1, len(t_cands)))
 
     # 2) 游戏画面
     p_cands = None
@@ -140,6 +138,25 @@ def capture(rom, kit, title_at=None, keys=None, play=None, state=None, title_key
         k = min(max(play_pick, 1), len(p_cands)) - 1
         shot, f, how = p_cands[k]
         log('游戏画面：第 %d 帧，%s（候选 %d/%d）' % (f, how, k + 1, len(p_cands)))
+
+    # 3) 标题候选重新排序：和游戏画面很像的、或在候选里有相似同伴的（多半是自动演示），降分
+    if t_cands:
+        plays = [x[0] for x in (p_cands or [])] + [shot]
+        def rescore(t):
+            near = min(frame_diff(t[0], p) for p in plays)
+            # 自动演示会在同一场景停好几次，候选里有“相似同伴”；标题画面通常独一无二
+            colors, content = frame_info(t[0])
+            twins = sum(1 for o in t_cands if o is not t and frame_diff(t[0], o[0]) < 25)
+            demo_like = twins and content > 0.55            # 满屏场景且有相似同伴：多半是自动演示
+            text_only = colors < 5                          # 版权页、汉化组说明等纯文字画面
+            return t[3] * (0.25 if near < 20 else 1.0) * (0.4 if demo_like else 1.0) * (0.3 if text_only else 1.0)
+        scored = sorted(((rescore(t), t) for t in t_cands), key=lambda x: x[0], reverse=True)
+        t_cands[:] = [t for _, t in scored]
+        log('标题候选得分：' + '，'.join('第%d帧=%.1f' % (t[1], sc) for sc, t in scored))
+        k = min(max(title_pick, 1), len(t_cands)) - 1
+        title, f = t_cands[k][0], t_cands[k][1]
+        log('标题画面：第 %d 帧（候选 %d/%d）' % (f, k + 1, len(t_cands)))
+
     if sheet and (t_cands or p_cands):
         candidates_sheet(t_cands or [(title, 0)], p_cands or [(shot, 0)], sheet)
         log('候选总览：%s（不满意可加 --title-pick N / --play-pick N 换一张）' % sheet)
@@ -202,7 +219,8 @@ def auto_title(c, scan=40, step=10, stable_need=3, top=6):
     厂商 Logo、剧情文字颜色少或停得短，分数低。20 秒内若没有像样的画面，按一次开始键跳过开场。
     返回按分数排序的候选 [(图, 帧号, 存档), ...]，模拟器停在第 1 名的时刻。"""
     segs = []                                 # 每段：[图, 帧号, 存档, 停留帧数, 颜色, 前景]
-    cur, prev, stable, pressed = None, None, 0, False
+    cur, prev, stable, pressed, waits = None, None, 0, False, 0
+    after = 1.0                               # 在“像标题的画面”上按过开始后，后面多半已是游戏内容
     for i in range(scan * 60 // step):
         c.run(step)
         im = c.image().convert('RGB')
@@ -213,22 +231,29 @@ def auto_title(c, scan=40, step=10, stable_need=3, top=6):
         prev = im
         if stable == stable_need:
             colors, content = frame_info(im)
-            cur = [im, c.frames, c.save_state(), 0, colors, content]
+            cur = [im, c.frames, c.save_state(), 0, colors, content, False, after]
             segs.append(cur)
         if cur is not None:
             cur[3] += step
-            if cur[3] >= 900 and cur[4] >= 6:     # 停了 15 秒还没动：基本就是等待按键的标题
-                break
+            if cur[3] >= 900:                     # 停了 15 秒：在等按键（标题，或汉化组片头等）
+                if waits >= 2:
+                    break
+                cur[6] = True                     # 一直在等按键：很强的“标题”信号
+                if cur[4] >= 8:                   # 颜色丰富的等待画面（标题）之后的画面降分；
+                    after = 0.5                   # 颜色少的（汉化组片头、说明页）之后不降
+                c.press('start', 6, 30)           # 按一次开始，看看后面还有没有真正的标题
+                waits += 1; cur = None; stable = 0
         best_now = max((x[4] * min(x[5], 0.6) for x in segs), default=0)
         if not pressed and c.frames > 1200 and best_now < 8:
             c.press('start', 6, 30); pressed = True
     if not segs:
-        return [(c.image().convert('RGB'), c.frames, c.save_state())]
+        return [(c.image().convert('RGB'), c.frames, c.save_state(), 1)]
 
     def score(x):
         early = 1.4 if x[1] < 1500 else 1.0
         plain_bg = 1.0 if x[5] <= 0.65 else 0.45        # 标题多是“纯色背景 + 标志”，满屏场景（演示画面）降分
-        return x[4] * min(x[5], 0.6) * (min(x[3], 600) / 600) ** 0.5 * early * plain_bg
+        waited = 1.8 if x[6] else 1.0                    # 停到需要按键才继续
+        return x[4] * min(x[5], 0.6) * (min(x[3], 600) / 600) ** 0.5 * early * plain_bg * waited * x[7]
 
     segs.sort(key=score, reverse=True)
     picked = []
@@ -237,7 +262,7 @@ def auto_title(c, scan=40, step=10, stable_need=3, top=6):
             picked.append(x)
         if len(picked) >= top:
             break
-    return [(x[0], x[1], x[2]) for x in picked]
+    return [(x[0], x[1], x[2], score(x)) for x in picked]
 
 
 def auto_play(c, title, rounds=12, top=6):
@@ -316,7 +341,7 @@ def auto_logo_box(im, gap=6, join=10, pad=6):
     """自动找标题标志：
     1. 背景色 = 画面四边最常见的颜色；
     2. 按“连续 gap 行以上没有前景像素”把画面切成若干横条；
-    3. 取前景像素最多的横条当标志，与它相距不超过 join 行、且不比它宽的横条一并纳入
+    3. 取“面积 × 颜色数”最大的横条当标志，与它相距不超过 join 行、且不比它宽的横条一并纳入
        （例如标志上方的厂商名）；菜单、版权行通常离得远或很窄，会被排除。"""
     w, h = im.size
     edge = [im.getpixel((x, 0)) for x in range(w)] + [im.getpixel((x, h - 1)) for x in range(w)] + \
@@ -325,12 +350,13 @@ def auto_logo_box(im, gap=6, join=10, pad=6):
     fg = lambda p: abs(p[0] - bg[0]) + abs(p[1] - bg[1]) + abs(p[2] - bg[2]) > 60
     rows = [[x for x in range(w) if fg(im.getpixel((x, y)))] for y in range(h)]
 
-    bands, cur, empty = [], None, 0          # 每条：[y0, y1, 像素数, x0, x1]
+    bands, cur, empty = [], None, 0          # 每条：[y0, y1, 像素数, x0, x1, 颜色集合]
     for y, xs in enumerate(rows):
         if xs:
             if cur is None:
-                cur = [y, y, 0, w, 0]
+                cur = [y, y, 0, w, 0, set()]
             cur[1] = y; cur[2] += len(xs); cur[3] = min(cur[3], xs[0]); cur[4] = max(cur[4], xs[-1])
+            cur[5].update(im.getpixel((x, y)) for x in xs[::3])
             empty = 0
         elif cur is not None:
             empty += 1
@@ -341,8 +367,9 @@ def auto_logo_box(im, gap=6, join=10, pad=6):
     if not bands:
         return 0, 0, w, h
 
-    i = max(range(len(bands)), key=lambda k: bands[k][2])
-    y0, y1, _, x0, x1 = bands[i]
+    # 标志通常颜色多、面积大；大块纯色图案（口袋、边框）颜色少，排在后面
+    i = max(range(len(bands)), key=lambda k: bands[k][2] ** 0.5 * min(len(bands[k][5]), 12))
+    y0, y1, _, x0, x1, _ = bands[i]
     width = x1 - x0
     for k in list(range(i - 1, -1, -1)) + list(range(i + 1, len(bands))):
         b = bands[k]
