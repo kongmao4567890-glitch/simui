@@ -40,9 +40,9 @@
             </div>
 
             <div class="rating">
-              <star-rating v-model:rating="detail.Info.Score" :increment="0.5" :read-only="true" :star-size="18"
-                           :show-rating="false" active-color="#ff9800" inactive-color="#784f1f" :clearable="true"
-                           :star-points="[23,2, 14,17, 0,19, 10,34, 7,50, 23,43, 38,50, 36,34, 46,19, 31,17]"/>
+              <!-- vue-star-rating 在新版 Vue 下渲染会报错，改用 Quasar 自带评分组件（与经典主题一致） -->
+              <q-rating :model-value="Number(detail.Info.Score) || 0" readonly :max="5" size="18px" color="orange"
+                        color-half="orange" icon-half="star_half"/>
             </div>
 
             <div class="rombase">
@@ -176,7 +176,6 @@ import 'viewerjs/dist/viewer.css'
 import {api} from 'v-viewer'
 import {useGlobalStore} from 'stores/globalData';
 import {storeToRefs} from 'pinia';
-import StarRating from 'vue-star-rating'
 import {decodeApiData, getDateTime, isEmpty} from "components/utils";
 import {
   GetGameDetail,
@@ -414,7 +413,7 @@ function changeVideoVolume() {
 }
 
 export default {
-  components: {StarRating},
+  components: {},
   setup() {
     return {
       activeRom,

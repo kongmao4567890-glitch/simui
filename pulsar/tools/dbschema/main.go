@@ -9,6 +9,7 @@ package main
 
 import (
 	"database/sql"
+	"encoding/json"
 	"flag"
 	"fmt"
 	"os"
@@ -74,6 +75,20 @@ func main() {
 		}
 	}
 
+	// 补齐当前代码需要的配置项（早期数据库缺少或格式不对的会导致界面颜色、边栏显示异常）
+	ensureConfig(raw, "Colors", `{"ThemeColor":"rgb(17, 17, 17)","ThemeTextColor":"#FFFFFF","ThemeBrandColor":"#1976D2","ThemeBrandTextColor":"#FFFFFF"}`, "主题颜色配置", true)
+	ensureConfig(raw, "FrameShowDefault", `{"LogoShow":true,"PlatformShow":true,"MenuShow":true,"RightShow":true}`, "窗体框架显示状态", true)
+	ensureConfig(raw, "SplashScreen", `{"Src":"","Size":"","Time":0}`, "开屏画面参数", true)
+	ensureConfig(raw, "SoftName", `{"Name":"SimUI","SubName":"","Image":"","HideText":0}`, "软件名称", true)
+	ensureConfig(raw, "ThumbOrders", `[]`, "展示图排序", true)
+	ensureConfig(raw, "Menu", `["",0]`, "当前选定菜单", true)
+	ensureConfig(raw, "WindowZoom", "1", "窗口缩放比例", false)
+	ensureConfig(raw, "VideoVolume", "0.5", "视频默认音量", false)
+	ensureConfig(raw, "AdminRunGame", "0", "以管理员身份启动游戏", false)
+	ensureConfig(raw, "GameMultiOpen", "0", "是否允许模拟器游戏多开", false)
+	ensureConfig(raw, "VersionNo", "", "当前版本号或已跳过的版本号", false)
+	mustExec(raw, `DELETE FROM config WHERE name = 'BarShowStatus'`) // 已被 FrameShowDefault 取代
+
 	// 升级 SQL 已由本工具覆盖，记录为全部执行过，避免启动时重复执行
 	n := len(db.DbUpdateSqlList(""))
 	upsert(raw, "SqlUpdateNum", fmt.Sprint(n), "sql升级条数")
@@ -109,6 +124,18 @@ func main() {
 	}
 	mustExec(raw, "VACUUM")
 	fmt.Println("ok:", *path)
+}
+
+// ensureConfig 配置项不存在时写入默认值；mustJSON 为 true 时，现有值不是合法 JSON 也会被替换
+func ensureConfig(raw *sql.DB, name, def, desc string, mustJSON bool) {
+	var cur sql.NullString
+	err := raw.QueryRow(`SELECT data FROM config WHERE name = ?`, name).Scan(&cur)
+	if err == nil {
+		if !mustJSON || (cur.String != "" && json.Valid([]byte(cur.String))) {
+			return
+		}
+	}
+	upsert(raw, name, def, desc)
 }
 
 func existingColumns(raw *sql.DB, table string) map[string]bool {
